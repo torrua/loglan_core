@@ -21,4 +21,4 @@ jobs:
         pip install -r requirements-tests.txt
     - name: Test with pytest
       run: |
-        pytest .\tests\ --cov=loglan_core
+        pytest tests --cov=loglan_core
