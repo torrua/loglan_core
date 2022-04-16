@@ -21,4 +21,4 @@ jobs:
         pip install -r requirements-tests.txt
     - name: Test with pytest
       run: |
-        pytest tests.py --doctest-modules --cov=loglan_core --cov-report=xml --cov-report=html
+        pytest .\tests\ --doctest-modules --cov=loglan_core --cov-report=xml --cov-report=html
