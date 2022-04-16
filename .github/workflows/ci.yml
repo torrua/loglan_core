@@ -1,4 +1,4 @@
-name: Python package
+name: tests for loglan_core
 
 on: [push]
 
