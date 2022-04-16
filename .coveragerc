@@ -1,0 +1,4 @@
+[run]
+branch = True
+source = loglan_core
+omit = loglan_core/setup.py
