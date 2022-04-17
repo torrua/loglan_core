@@ -15,11 +15,7 @@ build:
         override:
           - py-scrutinizer-run
           - pylint-run loglan_core
-          - command: 'pytest --cov'
-            coverage:
-                file: '.coverage'
-                config_file: '.coveragerc'
-                format: 'py-cc'
+
 filter:
     excluded_paths:
         - tests/*
