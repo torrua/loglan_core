@@ -4,3 +4,5 @@ mypy
 pylint
 radon
 sqlalchemy-stubs
+wheel
+setuptools
