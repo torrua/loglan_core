@@ -1,11 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-This module contains functions and variables for initializing application and db
+Default engine and Session
 """
-
-__author__ = "torrua"
-__copyright__ = "Copyright 2022, loglan_core project"
-__email__ = "torrua@gmail.com"
 
 import os
 

@@ -3,6 +3,11 @@
 Main point for export DB models
 """
 
+__author__ = "torrua"
+__copyright__ = "Copyright 2022, loglan_core project"
+__email__ = "torrua@gmail.com"
+
+
 from loglan_core.author import BaseAuthor as Author
 from loglan_core.connect_tables import t_connect_authors, t_connect_words, t_connect_keys
 from loglan_core.definition import BaseDefinition as Definition
