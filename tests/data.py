@@ -107,42 +107,6 @@ syllable_39 = {'allowed': False, 'name': 'cvl', 'type': 'UnintelligibleCCC'}
 syllable_40 = {'allowed': False, 'name': 'ndj', 'type': 'UnintelligibleCCC'}
 syllables = [syllable_35, syllable_36, syllable_37, syllable_38, syllable_39, syllable_40, ]
 
-# ===== COMPOUNDS & LW ==========================================================
-little_1 = {'notes': None, 'id': 479, 'tid_old': None, 'id_old': 382, 'name': 'bicio', 'type_id': 16, 'origin': 'bi+cio', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '15', 'year': datetime.date(1975, 1, 1)}
-little_2 = {'notes': None, 'id': 467, 'tid_old': None, 'id_old': 370, 'name': 'bi', 'type_id': 17, 'origin': '', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
-little_3 = {'notes': None, 'id': 999, 'tid_old': None, 'id_old': 986, 'name': 'cio', 'type_id': 17, 'origin': '', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
-littles = [little_1, little_2, little_3, ]
-
-little_type_1 = {'description': 'Compound Little Word E.g. enoi from e+no, "and not".', 'group': 'Little', 'type': 'Cpd', 'parentable': True, 'type_x': 'Struct', 'id': 16, 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132)}
-little_type_2 = {'description': 'Little Word, a small word used to give Loglan its grammatical structure.', 'group': 'Little', 'type': 'LW', 'parentable': True, 'type_x': 'Struct', 'id': 17, 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132)}
-little_types = [little_type_1, little_type_2, ]
-
-# ===== DOUBLED WORDS ===========================================================
-doubled_word_1 = {'notes': None, 'id': 1835, 'tid_old': None, 'id_old': 1722, 'name': 'duo', 'type_id': 17, 'origin': 'du(rz)o', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
-doubled_word_2 = {'notes': {'author': '(?)', 'year': '(?)'}, 'id': 1836, 'tid_old': None, 'id_old': 9958, 'name': 'duo', 'type_id': 2, 'origin': 'du(rz)o', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '7+?', 'year': datetime.date(1988, 1, 1)}
-doubled_words = [doubled_word_1, doubled_word_2, ]
-
-
-# ===== PRIM WORDS ===========================================================
-prim_d = {'tid_old': None, 'name': 'balna', 'origin': 'balnu', 'type_id': 10, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(2000, 1, 1), 'notes': None, 'id': 291, 'id_old': 197}
-prim_i = {'tid_old': None, 'name': 'banko', 'origin': 'Int.', 'type_id': 11, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '1.8', 'year': datetime.date(1975, 1, 1), 'notes': None, 'id': 318, 'id_old': 224}
-prim_l = {'tid_old': None, 'name': 'cimpe', 'origin': 'abbreviation of cimpenizi', 'type_id': 12, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1988, 1, 1), 'notes': None, 'id': 984, 'id_old': 971}
-prim_o = {'tid_old': None, 'name': 'murmu', 'origin': 'Onamatopoetic', 'type_id': 14, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '2.5', 'year': datetime.date(1987, 1, 1), 'notes': None, 'id': 5655, 'id_old': 5648}
-prim_n = {'tid_old': None, 'name': 'bordo', 'origin': 'Fr. Bordeaux', 'type_id': 13, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1988, 1, 1), 'notes': None, 'id': 641, 'id_old': 541}
-prim_s = {'tid_old': None, 'name': 'carbo', 'origin': 'ISV', 'type_id': 15, 'origin_x': '', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1988, 1, 1), 'notes': None, 'id': 849, 'id_old': 748}
-
-prim_words = [prim_d, prim_i, prim_l, prim_o, prim_n, prim_s]
-
-# ===== PRIM TYPES ===========================================================
-type_d = {'parentable': False, 'type_x': 'Predicate', 'id': 10, 'description': 'Derived Primitive, one of the primitives that follows the cultural (language, nationality, culture) or animal (male, female, infant, resembling, unspecified) declension.', 'group': 'Prim', 'type': 'D-Prim'}
-type_i = {'parentable': False, 'type_x': 'Predicate', 'id': 11, 'description': 'International Primitives, drawn from a single word of international scope. E.g. telfo from "telephone".', 'group': 'Prim', 'type': 'I-Prim'}
-type_l = {'parentable': False, 'type_x': 'Predicate', 'id': 12, 'description': 'Loglan Primitives, a small group of primitives that were drawn from other Loglan words. E.g. logla from the name Loglan.', 'group': 'Prim', 'type': 'L-Prim'}
-type_o = {'parentable': False, 'type_x': 'Predicate', 'id': 14, 'description': 'Onomatopoetic E.g zbuma, to explode.', 'group': 'Prim', 'type': 'O-Prim'}
-type_n = {'parentable': False, 'type_x': 'Predicate', 'id': 13, 'description': 'Native Primitives, drawn from a single source language. E.g. dolra from the English "dollar".', 'group': 'Prim', 'type': 'N-Prim'}
-type_s = {'parentable': False, 'type_x': 'Predicate', 'id': 15, 'description': 'Scientific Primitive, drawn from the international vocabulary of science. E.g. lidro from Hydrogen.', 'group': 'Prim', 'type': 'S-Prim'}
-
-prim_types = [type_d, type_i, type_l, type_o, type_n, type_s]
-
 # ===== WORD SOURCES ===========================================================
 word_source_1 = "2/3E act"
 word_source_2 = "3/3F acte"
