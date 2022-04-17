@@ -1,5 +1,5 @@
 import pytest
-from loglan_core import Word, Type, Event, Key, Author
+from loglan_core import Author
 
 
 @pytest.mark.usefixtures("db_session")

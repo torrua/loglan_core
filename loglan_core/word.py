@@ -186,9 +186,9 @@ class BaseWord(BaseModel):
         """
 
         type_values = [
-                (type_class.type, word_type),
-                (type_class.type_x, word_type_x),
-                (type_class.group, word_group), ]
+            (type_class.type, word_type),
+            (type_class.type_x, word_type_x),
+            (type_class.group, word_group), ]
 
         type_filters = [i[0] == i[1] for i in type_values if i[1]]
 
