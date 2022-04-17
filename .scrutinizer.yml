@@ -4,8 +4,6 @@ checks:
         duplicate_code: true
 
 build:
-  environment:
-    python: 3.10.4
   nodes:
     tests:
       dependencies:
