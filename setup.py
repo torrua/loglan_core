@@ -12,7 +12,7 @@ def read(filename):
 
 setup(
   name='Loglan-Core',
-  packages=['loglan_core'],
+  packages=['loglan_core', 'loglan_core.addons'],
   package_data={'loglan_core': ['*'], },
   include_package_data=True,
   version='0.0.3',
