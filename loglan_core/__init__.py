@@ -19,3 +19,4 @@ from loglan_core.type import BaseType as Type
 from loglan_core.word import BaseWord as Word
 from loglan_core.word_source import BaseWordSource as WordSource
 from loglan_core.word_spell import BaseWordSpell as WordSpell
+from loglan_core.addons import AddonWordGetter
