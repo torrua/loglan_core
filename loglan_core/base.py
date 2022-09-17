@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Set
 
 from sqlalchemy import Column, TIMESTAMP, func, Integer
-from sqlalchemy.orm import declarative_base
+from sqlalchemy.orm import declarative_base, Session
 Base = declarative_base()
 
 
@@ -21,6 +21,15 @@ class BaseModel(Base):
     created = Column(TIMESTAMP, default=datetime.now(), nullable=False)
     updated = Column(TIMESTAMP, onupdate=func.now())
 
+    @classmethod
+    def get_by_id(cls, session: Session, cid: int):
+        """
+        Get model object from DB by its id
+        :param session: session
+        :param cid: cls id
+        :return:
+        """
+        return session.query(cls).filter(cls.id == cid).first()
 
     def export(self):
         """
