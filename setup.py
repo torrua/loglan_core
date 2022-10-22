@@ -26,7 +26,7 @@ setup(
   download_url='https://github.com/torrua/loglan_core/archive/0.0.4.tar.gz',
   keywords=['Loglan', 'Dictionary', 'Database', 'Model', 'LOD'],
   install_requires=[
-          'sqlalchemy', 'psycopg2',
+          'sqlalchemy',
   ],
   classifiers=[
     'Development Status :: 3 - Alpha',  # "3 - Alpha", "4 - Beta" or "5 - Production/Stable"
