@@ -57,6 +57,17 @@ and Definition should be many-to-many. See <code>t_connect_keys</code>.</p>
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
 <li>sqlalchemy.orm.decl_api.Base</li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="loglan_core.key.BaseKey.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.key.BaseKey.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="loglan_core.key.BaseKey.definitions"><code class="name">var <span class="ident">definitions</span></code></dt>
@@ -68,16 +79,16 @@ and Definition should be many-to-many. See <code>t_connect_keys</code>.</p>
 <dd>
 <div class="desc"><p>Returns:</p></div>
 </dd>
-<dt id="loglan_core.key.BaseKey.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dt id="loglan_core.key.BaseKey.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.key.BaseKey.language"><code class="name">var <span class="ident">language</span></code></dt>
+<dt id="loglan_core.key.BaseKey.language"><code class="name">var <span class="ident">language</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Key's language</em><br>
 <strong>str</strong> : max_length=16, nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.key.BaseKey.word"><code class="name">var <span class="ident">word</span></code></dt>
+<dt id="loglan_core.key.BaseKey.word"><code class="name">var <span class="ident">word</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Key's vernacular word</em><br>
 <strong>str</strong> : max_length=64, nullable=False, unique=False<br>
@@ -93,6 +104,7 @@ It is non-unique, as words can be the same in spelling in different languages</p
 <li><code><a title="loglan_core.base.BaseModel.attributes_extended" href="base.html#loglan_core.base.BaseModel.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.export" href="base.html#loglan_core.base.BaseModel.export">export</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
@@ -118,11 +130,13 @@ It is non-unique, as words can be the same in spelling in different languages</p
 <ul>
 <li>
 <h4><code><a title="loglan_core.key.BaseKey" href="#loglan_core.key.BaseKey">BaseKey</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="loglan_core.key.BaseKey.definitions" href="#loglan_core.key.BaseKey.definitions">definitions</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.definitions_query" href="#loglan_core.key.BaseKey.definitions_query">definitions_query</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.id" href="#loglan_core.key.BaseKey.id">id</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.language" href="#loglan_core.key.BaseKey.language">language</a></code></li>
+<li><code><a title="loglan_core.key.BaseKey.metadata" href="#loglan_core.key.BaseKey.metadata">metadata</a></code></li>
+<li><code><a title="loglan_core.key.BaseKey.registry" href="#loglan_core.key.BaseKey.registry">registry</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.word" href="#loglan_core.key.BaseKey.word">word</a></code></li>
 </ul>
 </li>

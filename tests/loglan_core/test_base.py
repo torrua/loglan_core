@@ -6,15 +6,19 @@ import datetime
 @pytest.mark.usefixtures("db_session")
 class TestBase:
 
+    def test_get_by_id(self, db_session):
+        third_word: Word = Word.get_by_id(db_session, 3)
+        assert third_word.id == 3
+
     def test_export(self, db_session):
-        kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
-        assert kakto.export() == {
-            'event_end_id': None, 'event_start_id': 1,
-            'id': 2, 'id_old': 3880, 'match': '56%',
-            'name': 'kakto', 'notes': None,
-            'origin': '3/3R akt | 4/4S acto | 3/3F acte | 2/3E act | 2/3H kam',
-            'origin_x': '', 'rank': '1.0', 'tid_old': None, 'type_id': 2,
-            'year': datetime.date(1975, 1, 1)}
+            kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
+            assert kakto.export() == {
+                'event_end_id': None, 'event_start_id': 1,
+                'id': 2, 'id_old': 3880, 'match': '56%',
+                'name': 'kakto', 'notes': None,
+                'origin': '3/3R akt | 4/4S acto | 3/3F acte | 2/3E act | 2/3H kam',
+                'origin_x': '', 'rank': '1.0', 'tid_old': None, 'type_id': 2,
+                'year': datetime.date(1975, 1, 1)}
 
     def test_attributes_all(self):
         assert Word.attributes_all() == {

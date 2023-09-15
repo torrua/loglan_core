@@ -35,7 +35,7 @@
 <dl>
 <dt id="loglan_core.base.BaseModel"><code class="flex name class">
 <span>class <span class="ident">BaseModel</span></span>
-<span>(</span><span>**kwargs)</span>
+<span>(</span><span>**kwargs: Any)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Init class for common methods</p>
@@ -71,6 +71,14 @@ for example, any mapped columns or relationships.</p></div>
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="loglan_core.base.BaseModel.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.base.BaseModel.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="loglan_core.base.BaseModel.updated"><code class="name">var <span class="ident">updated</span></code></dt>
 <dd>
 <div class="desc"></div>
@@ -101,6 +109,14 @@ for example, any mapped columns or relationships.</p></div>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns:</p></div>
+</dd>
+<dt id="loglan_core.base.BaseModel.get_all"><code class="name flex">
+<span>def <span class="ident">get_all</span></span>(<span>session: sqlalchemy.orm.session.Session)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get all model objects from DB
+:param session: session
+:return:</p></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.get_by_id"><code class="name flex">
 <span>def <span class="ident">get_by_id</span></span>(<span>session: sqlalchemy.orm.session.Session, cid: int)</span>
@@ -161,9 +177,12 @@ Returns:</p></div>
 <li><code><a title="loglan_core.base.BaseModel.created" href="#loglan_core.base.BaseModel.created">created</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.export" href="#loglan_core.base.BaseModel.export">export</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.get_all" href="#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.id" href="#loglan_core.base.BaseModel.id">id</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.metadata" href="#loglan_core.base.BaseModel.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.registry" href="#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.updated" href="#loglan_core.base.BaseModel.updated">updated</a></code></li>
 </ul>

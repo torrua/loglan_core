@@ -27,8 +27,6 @@ class AddonWordGetter:
           event_id: Union[BaseEvent, int]: Event object or Event.id (int) (Default value = None)
           add_to:
         Returns:
-          BaseQuery
-
         """
         if not event_id:
             event_id = BaseEvent.latest(session).id
@@ -55,8 +53,6 @@ class AddonWordGetter:
           case_sensitive: bool:  (Default value = False)
           add_to:
         Returns:
-          BaseQuery
-
         """
 
         request = add_to if add_to else session.query(cls)
@@ -87,7 +83,7 @@ class AddonWordGetter:
         request = cls.by_event(session, event_id, request)
 
         key = (BaseKey.word if isinstance(key, BaseKey) else str(key)).replace("*", "%")
-        request = request.join(BaseDefinition, t_connect_keys, BaseKey).filter(
+        request = request.join(BaseDefinition).join(t_connect_keys).join(BaseKey).filter(
             BaseKey.word.like(key) if case_sensitive else BaseKey.word.ilike(key))
 
         if language:

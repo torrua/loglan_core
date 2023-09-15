@@ -51,28 +51,39 @@
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
 <li>sqlalchemy.orm.decl_api.Base</li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="loglan_core.setting.BaseSetting.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.setting.BaseSetting.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_core.setting.BaseSetting.date"><code class="name">var <span class="ident">date</span></code></dt>
+<dt id="loglan_core.setting.BaseSetting.date"><code class="name">var <span class="ident">date</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Last modified date</em><br>
 <strong>dateime.datetime</strong> : nullable=True, unique=False</p></div>
 </dd>
-<dt id="loglan_core.setting.BaseSetting.db_release"><code class="name">var <span class="ident">db_release</span></code></dt>
+<dt id="loglan_core.setting.BaseSetting.db_release"><code class="name">var <span class="ident">db_release</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Database release (for new application)</em><br>
 <strong>str</strong> : max_length=16, nullable=False, unique=True</p></div>
 </dd>
-<dt id="loglan_core.setting.BaseSetting.db_version"><code class="name">var <span class="ident">db_version</span></code></dt>
+<dt id="loglan_core.setting.BaseSetting.db_version"><code class="name">var <span class="ident">db_version</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Database version (for old application)</em><br>
 <strong>int</strong> : nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.setting.BaseSetting.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dt id="loglan_core.setting.BaseSetting.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.setting.BaseSetting.last_word_id"><code class="name">var <span class="ident">last_word_id</span></code></dt>
+<dt id="loglan_core.setting.BaseSetting.last_word_id"><code class="name">var <span class="ident">last_word_id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>ID number of the last word in DB</em><br>
 <strong>int</strong> : nullable=False, unique=False</p></div>
@@ -87,6 +98,7 @@
 <li><code><a title="loglan_core.base.BaseModel.attributes_extended" href="base.html#loglan_core.base.BaseModel.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.export" href="base.html#loglan_core.base.BaseModel.export">export</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
@@ -112,12 +124,14 @@
 <ul>
 <li>
 <h4><code><a title="loglan_core.setting.BaseSetting" href="#loglan_core.setting.BaseSetting">BaseSetting</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="loglan_core.setting.BaseSetting.date" href="#loglan_core.setting.BaseSetting.date">date</a></code></li>
 <li><code><a title="loglan_core.setting.BaseSetting.db_release" href="#loglan_core.setting.BaseSetting.db_release">db_release</a></code></li>
 <li><code><a title="loglan_core.setting.BaseSetting.db_version" href="#loglan_core.setting.BaseSetting.db_version">db_version</a></code></li>
 <li><code><a title="loglan_core.setting.BaseSetting.id" href="#loglan_core.setting.BaseSetting.id">id</a></code></li>
 <li><code><a title="loglan_core.setting.BaseSetting.last_word_id" href="#loglan_core.setting.BaseSetting.last_word_id">last_word_id</a></code></li>
+<li><code><a title="loglan_core.setting.BaseSetting.metadata" href="#loglan_core.setting.BaseSetting.metadata">metadata</a></code></li>
+<li><code><a title="loglan_core.setting.BaseSetting.registry" href="#loglan_core.setting.BaseSetting.registry">registry</a></code></li>
 </ul>
 </li>
 </ul>

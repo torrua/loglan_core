@@ -51,23 +51,34 @@
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
 <li>sqlalchemy.orm.decl_api.Base</li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="loglan_core.syllable.BaseSyllable.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.syllable.BaseSyllable.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_core.syllable.BaseSyllable.allowed"><code class="name">var <span class="ident">allowed</span></code></dt>
+<dt id="loglan_core.syllable.BaseSyllable.allowed"><code class="name">var <span class="ident">allowed</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Is this syllable acceptable in grammar</em><br>
 <strong>bool</strong> : nullable=True, unique=False</p></div>
 </dd>
-<dt id="loglan_core.syllable.BaseSyllable.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dt id="loglan_core.syllable.BaseSyllable.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.syllable.BaseSyllable.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dt id="loglan_core.syllable.BaseSyllable.name"><code class="name">var <span class="ident">name</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Syllable itself</em><br>
 <strong>str</strong> : max_length=8, nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.syllable.BaseSyllable.type"><code class="name">var <span class="ident">type</span></code></dt>
+<dt id="loglan_core.syllable.BaseSyllable.type"><code class="name">var <span class="ident">type</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Syllable's type</em><br>
 <strong>str</strong> : max_length=8, nullable=False, unique=False</p></div>
@@ -82,6 +93,7 @@
 <li><code><a title="loglan_core.base.BaseModel.attributes_extended" href="base.html#loglan_core.base.BaseModel.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.export" href="base.html#loglan_core.base.BaseModel.export">export</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
@@ -107,10 +119,12 @@
 <ul>
 <li>
 <h4><code><a title="loglan_core.syllable.BaseSyllable" href="#loglan_core.syllable.BaseSyllable">BaseSyllable</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="loglan_core.syllable.BaseSyllable.allowed" href="#loglan_core.syllable.BaseSyllable.allowed">allowed</a></code></li>
 <li><code><a title="loglan_core.syllable.BaseSyllable.id" href="#loglan_core.syllable.BaseSyllable.id">id</a></code></li>
+<li><code><a title="loglan_core.syllable.BaseSyllable.metadata" href="#loglan_core.syllable.BaseSyllable.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.syllable.BaseSyllable.name" href="#loglan_core.syllable.BaseSyllable.name">name</a></code></li>
+<li><code><a title="loglan_core.syllable.BaseSyllable.registry" href="#loglan_core.syllable.BaseSyllable.registry">registry</a></code></li>
 <li><code><a title="loglan_core.syllable.BaseSyllable.type" href="#loglan_core.syllable.BaseSyllable.type">type</a></code></li>
 </ul>
 </li>

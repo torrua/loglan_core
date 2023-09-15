@@ -31,6 +31,15 @@ class BaseModel(Base):
         """
         return session.query(cls).filter(cls.id == cid).first()
 
+    @classmethod
+    def get_all(cls, session: Session):
+        """
+        Get all model objects from DB
+        :param session: session
+        :return:
+        """
+        return session.query(cls).all()
+
     def export(self):
         """
         Export record data from DB

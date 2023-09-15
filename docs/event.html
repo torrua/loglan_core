@@ -55,6 +55,17 @@ identified ones that the parser did not recognize as words',
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
 <li>sqlalchemy.orm.decl_api.Base</li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="loglan_core.event.BaseEvent.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.event.BaseEvent.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.event.BaseEvent.latest"><code class="name flex">
@@ -66,7 +77,7 @@ identified ones that the parser did not recognize as words',
 </dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_core.event.BaseEvent.annotation"><code class="name">var <span class="ident">annotation</span></code></dt>
+<dt id="loglan_core.event.BaseEvent.annotation"><code class="name">var <span class="ident">annotation</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Event's annotation (displayed in old format dictionary HTML file)</em><br>
 <strong>str</strong> : max_length=16, nullable=False, unique=False</p></div>
@@ -76,12 +87,12 @@ identified ones that the parser did not recognize as words',
 <div class="desc"><p><em>Relationship query for getting a list of words appeared during this event</em></p>
 <p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.date"><code class="name">var <span class="ident">date</span></code></dt>
+<dt id="loglan_core.event.BaseEvent.date"><code class="name">var <span class="ident">date</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Event's starting day</em><br>
 <strong>dateime.date</strong> : nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.definition"><code class="name">var <span class="ident">definition</span></code></dt>
+<dt id="loglan_core.event.BaseEvent.definition"><code class="name">var <span class="ident">definition</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Event's definition</em><br>
 <strong>str</strong> : nullable=False, unique=False</p></div>
@@ -91,16 +102,16 @@ identified ones that the parser did not recognize as words',
 <div class="desc"><p><em>Relationship query for getting a list of words deprecated during this event</em></p>
 <p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dt id="loglan_core.event.BaseEvent.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.name"><code class="name">var <span class="ident">name</span></code></dt>
+<dt id="loglan_core.event.BaseEvent.name"><code class="name">var <span class="ident">name</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Event's short name</em><br>
 <strong>str</strong> : max_length=64, nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.suffix"><code class="name">var <span class="ident">suffix</span></code></dt>
+<dt id="loglan_core.event.BaseEvent.suffix"><code class="name">var <span class="ident">suffix</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Event's suffix (used to create filename when exporting HTML file)</em><br>
 <strong>str</strong> : max_length=16, nullable=False, unique=False</p></div>
@@ -115,6 +126,7 @@ identified ones that the parser did not recognize as words',
 <li><code><a title="loglan_core.base.BaseModel.attributes_extended" href="base.html#loglan_core.base.BaseModel.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.export" href="base.html#loglan_core.base.BaseModel.export">export</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
@@ -148,7 +160,9 @@ identified ones that the parser did not recognize as words',
 <li><code><a title="loglan_core.event.BaseEvent.deprecated_words" href="#loglan_core.event.BaseEvent.deprecated_words">deprecated_words</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.id" href="#loglan_core.event.BaseEvent.id">id</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.latest" href="#loglan_core.event.BaseEvent.latest">latest</a></code></li>
+<li><code><a title="loglan_core.event.BaseEvent.metadata" href="#loglan_core.event.BaseEvent.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.name" href="#loglan_core.event.BaseEvent.name">name</a></code></li>
+<li><code><a title="loglan_core.event.BaseEvent.registry" href="#loglan_core.event.BaseEvent.registry">registry</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.suffix" href="#loglan_core.event.BaseEvent.suffix">suffix</a></code></li>
 </ul>
 </li>

@@ -44,6 +44,17 @@
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
 <li>sqlalchemy.orm.decl_api.Base</li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="loglan_core.type.BaseType.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.type.BaseType.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.type.BaseType.by"><code class="name flex">
@@ -61,27 +72,27 @@
 </dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_core.type.BaseType.description"><code class="name">var <span class="ident">description</span></code></dt>
+<dt id="loglan_core.type.BaseType.description"><code class="name">var <span class="ident">description</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.type.BaseType.group"><code class="name">var <span class="ident">group</span></code></dt>
+<dt id="loglan_core.type.BaseType.group"><code class="name">var <span class="ident">group</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.type.BaseType.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dt id="loglan_core.type.BaseType.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.type.BaseType.parentable"><code class="name">var <span class="ident">parentable</span></code></dt>
+<dt id="loglan_core.type.BaseType.parentable"><code class="name">var <span class="ident">parentable</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.type.BaseType.type"><code class="name">var <span class="ident">type</span></code></dt>
+<dt id="loglan_core.type.BaseType.type"><code class="name">var <span class="ident">type</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.type.BaseType.type_x"><code class="name">var <span class="ident">type_x</span></code></dt>
+<dt id="loglan_core.type.BaseType.type_x"><code class="name">var <span class="ident">type_x</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -99,6 +110,7 @@
 <li><code><a title="loglan_core.base.BaseModel.attributes_extended" href="base.html#loglan_core.base.BaseModel.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.export" href="base.html#loglan_core.base.BaseModel.export">export</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
@@ -129,7 +141,9 @@
 <li><code><a title="loglan_core.type.BaseType.description" href="#loglan_core.type.BaseType.description">description</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.group" href="#loglan_core.type.BaseType.group">group</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.id" href="#loglan_core.type.BaseType.id">id</a></code></li>
+<li><code><a title="loglan_core.type.BaseType.metadata" href="#loglan_core.type.BaseType.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.parentable" href="#loglan_core.type.BaseType.parentable">parentable</a></code></li>
+<li><code><a title="loglan_core.type.BaseType.registry" href="#loglan_core.type.BaseType.registry">registry</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.type" href="#loglan_core.type.BaseType.type">type</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.type_x" href="#loglan_core.type.BaseType.type_x">type_x</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.words" href="#loglan_core.type.BaseType.words">words</a></code></li>

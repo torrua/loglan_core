@@ -38,9 +38,9 @@ types = [type_1, type_2, type_3]
 word_1 = {'notes': None, 'tid_old': None, 'id_old': 3869, 'name': 'kak', 'type_id': 3, 'origin': 'kak(to)', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'rank': '7+', 'year': datetime.date(1988, 1, 1)}
 word_2 = {'notes': None, 'tid_old': None, 'id_old': 3880, 'name': 'kakto', 'type_id': 2, 'origin': '3/3R akt | 4/4S acto | 3/3F acte | 2/3E act | 2/3H kam', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '56%', 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
 word_3 = {'notes': {'author': '(?)', 'year': '(?)'}, 'tid_old': None, 'id_old': 9983, 'name': 'kao', 'type_id': 3, 'origin': 'ka(kt)o', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'rank': '7+?', 'year': datetime.date(1988, 1, 1)}
-word_4 = {'notes': None, 'tid_old': None, 'id_old': 7188, 'name': 'pru', 'type_id': 3, 'origin': 'pru(ci)', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'rank': '7+', 'year': datetime.date(1988, 1, 1)}
+word_4 = {'notes': None, 'tid_old': None, 'id_old': 7188, 'name': 'pru', 'type_id': 3, 'origin': 'pru(ci)', 'event_start_id': 3, 'origin_x': '', 'event_end_id': None, 'match': '', 'rank': '7+', 'year': datetime.date(1988, 1, 1)}
 word_5 = {'notes': None, 'tid_old': None, 'id_old': 7190, 'name': 'pruci', 'type_id': 2, 'origin': '3/4E prove | 2/4C sh yen | 3/6S prueba | 2/5R proba | 2/5F epreuve | 2/5G probe | 2/6J tameshi', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '49%', 'rank': '1.9', 'year': datetime.date(1975, 1, 1)}
-word_6 = {'notes': None, 'tid_old': None, 'id_old': 7191, 'name': 'prukao', 'type_id': 1, 'origin': 'pru(ci)+ka(kt)o', 'event_start_id': 1, 'origin_x': 'test act', 'event_end_id': None, 'match': '', 'rank': '1.9', 'year': datetime.date(1975, 1, 1)}
+word_6 = {'notes': None, 'tid_old': None, 'id_old': 7191, 'name': 'prukao', 'type_id': 1, 'origin': 'pru(ci)+ka(kt)o', 'event_start_id': 3, 'origin_x': 'test act', 'event_end_id': None, 'match': '', 'rank': '1.9', 'year': datetime.date(1975, 1, 1)}
 words = [word_1, word_2, word_3, word_4, word_5, word_6]
 
 # ===== DEFINITIONS ============================================================

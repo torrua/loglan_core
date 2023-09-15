@@ -8,7 +8,7 @@ class Word(BaseWord, AddonWordGetter):
 
 
 @pytest.mark.usefixtures("db_session")
-class TestWord:
+class TestWordGetter:
 
     def test_by_name(self, db_session):
         kakto: Word = Word.by_name(db_session, 'kakto').first()

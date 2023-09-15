@@ -54,6 +54,14 @@
 <dd>
 <div class="desc"></div>
 </dd>
+<dt id="loglan_core.definition.BaseDefinition.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.definition.BaseDefinition.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 </dl>
 <h3>Static methods</h3>
 <dl>
@@ -79,11 +87,11 @@
 </dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_core.definition.BaseDefinition.body"><code class="name">var <span class="ident">body</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.body"><code class="name">var <span class="ident">body</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.case_tags"><code class="name">var <span class="ident">case_tags</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.case_tags"><code class="name">var <span class="ident">case_tags</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -93,11 +101,11 @@
 <h2 id="returns">Returns</h2>
 <p>String with grammar data like (3v) or (2n)</p></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.grammar_code"><code class="name">var <span class="ident">grammar_code</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.grammar_code"><code class="name">var <span class="ident">grammar_code</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -109,19 +117,19 @@
 <dd>
 <div class="desc"><p>Returns:</p></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.language"><code class="name">var <span class="ident">language</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.language"><code class="name">var <span class="ident">language</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.notes"><code class="name">var <span class="ident">notes</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.notes"><code class="name">var <span class="ident">notes</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.position"><code class="name">var <span class="ident">position</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.position"><code class="name">var <span class="ident">position</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.slots"><code class="name">var <span class="ident">slots</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.slots"><code class="name">var <span class="ident">slots</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -129,11 +137,11 @@
 <dd>
 <div class="desc"><p>Returns:</p></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.usage"><code class="name">var <span class="ident">usage</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.usage"><code class="name">var <span class="ident">usage</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.definition.BaseDefinition.word_id"><code class="name">var <span class="ident">word_id</span></code></dt>
+<dt id="loglan_core.definition.BaseDefinition.word_id"><code class="name">var <span class="ident">word_id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -147,6 +155,7 @@
 <li><code><a title="loglan_core.base.BaseModel.attributes_extended" href="base.html#loglan_core.base.BaseModel.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.export" href="base.html#loglan_core.base.BaseModel.export">export</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
@@ -184,8 +193,10 @@
 <li><code><a title="loglan_core.definition.BaseDefinition.keys" href="#loglan_core.definition.BaseDefinition.keys">keys</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.keys_query" href="#loglan_core.definition.BaseDefinition.keys_query">keys_query</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.language" href="#loglan_core.definition.BaseDefinition.language">language</a></code></li>
+<li><code><a title="loglan_core.definition.BaseDefinition.metadata" href="#loglan_core.definition.BaseDefinition.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.notes" href="#loglan_core.definition.BaseDefinition.notes">notes</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.position" href="#loglan_core.definition.BaseDefinition.position">position</a></code></li>
+<li><code><a title="loglan_core.definition.BaseDefinition.registry" href="#loglan_core.definition.BaseDefinition.registry">registry</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.slots" href="#loglan_core.definition.BaseDefinition.slots">slots</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.source_word" href="#loglan_core.definition.BaseDefinition.source_word">source_word</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.usage" href="#loglan_core.definition.BaseDefinition.usage">usage</a></code></li>

@@ -56,9 +56,20 @@
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
 <li>sqlalchemy.orm.decl_api.Base</li>
 </ul>
+<h3>Class variables</h3>
+<dl>
+<dt id="loglan_core.author.BaseAuthor.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.author.BaseAuthor.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+</dl>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_core.author.BaseAuthor.abbreviation"><code class="name">var <span class="ident">abbreviation</span></code></dt>
+<dt id="loglan_core.author.BaseAuthor.abbreviation"><code class="name">var <span class="ident">abbreviation</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Author's abbreviation (used in the LOD dictionary)</em><br>
 <strong>str</strong> : max_length=64, nullable=False, unique=True</p>
@@ -72,7 +83,7 @@
 <div class="desc"><p><em>Relationship query for getting a list of words coined by this author</em>
 <strong>query</strong> : Optional[List[BaseWord]]</p></div>
 </dd>
-<dt id="loglan_core.author.BaseAuthor.full_name"><code class="name">var <span class="ident">full_name</span></code></dt>
+<dt id="loglan_core.author.BaseAuthor.full_name"><code class="name">var <span class="ident">full_name</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Author's full name (if exists)</em><br>
 <strong>str</strong> : max_length=64, nullable=True, unique=False</p>
@@ -81,11 +92,11 @@
 <p>James Cooke Brown, Loglan 4&amp;5</p>
 </blockquote></div>
 </dd>
-<dt id="loglan_core.author.BaseAuthor.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dt id="loglan_core.author.BaseAuthor.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.author.BaseAuthor.notes"><code class="name">var <span class="ident">notes</span></code></dt>
+<dt id="loglan_core.author.BaseAuthor.notes"><code class="name">var <span class="ident">notes</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Any additional information about author</em><br>
 <strong>str</strong> : max_length=128, nullable=True, unique=False</p></div>
@@ -100,6 +111,7 @@
 <li><code><a title="loglan_core.base.BaseModel.attributes_extended" href="base.html#loglan_core.base.BaseModel.attributes_extended">attributes_extended</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.export" href="base.html#loglan_core.base.BaseModel.export">export</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
@@ -125,12 +137,14 @@
 <ul>
 <li>
 <h4><code><a title="loglan_core.author.BaseAuthor" href="#loglan_core.author.BaseAuthor">BaseAuthor</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="loglan_core.author.BaseAuthor.abbreviation" href="#loglan_core.author.BaseAuthor.abbreviation">abbreviation</a></code></li>
 <li><code><a title="loglan_core.author.BaseAuthor.contribution" href="#loglan_core.author.BaseAuthor.contribution">contribution</a></code></li>
 <li><code><a title="loglan_core.author.BaseAuthor.full_name" href="#loglan_core.author.BaseAuthor.full_name">full_name</a></code></li>
 <li><code><a title="loglan_core.author.BaseAuthor.id" href="#loglan_core.author.BaseAuthor.id">id</a></code></li>
+<li><code><a title="loglan_core.author.BaseAuthor.metadata" href="#loglan_core.author.BaseAuthor.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.author.BaseAuthor.notes" href="#loglan_core.author.BaseAuthor.notes">notes</a></code></li>
+<li><code><a title="loglan_core.author.BaseAuthor.registry" href="#loglan_core.author.BaseAuthor.registry">registry</a></code></li>
 </ul>
 </li>
 </ul>
