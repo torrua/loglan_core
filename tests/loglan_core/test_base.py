@@ -10,6 +10,10 @@ class TestBase:
         third_word: Word = Word.get_by_id(db_session, 3)
         assert third_word.id == 3
 
+    def test_get_all(self, db_session):
+        words = Word.get_all(db_session)
+        assert len(words) == 13
+
     def test_export(self, db_session):
             kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
             assert kakto.export() == {
