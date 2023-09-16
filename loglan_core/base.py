@@ -7,11 +7,11 @@ from datetime import datetime
 from typing import Set
 
 from sqlalchemy import Column, TIMESTAMP, func, Integer
-from sqlalchemy.orm import declarative_base, Session
-Base = declarative_base()
+from sqlalchemy.orm import Session
+from sqlalchemy.orm import DeclarativeBase
 
 
-class BaseModel(Base):
+class BaseModel(DeclarativeBase):
     """
     Init class for common methods
     """

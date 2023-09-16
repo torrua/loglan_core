@@ -3,7 +3,7 @@ import pytest
 
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, Session
-from loglan_core.base import Base
+from loglan_core.base import BaseModel as Base
 from loglan_core import Syllable, Setting
 
 from loglan_core.connect_tables import t_connect_words, t_connect_authors, t_connect_keys
