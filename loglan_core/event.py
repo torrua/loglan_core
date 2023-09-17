@@ -6,11 +6,14 @@ This module contains a basic Event Model
 """
 from __future__ import annotations
 
-from sqlalchemy import Column, String, Date, Text
+import datetime
+
+from sqlalchemy import Column, String, Text
 from sqlalchemy import select
 from sqlalchemy.orm import relationship, Session
+from sqlalchemy.orm import Mapped, mapped_column
 
-from loglan_core.base import BaseModel
+from loglan_core.base import BaseModel, str_016, str_064
 from loglan_core.table_names import T_NAME_EVENTS
 
 __pdoc__ = {
@@ -45,19 +48,19 @@ class BaseEvent(BaseModel):
         self.annotation = annotation
         self.suffix = suffix
 
-    date = Column(Date, nullable=False, unique=False)
+    date: Mapped[datetime.date] = mapped_column(nullable=False)
     """*Event's starting day*  
         **dateime.date** : nullable=False, unique=False"""
-    name = Column(String(64), nullable=False, unique=False)
+    name: Mapped[str_064] = mapped_column(nullable=False)
     """*Event's short name*  
         **str** : max_length=64, nullable=False, unique=False"""
-    definition = Column(Text, nullable=False, unique=False)
-    """*Event's definition*  
+    definition: Mapped[str] = mapped_column(Text, nullable=False)
+    """*Event's definition*
         **str** : nullable=False, unique=False"""
-    annotation = Column(String(16), nullable=False, unique=False)
+    annotation: Mapped[str_016] = mapped_column(nullable=False)
     """*Event's annotation (displayed in old format dictionary HTML file)*  
         **str** : max_length=16, nullable=False, unique=False"""
-    suffix = Column(String(16), nullable=False, unique=False)
+    suffix: Mapped[str_016] = mapped_column(nullable=False)
     """*Event's suffix (used to create filename when exporting HTML file)*  
         **str** : max_length=16, nullable=False, unique=False"""
 

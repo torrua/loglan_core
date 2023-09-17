@@ -12,8 +12,9 @@ from sqlalchemy.orm.session import Session
 from loglan_core.table_names import T_NAME_WORDS, T_NAME_DEFINITIONS
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.key import BaseKey
-from loglan_core.base import BaseModel
-
+from loglan_core.base import BaseModel, str_008, str_016, str_064, str_255
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 __pdoc__ = {
     'BaseDefinition.created': False, 'BaseDefinition.updated': False,
@@ -39,17 +40,17 @@ class BaseDefinition(BaseModel):
         self.language = language
         self.notes = notes
 
-    word_id = Column(Integer, ForeignKey(f'{T_NAME_WORDS}.id'), nullable=False)
-    position = Column(Integer, nullable=False)
-    usage = Column(String(64))
-    grammar_code = Column(String(8))
-    slots = Column(Integer)
-    case_tags = Column(String(16))
-    body = Column(Text, nullable=False)
-    language = Column(String(16))
-    notes = Column(String(255))
+    word_id: Mapped[int] = mapped_column(ForeignKey(f'{T_NAME_WORDS}.id'), nullable=False)
+    position: Mapped[int] = mapped_column(nullable=False)
+    body: Mapped[str] = mapped_column(Text, nullable=False)
+    usage: Mapped[str_064 | None]
+    grammar_code: Mapped[str_008 | None ]
+    slots: Mapped[int | None]
+    case_tags: Mapped[str_016 | None]
+    language: Mapped[str_016 | None]
+    notes: Mapped[str_255 | None]
 
-    APPROVED_CASE_TAGS = ["B", "C", "D", "F", "G", "J", "K", "N", "P", "S", "V", ]
+    APPROVED_CASE_TAGS = ("B", "C", "D", "F", "G", "J", "K", "N", "P", "S", "V", )
     KEY_PATTERN = r"(?<=\«)(.+?)(?=\»)"
 
     _keys = relationship(

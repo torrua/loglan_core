@@ -3,16 +3,18 @@
 """
 This module contains a basic Author Model
 """
-
-from sqlalchemy import Column, String
+from typing import List
 from sqlalchemy.orm import relationship
 
-from loglan_core.base import BaseModel
+from loglan_core.base import BaseModel, str_064, str_128
 from loglan_core.connect_tables import t_connect_authors
 from loglan_core.table_names import T_NAME_AUTHORS
+from sqlalchemy.orm import Mapped
+from sqlalchemy.orm import mapped_column
 
 __pdoc__ = {
-    'BaseAuthor.created': False, 'BaseAuthor.updated': False,
+    "BaseAuthor.created": False,
+    "BaseAuthor.updated": False,
 }
 
 
@@ -44,14 +46,14 @@ class BaseAuthor(BaseModel):
         self.full_name = full_name
         self.notes = notes
 
-    abbreviation = Column(String(64), nullable=False, unique=True)
+    abbreviation: Mapped[str_064] = mapped_column(nullable=False, unique=True)
     """*Author's abbreviation (used in the LOD dictionary)*  
         **str** : max_length=64, nullable=False, unique=True
     Example:
         > JCB, L4
     """
 
-    full_name = Column(String(64), nullable=True, unique=False)
+    full_name: Mapped[str_064 | None]
     """
     *Author's full name (if exists)*  
         **str** : max_length=64, nullable=True, unique=False
@@ -59,13 +61,14 @@ class BaseAuthor(BaseModel):
         > James Cooke Brown, Loglan 4&5
     """
 
-    notes = Column(String(128), nullable=True, unique=False)
+    notes: Mapped[str_128 | None]
     """*Any additional information about author*  
         **str** : max_length=128, nullable=True, unique=False
     """
 
-    _contribution = relationship(
-        "BaseWord", back_populates="_authors", secondary=t_connect_authors)
+    _contribution: Mapped[List["BaseWord"]] = relationship(
+        back_populates="_authors", secondary=t_connect_authors
+    )
 
     @property
     def contribution(self):

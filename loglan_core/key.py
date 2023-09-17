@@ -3,10 +3,12 @@
 """
 This module contains a basic Key Model
 """
-from sqlalchemy import Column, String, UniqueConstraint
+from typing import List
+from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import relationship
+from sqlalchemy.orm import mapped_column, Mapped
 
-from loglan_core.base import BaseModel
+from loglan_core.base import BaseModel, str_016, str_064
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.table_names import T_NAME_KEYS
 
@@ -50,16 +52,15 @@ class BaseKey(BaseModel):
     def __repr__(self):
         return f"<{self.__class__.__name__} '{self.word}' ({self.language})>"
 
-    word = Column(String(64), nullable=False, unique=False)
+    word: Mapped[str_064] = mapped_column(nullable=False)
     """*Key's vernacular word*  
         **str** : max_length=64, nullable=False, unique=False  
     It is non-unique, as words can be the same in spelling in different languages"""
-    language = Column(String(16), nullable=False, unique=False)
+    language: Mapped[str_016] = mapped_column(nullable=False)
     """*Key's language*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    _definitions = relationship(
-        "BaseDefinition", secondary=t_connect_keys, lazy='dynamic', back_populates="_keys")
+    _definitions: Mapped[List["BaseDefinition"]] = relationship(secondary=t_connect_keys, lazy='dynamic', back_populates="_keys")
 
     @property
     def definitions_query(self):

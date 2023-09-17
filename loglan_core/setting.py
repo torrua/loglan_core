@@ -6,8 +6,8 @@ This module contains a basic Setting Model
 from datetime import datetime
 
 from sqlalchemy import Column, String, Integer, DateTime
-
-from loglan_core.base import BaseModel
+from sqlalchemy.orm import Mapped, mapped_column
+from loglan_core.base import BaseModel, str_016
 from loglan_core.table_names import T_NAME_SETTINGS
 
 __pdoc__ = {
@@ -37,15 +37,15 @@ class BaseSetting(BaseModel):
         self.last_word_id = last_word_id
         self.date = date
 
-    date = Column(DateTime, nullable=True, unique=False)
+    date: Mapped[datetime | None]
     """*Last modified date*  
         **dateime.datetime** : nullable=True, unique=False"""
-    db_version = Column(Integer, nullable=False, unique=False)
+    db_version: Mapped[int] = mapped_column(nullable=False)
     """*Database version (for old application)*  
         **int** : nullable=False, unique=False"""
-    last_word_id = Column(Integer, nullable=False, unique=False)
+    last_word_id: Mapped[int] = mapped_column(nullable=False)
     """*ID number of the last word in DB*  
             **int** : nullable=False, unique=False"""
-    db_release = Column(String(16), nullable=False)
+    db_release: Mapped[str_016] = mapped_column(nullable=False)
     """*Database release (for new application)*  
             **str** : max_length=16, nullable=False, unique=True"""

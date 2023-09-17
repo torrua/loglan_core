@@ -5,21 +5,42 @@ Initial common functions for LOD Model Classes
 """
 from datetime import datetime
 from typing import Set
+from typing_extensions import Annotated
 
 from sqlalchemy import Column, TIMESTAMP, func, Integer
 from sqlalchemy.orm import Session
-from sqlalchemy.orm import DeclarativeBase
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy import String
+from sqlalchemy.orm import registry
 
+str_008 = Annotated[str, 8]
+str_016 = Annotated[str, 16]
+str_032 = Annotated[str, 32]
+str_064 = Annotated[str, 64]
+str_128 = Annotated[str, 128]
+str_255 = Annotated[str, 255]
 
 class BaseModel(DeclarativeBase):
+
+    registry = registry(
+        type_annotation_map={
+            str_008: String(8),
+            str_016: String(16),
+            str_032: String(32),
+            str_064: String(64),
+            str_128: String(128),
+            str_255: String(255),
+        }
+    )
+
     """
     Init class for common methods
     """
     __abstract__ = True
 
-    id = Column(Integer, primary_key=True)
-    created = Column(TIMESTAMP, default=datetime.now(), nullable=False)
-    updated = Column(TIMESTAMP, onupdate=func.now())
+    id: Mapped[int] = mapped_column(primary_key=True)
+    created: Mapped[datetime] = mapped_column(default=datetime.now(), nullable=False)
+    updated: Mapped[datetime | None] = mapped_column(onupdate=func.now())
 
     @classmethod
     def get_by_id(cls, session: Session, cid: int):

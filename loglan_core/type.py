@@ -3,14 +3,12 @@
 """
 This module contains a basic Type Model
 """
-from typing import Union, List
-
-from sqlalchemy import Column, String, Boolean
 from sqlalchemy import or_, select
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, mapped_column, Mapped
 from sqlalchemy.orm.session import Session
 
 from loglan_core.base import BaseModel
+from loglan_core.base import str_016, str_255
 from loglan_core.table_names import T_NAME_TYPES
 
 __pdoc__ = {
@@ -31,14 +29,13 @@ class BaseType(BaseModel):
         self.group = group
         self.description = description
 
-    type = Column(String(16), nullable=False)  # E.g. 2-Cpx, C-Prim
-    type_x = Column(String(16), nullable=False)  # E.g. Predicate, Predicate
-    group = Column(String(16))  # E.g. Cpx, Prim
-    parentable = Column(Boolean, nullable=False)  # E.g. True, False
-    description = Column(String(255))  # E.g. Two-term Complex, ...
+    type: Mapped[str_016] = mapped_column(nullable=False)  # E.g. 2-Cpx, C-Prim
+    type_x: Mapped[str_016] = mapped_column(nullable=False)  # E.g. Predicate, Predicate
+    group: Mapped[str_016 | None]  # E.g. Cpx, Prim
+    parentable: Mapped[bool] = mapped_column(nullable=False)  # E.g. True, False
+    description: Mapped[str_255 | None]  # E.g. Two-term Complex, ...
 
-    _words = relationship(
-        "BaseWord", back_populates="_type",
+    _words: Mapped[list["BaseWord"]] = relationship(back_populates="_type",
         foreign_keys="BaseWord.type_id")
 
     @property
@@ -51,7 +48,7 @@ class BaseType(BaseModel):
         return self._words
 
     @classmethod
-    def by(cls, session: Session, type_filter: Union[str, List[str]]):
+    def by(cls, session: Session, type_filter: str| list[str]):
         """
 
         Args:

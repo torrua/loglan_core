@@ -6,15 +6,16 @@ This module contains a basic Word Model
 
 from __future__ import annotations
 
-from datetime import datetime
-
-from sqlalchemy import Column, String, Integer, ForeignKey, Date, JSON
+import datetime
+from sqlalchemy import Column, Integer, ForeignKey, JSON
 from sqlalchemy import select
+from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm.session import Session
 
 from loglan_core.author import BaseAuthor
 from loglan_core.base import BaseModel
+from loglan_core.base import str_008, str_064, str_128
 from loglan_core.connect_tables import t_connect_authors, t_connect_words, t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
@@ -32,7 +33,9 @@ class BaseWord(BaseModel):
     __tablename__ = T_NAME_WORDS
 
     def __init__(
-            self, id_old: int, name: str, type_id: int,
+            self,
+            id_old: int | Mapped[int],
+            name: str, type_id: int,
             event_start_id: int, event_end_id: int = None, tid_old: int = None,
             origin: str = None, origin_x: str = None, match: str = None,
             rank: str = None, year: datetime.date = None, notes: dict = None, ):
@@ -60,36 +63,34 @@ class BaseWord(BaseModel):
                f"{' ID ' + str(self.id) + ' ' if self.id else ' '}" \
                f"'{self.name}'>"
 
-    id = Column(Integer, primary_key=True)
+    id: Mapped[int] = mapped_column(primary_key=True)
     """Word's internal ID number: Integer"""
 
-    name = Column(String(64), nullable=False)
-    origin = Column(String(128))
-    origin_x = Column(String(64))
-    match = Column(String(8))
-    rank = Column(String(8))
-    year = Column("year", Date)
-    notes = Column("notes", JSON)
+    name: Mapped[str_064] = mapped_column(nullable=False)
+    origin: Mapped[str_128 | None]
+    origin_x: Mapped[str_064 | None]
+    match: Mapped[str_008 | None]
+    rank: Mapped[str_008 | None]
+    year: Mapped[datetime.date | None]
+    notes: Mapped[dict[str, str] | None] = mapped_column(JSON)
 
     # Field for legacy database compatibility
-    id_old = Column(Integer, nullable=False)
-    tid_old = Column("TID_old", Integer)  # references
+    id_old: Mapped[int] = mapped_column(nullable=False)
+    tid_old: Mapped[int | None] = mapped_column("TID_old")  # references
 
     # Relationships
-    type_id = Column("type", ForeignKey(f'{T_NAME_TYPES}.id'), nullable=False)
+    type_id: Mapped[int] = mapped_column("type", ForeignKey(f'{T_NAME_TYPES}.id'), nullable=False)
 
-    _type = relationship(
-        BaseType.__name__, back_populates="_words")
+    _type: Mapped[BaseType] = relationship(back_populates="_words")
 
     @property
     def type(self) -> BaseType:
         return self._type
 
-    event_start_id = Column(
-        "event_start", ForeignKey(f'{T_NAME_EVENTS}.id'), nullable=False)
+    event_start_id: Mapped[int] = mapped_column(ForeignKey(f'{T_NAME_EVENTS}.id'), nullable=False)
 
-    _event_start = relationship(
-        BaseEvent.__name__, foreign_keys=[event_start_id],
+    _event_start: Mapped[BaseEvent] = relationship(
+        foreign_keys=[event_start_id],
         back_populates="_appeared_words")
 
     @property
@@ -101,10 +102,10 @@ class BaseWord(BaseModel):
         """
         return self._event_start
 
-    event_end_id = Column("event_end", ForeignKey(f'{T_NAME_EVENTS}.id'))
+    event_end_id: Mapped[int | None] = mapped_column(ForeignKey(f'{T_NAME_EVENTS}.id'))
 
-    _event_end = relationship(
-        BaseEvent.__name__, foreign_keys=[event_end_id],
+    _event_end: Mapped[BaseEvent | None] = relationship(
+        foreign_keys=[event_end_id],
         back_populates="_deprecated_words")
 
     @property
@@ -116,9 +117,12 @@ class BaseWord(BaseModel):
         """
         return self._event_end
 
-    _authors = relationship(
-        BaseAuthor.__name__, secondary=t_connect_authors,
-        back_populates="_contribution", lazy='dynamic', enable_typechecks=False)
+    _authors: Mapped[list[BaseAuthor]] = relationship(
+        secondary=t_connect_authors,
+        back_populates="_contribution",
+        lazy='dynamic',
+        enable_typechecks=False,  # TODO Check
+    )
 
     @property
     def authors_query(self):
@@ -133,8 +137,10 @@ class BaseWord(BaseModel):
         """
         return self._authors.all()
 
-    _definitions = relationship(
-        BaseDefinition.__name__, back_populates="_source_word", lazy='dynamic')
+    _definitions: Mapped[list[BaseDefinition]] = relationship(
+        back_populates="_source_word",
+        lazy='dynamic',
+    )
 
     @property
     def definitions_query(self):
@@ -150,8 +156,8 @@ class BaseWord(BaseModel):
         return self.definitions_query.order_by(BaseDefinition.position.asc()).all()
 
     # word's derivatives
-    _derivatives = relationship(
-        'BaseWord', secondary=t_connect_words,
+    _derivatives: Mapped[list[BaseWord]] = relationship(
+        secondary=t_connect_words,
         primaryjoin=(t_connect_words.c.parent_id == id),
         secondaryjoin=(t_connect_words.c.child_id == id),
         backref=backref('_parents', lazy='dynamic', enable_typechecks=False),
