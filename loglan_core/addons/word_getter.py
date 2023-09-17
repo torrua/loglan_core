@@ -13,6 +13,7 @@ from loglan_core.event import BaseEvent
 from loglan_core.key import BaseKey
 
 
+
 class AddonWordGetter:
     """AddonWordGetter model"""
 
@@ -79,14 +80,19 @@ class AddonWordGetter:
         Returns:
         """
 
-        request = add_to if add_to else session.query(cls)
+        request = add_to or session.query(cls)
         request = cls.by_event(session, event_id, request)
 
-        key = (BaseKey.word if isinstance(key, BaseKey) else str(key)).replace("*", "%")
-        request = request.join(BaseDefinition).join(t_connect_keys).join(BaseKey).filter(
-            BaseKey.word.like(key) if case_sensitive else BaseKey.word.ilike(key))
+        key = str(key) if isinstance(key, BaseKey) else str(key).replace("*", "%")
+        key_filter = BaseKey.word.like(key) if case_sensitive else BaseKey.word.ilike(key)
+        language_filter = BaseKey.language == language if language else True
 
-        if language:
-            request = request.filter(BaseKey.language == language)
-
-        return request.order_by(cls.name)
+        return (
+            request
+            .join(BaseDefinition)
+            .join(t_connect_keys)
+            .join(BaseKey)
+            .filter(key_filter)
+            .filter(language_filter)
+            .order_by(cls.name)
+        )
