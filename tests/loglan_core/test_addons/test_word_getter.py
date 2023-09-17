@@ -11,7 +11,7 @@ class Word(BaseWord, AddonWordGetter):
 class TestWordGetter:
 
     def test_by_name(self, db_session):
-        kakto: Word = Word.by_name(db_session, 'kakto').first()
+        kakto: Word = Word.by_name(session=db_session, name='kakto').first()
         assert str(kakto) == "<Word ID 2 'kakto'>"
 
         kakto: Word = Word.by_name(session=db_session, name='kakto', event_id=1).first()

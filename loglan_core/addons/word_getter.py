@@ -5,7 +5,7 @@ which makes it possible to get words by event, name or key
 """
 from typing import Union
 
-from sqlalchemy import or_
+from sqlalchemy import or_, and_, select
 from sqlalchemy.orm import Session
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
@@ -32,13 +32,14 @@ class AddonWordGetter:
         if not event_id:
             event_id = BaseEvent.latest(session).id
 
-        request = add_to if add_to else session.query(cls)
-        return cls._filter_event(event_id, request).order_by(cls.name)
+        request = add_to if add_to else select(cls)
+        return request.filter(cls._filter_event(event_id)).order_by(cls.name)
 
     @classmethod
-    def _filter_event(cls, event_id: int, add_to):
-        return add_to.filter(cls.event_start_id <= event_id) \
-            .filter(or_(cls.event_end_id > event_id, cls.event_end_id.is_(None)))
+    def _filter_event(cls, event_id: int):
+        start_id_condition = cls.event_start_id <= event_id
+        end_id_condition = or_(cls.event_end_id > event_id, cls.event_end_id.is_(None))
+        return and_(start_id_condition, end_id_condition)
 
     @classmethod
     def by_name(
