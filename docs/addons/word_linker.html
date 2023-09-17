@@ -5,8 +5,11 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>loglan_core.addons.word_linker API documentation</title>
-<meta name="description" content="This module contains an addon for basic Word Model,
-which makes it possible to specify the authors and derivatives of words" />
+<meta name="description" content="-*- coding: utf-8 -*-
+&#34;&#34;&#34;
+This module contains an addon for basic Word Model,
+which makes it possible to specify the authors and derivatives of words
+…" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,8 +26,88 @@ which makes it possible to specify the authors and derivatives of words" />
 <h1 class="title">Module <code>loglan_core.addons.word_linker</code></h1>
 </header>
 <section id="section-intro">
-<p>This module contains an addon for basic Word Model,
-which makes it possible to specify the authors and derivatives of words</p>
+<h1 id="-coding-utf-8-">-<em>- coding: utf-8 -</em>-</h1>
+<p>"""
+This module contains an addon for basic Word Model,
+which makes it possible to specify the authors and derivatives of words
+"""</p>
+<p>from typing import List</p>
+<p>from loglan_core.author import BaseAuthor
+from loglan_core.connect_tables import t_connect_words
+from loglan_core.word import BaseWord</p>
+<p>class AddonWordLinker:
+"""AddonWordLinker Model"""
+_contribution = None</p>
+<pre><code>def _is_parented(self, child: BaseWord) -&gt; bool:
+    """
+    Check, if this word is already added as a parent for this 'child'
+
+    Args:
+        child: BaseWord: BaseWord object to check
+
+    Returns: bool:
+
+    """
+    return bool(self._derivatives.filter(t_connect_words.c.child_id == child.id).count() &gt; 0)
+
+# mark_as_parent_for
+def add_child(self, child: BaseWord) -&gt; str:
+    """Add derivative for the source word
+    Get word from Used In and add relationship in database
+
+    Args:
+      child: BaseWord: Object to add
+
+    Returns:
+        String with the name of the added child (BaseWord.name)
+
+    """
+    # TODO add check if type of child is allowed to add to this word
+    if not self._is_parented(child):
+        self._derivatives.append(child)
+    return child.name
+
+# mark_as_parent_for
+def add_children(self, children: List[BaseWord]):
+    """Add derivatives for the source word
+    Get words from Used In and add relationships in database
+
+    Args:
+      children: List[BaseWord]:
+
+    Returns:
+      None
+
+    """
+    # TODO add check if type of child is allowed to add to this word
+    new_children = list(set(children) - set(self._derivatives))
+    _ = self._derivatives.extend(new_children) if new_children else None
+
+def add_author(self, author: BaseAuthor) -&gt; str:
+    """Connect Author object with BaseWord object
+
+    Args:
+      author: BaseAuthor:
+
+    Returns:
+
+    """
+    if not self.authors_query.filter(BaseAuthor.abbreviation == author.abbreviation).count() &gt; 0:
+        self.authors_query.append(author)
+    return author.abbreviation
+
+def add_authors(self, authors: List[BaseAuthor]):
+    """Connect Author objects with BaseWord object
+
+    Args:
+      authors: List[BaseAuthor]:
+
+    Returns:
+
+    """
+    new_authors = list(set(authors) - set(self.authors))
+    _ = self._authors.extend(new_authors) if new_authors else None
+</code></pre>
 </section>
 <section>
 </section>
@@ -38,7 +121,9 @@ which makes it possible to specify the authors and derivatives of words</p>
 <nav id="sidebar">
 <h1>Index</h1>
 <div class="toc">
-<ul></ul>
+<ul>
+<li><a href="#-coding-utf-8-">&ndash; coding: utf-8 &ndash;</a></li>
+</ul>
 </div>
 <ul id="index">
 <li><h3>Super-module</h3>

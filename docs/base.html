@@ -38,7 +38,107 @@
 <span>(</span><span>**kwargs: Any)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Init class for common methods</p>
+<div class="desc"><p>Base class used for declarative class definitions.</p>
+<p>The :class:<code>_orm.DeclarativeBase</code> allows for the creation of new
+declarative bases in such a way that is compatible with type checkers::</p>
+<pre><code>from sqlalchemy.orm import DeclarativeBase
+
+class Base(DeclarativeBase):
+    pass
+</code></pre>
+<p>The above <code>Base</code> class is now usable as the base for new declarative
+mappings.
+The superclass makes use of the <code>__init_subclass__()</code>
+method to set up new classes and metaclasses aren't used.</p>
+<p>When first used, the :class:<code>_orm.DeclarativeBase</code> class instantiates a new
+:class:<code>_orm.registry</code> to be used with the base, assuming one was not
+provided explicitly. The :class:<code>_orm.DeclarativeBase</code> class supports
+class-level attributes which act as parameters for the construction of this
+registry; such as to indicate a specific :class:<code>_schema.MetaData</code>
+collection as well as a specific value for
+:paramref:<code>_orm.registry.type_annotation_map</code>::</p>
+<pre><code>from typing_extensions import Annotated
+
+from sqlalchemy import BigInteger
+from sqlalchemy import MetaData
+from sqlalchemy import String
+from sqlalchemy.orm import DeclarativeBase
+
+bigint = Annotated[int, "bigint"]
+my_metadata = MetaData()
+
+class Base(DeclarativeBase):
+    metadata = my_metadata
+    type_annotation_map = {
+        str: String().with_variant(String(255), "mysql", "mariadb"),
+        bigint: BigInteger()
+    }
+</code></pre>
+<p>Class-level attributes which may be specified include:</p>
+<p>:param metadata: optional :class:<code>_schema.MetaData</code> collection.
+If a :class:<code>_orm.registry</code> is constructed automatically, this
+:class:<code>_schema.MetaData</code> collection will be used to construct it.
+Otherwise, the local :class:<code>_schema.MetaData</code> collection will supercede
+that used by an existing :class:<code>_orm.registry</code> passed using the
+:paramref:<code>_orm.DeclarativeBase.registry</code> parameter.
+:param type_annotation_map: optional type annotation map that will be
+passed to the :class:<code>_orm.registry</code> as
+:paramref:<code>_orm.registry.type_annotation_map</code>.
+:param registry: supply a pre-existing :class:<code>_orm.registry</code> directly.</p>
+<div class="admonition versionadded">
+<p class="admonition-title">Added in version:&ensp;2.0
+Added :class:<code>.DeclarativeBase</code>, so that declarative</p>
+<p>base classes may be constructed in such a way that is also recognized
+by :pep:<code>484</code> type checkers.
+As a result, :class:<code>.DeclarativeBase</code>
+and other subclassing-oriented APIs should be seen as
+superseding previous "class returned by a function" APIs, namely
+:func:<code>_orm.declarative_base</code> and :meth:<code>_orm.registry.generate_base</code>,
+where the base class returned cannot be recognized by type checkers
+without using plugins.</p>
+</div>
+<p><strong><strong>init</strong> behavior</strong></p>
+<p>In a plain Python class, the base-most <code>__init__()</code> method in the class
+hierarchy is <code>object.__init__()</code>, which accepts no arguments. However,
+when the :class:<code>_orm.DeclarativeBase</code> subclass is first declared, the
+class is given an <code>__init__()</code> method that links to the
+:paramref:<code>_orm.registry.constructor</code> constructor function, if no
+<code>__init__()</code> method is already present; this is the usual declarative
+constructor that will assign keyword arguments as attributes on the
+instance, assuming those attributes are established at the class level
+(i.e. are mapped, or are linked to a descriptor). This constructor is
+<strong>never accessed by a mapped class without being called explicitly via
+super()</strong>, as mapped classes are themselves given an <code>__init__()</code> method
+directly which calls :paramref:<code>_orm.registry.constructor</code>, so in the
+default case works independently of what the base-most <code>__init__()</code>
+method does.</p>
+<div class="admonition versionchanged">
+<p class="admonition-title">Changed in version:&ensp;2.0.1
+:class:<code>_orm.DeclarativeBase</code> has a default</p>
+<p>constructor that links to :paramref:<code>_orm.registry.constructor</code> by
+default, so that calls to <code>super().__init__()</code> can access this
+constructor. Previously, due to an implementation mistake, this default
+constructor was missing, and calling <code>super().__init__()</code> would invoke
+<code>object.__init__()</code>.</p>
+</div>
+<p>The :class:<code>_orm.DeclarativeBase</code> subclass may also declare an explicit
+<code>__init__()</code> method which will replace the use of the
+:paramref:<code>_orm.registry.constructor</code> function at this level::</p>
+<pre><code>class Base(DeclarativeBase):
+    def __init__(self, id=None):
+        self.id = id
+</code></pre>
+<p>Mapped classes still will not invoke this constructor implicitly; it
+remains only accessible by calling <code>super().__init__()</code>::</p>
+<pre><code>class MyClass(Base):
+    def __init__(self, id=None, name=None):
+        self.name = name
+        super().__init__(id=id)
+</code></pre>
+<p>Note that this is a different behavior from what functions like the legacy
+:func:<code>_orm.declarative_base</code> would do; the base created by those functions
+would always install :paramref:<code>_orm.registry.constructor</code> for
+<code>__init__()</code>.</p>
 <p>A simple constructor that allows initialization from kwargs.</p>
 <p>Sets attributes on the constructed instance using the names and
 values in <code>kwargs</code>.</p>
@@ -47,7 +147,9 @@ attributes of the instance's class are allowed. These could be,
 for example, any mapped columns or relationships.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li>sqlalchemy.orm.decl_api.Base</li>
+<li>sqlalchemy.orm.decl_api.DeclarativeBase</li>
+<li>sqlalchemy.inspection.Inspectable</li>
+<li>typing.Generic</li>
 </ul>
 <h3>Subclasses</h3>
 <ul class="hlist">
@@ -63,23 +165,23 @@ for example, any mapped columns or relationships.</p></div>
 </ul>
 <h3>Class variables</h3>
 <dl>
-<dt id="loglan_core.base.BaseModel.created"><code class="name">var <span class="ident">created</span></code></dt>
+<dt id="loglan_core.base.BaseModel.created"><code class="name">var <span class="ident">created</span> : sqlalchemy.orm.base.Mapped[datetime.datetime]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.base.BaseModel.id"><code class="name">var <span class="ident">id</span></code></dt>
+<dt id="loglan_core.base.BaseModel.id"><code class="name">var <span class="ident">id</span> : sqlalchemy.orm.base.Mapped[int]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.base.BaseModel.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
+<dt id="loglan_core.base.BaseModel.metadata"><code class="name">var <span class="ident">metadata</span></code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
-<dt id="loglan_core.base.BaseModel.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
+<dt id="loglan_core.base.BaseModel.registry"><code class="name">var <span class="ident">registry</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Init class for common methods</p></div>
 </dd>
-<dt id="loglan_core.base.BaseModel.updated"><code class="name">var <span class="ident">updated</span></code></dt>
+<dt id="loglan_core.base.BaseModel.updated"><code class="name">var <span class="ident">updated</span> : sqlalchemy.orm.base.Mapped[datetime.datetime | None]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>

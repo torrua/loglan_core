@@ -53,19 +53,10 @@ identified ones that the parser did not recognize as words',
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
-<li>sqlalchemy.orm.decl_api.Base</li>
+<li>sqlalchemy.orm.decl_api.DeclarativeBase</li>
+<li>sqlalchemy.inspection.Inspectable</li>
+<li>typing.Generic</li>
 </ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="loglan_core.event.BaseEvent.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_core.event.BaseEvent.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.event.BaseEvent.latest"><code class="name flex">
@@ -94,7 +85,7 @@ identified ones that the parser did not recognize as words',
 </dd>
 <dt id="loglan_core.event.BaseEvent.definition"><code class="name">var <span class="ident">definition</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
-<div class="desc"><p><em>Event's definition</em><br>
+<div class="desc"><p><em>Event's definition</em>
 <strong>str</strong> : nullable=False, unique=False</p></div>
 </dd>
 <dt id="loglan_core.event.BaseEvent.deprecated_words"><code class="name">var <span class="ident">deprecated_words</span></code></dt>
@@ -129,6 +120,7 @@ identified ones that the parser did not recognize as words',
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>
@@ -160,9 +152,7 @@ identified ones that the parser did not recognize as words',
 <li><code><a title="loglan_core.event.BaseEvent.deprecated_words" href="#loglan_core.event.BaseEvent.deprecated_words">deprecated_words</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.id" href="#loglan_core.event.BaseEvent.id">id</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.latest" href="#loglan_core.event.BaseEvent.latest">latest</a></code></li>
-<li><code><a title="loglan_core.event.BaseEvent.metadata" href="#loglan_core.event.BaseEvent.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.name" href="#loglan_core.event.BaseEvent.name">name</a></code></li>
-<li><code><a title="loglan_core.event.BaseEvent.registry" href="#loglan_core.event.BaseEvent.registry">registry</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.suffix" href="#loglan_core.event.BaseEvent.suffix">suffix</a></code></li>
 </ul>
 </li>

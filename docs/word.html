@@ -42,19 +42,10 @@
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
-<li>sqlalchemy.orm.decl_api.Base</li>
+<li>sqlalchemy.orm.decl_api.DeclarativeBase</li>
+<li>sqlalchemy.inspection.Inspectable</li>
+<li>typing.Generic</li>
 </ul>
-<h3>Class variables</h3>
-<dl>
-<dt id="loglan_core.word.BaseWord.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_core.word.BaseWord.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="loglan_core.word.BaseWord.affixes"><code class="name">var <span class="ident">affixes</span></code></dt>
@@ -226,6 +217,7 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>
@@ -268,7 +260,6 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 <li><code><a title="loglan_core.word.BaseWord.keys" href="#loglan_core.word.BaseWord.keys">keys</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.keys_query" href="#loglan_core.word.BaseWord.keys_query">keys_query</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.match" href="#loglan_core.word.BaseWord.match">match</a></code></li>
-<li><code><a title="loglan_core.word.BaseWord.metadata" href="#loglan_core.word.BaseWord.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.name" href="#loglan_core.word.BaseWord.name">name</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.notes" href="#loglan_core.word.BaseWord.notes">notes</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.origin" href="#loglan_core.word.BaseWord.origin">origin</a></code></li>
@@ -276,7 +267,6 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 <li><code><a title="loglan_core.word.BaseWord.parents" href="#loglan_core.word.BaseWord.parents">parents</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.parents_query" href="#loglan_core.word.BaseWord.parents_query">parents_query</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.rank" href="#loglan_core.word.BaseWord.rank">rank</a></code></li>
-<li><code><a title="loglan_core.word.BaseWord.registry" href="#loglan_core.word.BaseWord.registry">registry</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.tid_old" href="#loglan_core.word.BaseWord.tid_old">tid_old</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.type" href="#loglan_core.word.BaseWord.type">type</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.type_id" href="#loglan_core.word.BaseWord.type_id">type_id</a></code></li>

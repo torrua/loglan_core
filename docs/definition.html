@@ -42,7 +42,9 @@
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
-<li>sqlalchemy.orm.decl_api.Base</li>
+<li>sqlalchemy.orm.decl_api.DeclarativeBase</li>
+<li>sqlalchemy.inspection.Inspectable</li>
+<li>typing.Generic</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -51,14 +53,6 @@
 <div class="desc"></div>
 </dd>
 <dt id="loglan_core.definition.BaseDefinition.KEY_PATTERN"><code class="name">var <span class="ident">KEY_PATTERN</span></code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_core.definition.BaseDefinition.metadata"><code class="name">var <span class="ident">metadata</span> : MetaData</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
-<dt id="loglan_core.definition.BaseDefinition.registry"><code class="name">var <span class="ident">registry</span> : RegistryType</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -158,6 +152,7 @@
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>
@@ -193,10 +188,8 @@
 <li><code><a title="loglan_core.definition.BaseDefinition.keys" href="#loglan_core.definition.BaseDefinition.keys">keys</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.keys_query" href="#loglan_core.definition.BaseDefinition.keys_query">keys_query</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.language" href="#loglan_core.definition.BaseDefinition.language">language</a></code></li>
-<li><code><a title="loglan_core.definition.BaseDefinition.metadata" href="#loglan_core.definition.BaseDefinition.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.notes" href="#loglan_core.definition.BaseDefinition.notes">notes</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.position" href="#loglan_core.definition.BaseDefinition.position">position</a></code></li>
-<li><code><a title="loglan_core.definition.BaseDefinition.registry" href="#loglan_core.definition.BaseDefinition.registry">registry</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.slots" href="#loglan_core.definition.BaseDefinition.slots">slots</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.source_word" href="#loglan_core.definition.BaseDefinition.source_word">source_word</a></code></li>
 <li><code><a title="loglan_core.definition.BaseDefinition.usage" href="#loglan_core.definition.BaseDefinition.usage">usage</a></code></li>
