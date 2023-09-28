@@ -1,9 +1,9 @@
 -r requirements-tests.txt
 
 mypy~=1.5.1
-pylint~=2.17.5
+pylint==2.17.6
 radon~=6.0.1
-sqlalchemy-stubs
+sqlalchemy2-stubs>=0.0.2a35
 wheel~=0.41.2
 setuptools~=68.2.2
 black~=23.9.1
