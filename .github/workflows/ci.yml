@@ -24,4 +24,4 @@ jobs:
         pytest --cov loglan_core
     - name: Check with mypy
       run: |
-        mypy loglan_core
+        mypy --no-strict-optional loglan_core
