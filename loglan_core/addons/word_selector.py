@@ -64,10 +64,10 @@ class WordSelector(Select):  # pylint: disable=R0901
           event_id: int
         Returns: self object with filter applied
         """
-        event_id_filter = (
-            event_id
-            or select(func.max(BaseEvent.id)).scalar_subquery()  # pylint: disable=E1102
-        )
+        max_event_id = select(
+            func.max(BaseEvent.id)  # pylint: disable=E1102
+        ).scalar_subquery()
+        event_id_filter = event_id or max_event_id
 
         start_id_condition = self.class_.event_start_id <= event_id_filter
         end_id_condition = or_(
@@ -139,12 +139,13 @@ class WordSelector(Select):  # pylint: disable=R0901
         query = self.where(self.class_.id.in_(subquery))
         return query
 
-
     def cs_key_filter(self, key: str, case_sensitive: bool) -> BinaryExpression:
         """case sensitive name filter"""
         return (
-            BaseKey.word.op("GLOB")(key) if self.is_sqlite else BaseKey.word.like(key)
-        )  if case_sensitive else BaseKey.word.ilike(key)
+            (BaseKey.word.op("GLOB")(key) if self.is_sqlite else BaseKey.word.like(key))
+            if case_sensitive
+            else BaseKey.word.ilike(key)
+        )
 
     @order_by_name
     def by_type(
@@ -173,7 +174,9 @@ class WordSelector(Select):  # pylint: disable=R0901
 
         type_filters = self.type_filters(type_values)
 
-        return self if not type_filters else self.join(BaseType).where(and_(*type_filters))
+        return (
+            self if not type_filters else self.join(BaseType).where(and_(*type_filters))
+        )
 
     @staticmethod
     def type_filters(type_values: tuple) -> list[BinaryExpression]:

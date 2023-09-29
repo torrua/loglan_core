@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-
+# pylint: disable=C0103
 """
 Initial common functions for LOD Model Classes
 """
@@ -7,7 +7,7 @@ from datetime import datetime
 from typing import Set
 from typing_extensions import Annotated
 
-from sqlalchemy import Column, TIMESTAMP, func, Integer
+from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String
@@ -20,7 +20,9 @@ str_064 = Annotated[str, 64]
 str_128 = Annotated[str, 128]
 str_255 = Annotated[str, 255]
 
+
 class BaseModel(DeclarativeBase):
+    """Declarative Base Model"""
 
     registry = registry(
         type_annotation_map={
@@ -33,14 +35,13 @@ class BaseModel(DeclarativeBase):
         }
     )
 
-    """
-    Init class for common methods
-    """
     __abstract__ = True
 
     id: Mapped[int] = mapped_column(primary_key=True)
     created: Mapped[datetime] = mapped_column(default=datetime.now(), nullable=False)
-    updated: Mapped[datetime | None] = mapped_column(onupdate=func.now())
+    updated: Mapped[datetime | None] = mapped_column(
+        onupdate=func.now()  # false-positive pylint: disable=E1102
+    )
 
     @classmethod
     def get_by_id(cls, session: Session, cid: int):
@@ -69,8 +70,10 @@ class BaseModel(DeclarativeBase):
 
         """
         return {
-            k: v for k, v in sorted(self.__dict__.items())
-            if not str(k).startswith("_") and k not in ["created", "updated"]}
+            k: v
+            for k, v in sorted(self.__dict__.items())
+            if not str(k).startswith("_") and k not in ["created", "updated"]
+        }
 
     @classmethod
     def attributes_all(cls) -> Set[str]:
@@ -124,4 +127,6 @@ class BaseModel(DeclarativeBase):
         Returns:
 
         """
-        return {column.name for column in cls.__table__.columns if not column.foreign_keys}
+        return {
+            column.name for column in cls.__table__.columns if not column.foreign_keys
+        }

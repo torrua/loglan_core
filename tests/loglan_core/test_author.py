@@ -4,7 +4,10 @@ from sqlalchemy import select
 
 @pytest.mark.usefixtures("db_session")
 class TestAuthor:
+    def test_repr(self, db_session):
+        author = db_session.query(Author).filter(Author.id == 1).first()
+        assert str(author) == '<BaseAuthor ID 1 L4>'
+
     def test_contribution(self, db_session):
-        stmt = select(Author).where(Author.id == 1)
-        author = db_session.execute(stmt).scalar()
+        author = db_session.query(Author).filter(Author.id == 1).first()
         assert len(author.contribution) == 4

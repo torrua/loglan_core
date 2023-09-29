@@ -10,7 +10,8 @@ from loglan_core.base import str_008, str_032
 from loglan_core.table_names import T_NAME_SYLLABLES
 
 __pdoc__ = {
-    'BaseSyllable.created': False, 'BaseSyllable.updated': False,
+    "BaseSyllable.created": False,
+    "BaseSyllable.updated": False,
 }
 
 
@@ -30,11 +31,26 @@ class BaseSyllable(BaseModel):
 
     __tablename__ = T_NAME_SYLLABLES
 
-    def __init__(self, name: str, type: str, allowed: bool = None):
+    def __init__(
+        self,
+        name: Mapped[str_008],
+        type: Mapped[str_032],  # pylint: disable=W0622
+        allowed: Mapped[bool] | None = None,
+    ):
         super().__init__()
         self.name = name
         self.type = type
         self.allowed = allowed
+
+    def __repr__(self):
+        """
+        Returns:
+        """
+        return (
+            f"<{self.__class__.__name__}"
+            f"{' ID ' + str(self.id) + ' ' if self.id else ' '}"
+            f"{self.name} ({self.type})>"
+        )
 
     name: Mapped[str_008] = mapped_column(nullable=False)
     """*Syllable itself*  

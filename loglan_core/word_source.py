@@ -8,6 +8,7 @@ from loglan_core.table_names import T_NAME_WORD_SOURCES
 
 class BaseWordSource:
     """Word Source from BaseWord.origin for Prims"""
+
     __tablename__ = T_NAME_WORD_SOURCES
     PATTERN_SOURCE = r"\d+\/\d+\w"
 
@@ -19,18 +20,22 @@ class BaseWordSource:
         "S": "Spanish",
         "F": "French",
         "J": "Japanese",
-        "G": "German", }
+        "G": "German",
+    }
 
     def __init__(self, source):
-
         compatibility_search = re.search(self.PATTERN_SOURCE, source)
-        self.coincidence, self.length, self.language = self.parse_source(compatibility_search)
+        self.coincidence, self.length, self.language = self.parse_source(
+            compatibility_search
+        )
 
         transcription_search = re.search(rf"(?!{self.PATTERN_SOURCE}) .+", source)
-        self.transcription = str(transcription_search[0]).strip() if transcription_search else None
+        self.transcription = (
+            str(transcription_search[0]).strip() if transcription_search else None
+        )
 
     @staticmethod
-    def parse_source(compatibility_search) -> tuple:
+    def parse_source(compatibility_search) -> tuple[int, int, str] | tuple[None, None, None]:
         """
 
         Args:
@@ -40,9 +45,9 @@ class BaseWordSource:
 
         """
         if compatibility_search:
-            coincidence = int(compatibility_search[0][:-1].split("/")[0])
-            length = int(compatibility_search[0][:-1].split("/")[1])
-            language = compatibility_search[0][-1:]
+            coincidence: int = int(compatibility_search[0][:-1].split("/")[0])
+            length: int = int(compatibility_search[0][:-1].split("/")[1])
+            language: str = compatibility_search[0][-1:]
             return coincidence, length, language
         return None, None, None  # TODO Raise Exception
 

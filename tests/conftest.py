@@ -1,20 +1,17 @@
-
 import pytest
-
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, Session
-from loglan_core.base import BaseModel as Base
+
 from loglan_core import Syllable, Setting
-
+from loglan_core.base import BaseModel as Base
 from loglan_core.connect_tables import t_connect_words, t_connect_authors, t_connect_keys
-
-from tests.data import connect_words, connect_authors, connect_keys
-from tests.data import Word, words, changed_words
-from tests.data import Type, types
-from tests.data import Event, events
 from tests.data import Author, authors
 from tests.data import Definition, definitions
+from tests.data import Event, events
 from tests.data import Key, keys, un_keys
+from tests.data import Type, types
+from tests.data import Word, words, changed_words
+from tests.data import connect_words, connect_authors, connect_keys
 from tests.data import syllables, settings
 
 
@@ -81,5 +78,3 @@ def create_db(session):
         ins = t_connect_keys.insert().values(KID=key_id, DID=definition_id)
         session.execute(ins)
         session.commit()
-
-

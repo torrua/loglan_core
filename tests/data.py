@@ -2,7 +2,7 @@
 """Data for test_models"""
 
 import datetime
-from loglan_core import Word, Definition, Type, Event, Author, Key
+from loglan_core import Word, Definition, Type, Event, Author, Key, Setting
 
 # ===== KEYS ===================================================================
 key_1 = {'word': 'examine', 'language': 'en', }
@@ -119,4 +119,13 @@ other_word_1 = {'tid_old': None, 'name': 'cirdui', 'origin': 'cir(na)+du(vr)i', 
 other_word_2 = {'notes': None, 'id': 2, 'tid_old': None, 'id_old': 3880, 'name': 'kakto', 'type_id': 9, 'origin': 'R akt | 4/4S | 3/3F acte | 2/3E act | 2/3H kam', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '56%', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
 other_author_1 = {'full_name': 'Robert McIvor', 'id': 36, 'notes': '', 'abbreviation': 'RAM'}
 
-all_objects = [(Key, keys), (Event, events), (Author, authors), (Type, types), (Word, words), (Definition, definitions)]
+
+all_objects = [
+    (Key, keys),
+    (Event, events),
+    (Author, authors),
+    (Type, types),
+    (Word, words),
+    (Definition, definitions),
+    (Setting, settings),
+]

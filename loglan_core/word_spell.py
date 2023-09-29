@@ -8,4 +8,5 @@ from loglan_core.base import BaseModel
 
 class BaseWordSpell(BaseModel):
     """BaseWordSpell model"""
+
     __tablename__ = T_NAME_WORD_SPELLS

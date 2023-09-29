@@ -14,5 +14,5 @@ class TestEvent:
         assert len(event_5.appeared_words) == 3
 
     def test_latest(self, db_session):
-        latest_event: Event = Event.latest(db_session)
+        latest_event: Event = db_session.execute(Event.latest()).scalar()
         assert latest_event.id == 6

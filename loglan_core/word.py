@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0103
+
 """
 This module contains a basic Word Model
 """
@@ -7,16 +7,19 @@ This module contains a basic Word Model
 from __future__ import annotations
 
 import datetime
-from sqlalchemy import Column, Integer, ForeignKey, JSON
+from sqlalchemy import ForeignKey, JSON
 from sqlalchemy import select
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.orm.session import Session
 
 from loglan_core.author import BaseAuthor
 from loglan_core.base import BaseModel
 from loglan_core.base import str_008, str_064, str_128
-from loglan_core.connect_tables import t_connect_authors, t_connect_words, t_connect_keys
+from loglan_core.connect_tables import (
+    t_connect_authors,
+    t_connect_words,
+    t_connect_keys,
+)
 from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
 from loglan_core.key import BaseKey
@@ -24,22 +27,34 @@ from loglan_core.table_names import T_NAME_EVENTS, T_NAME_TYPES, T_NAME_WORDS
 from loglan_core.type import BaseType
 
 __pdoc__ = {
-    'BaseWord.created': False, 'BaseWord.updated': False,
+    "BaseWord.created": False,
+    "BaseWord.updated": False,
 }
 
 
 class BaseWord(BaseModel):
     """BaseWord model"""
+
     __tablename__ = T_NAME_WORDS
 
     def __init__(
-            self,
-            id_old: int | Mapped[int],
-            name: str, type_id: int,
-            event_start_id: int, event_end_id: int = None, tid_old: int = None,
-            origin: str = None, origin_x: str = None, match: str = None,
-            rank: str = None, year: datetime.date = None, notes: dict = None, ):
-
+        self,
+        id_old: Mapped[int],
+        name: Mapped[str_064],
+        type_id: Mapped[int],
+        event_start_id: Mapped[int],
+        event_end_id: Mapped[int] | None = None,
+        tid_old: Mapped[int] | None = None,
+        origin: Mapped[str_128] | None = None,
+        origin_x: Mapped[str_064] | None = None,
+        match: Mapped[str_008] | None = None,
+        rank: Mapped[str_008] | None = None,
+        year: Mapped[datetime.date] | None = None,
+        notes: Mapped[dict] | None = None,
+    ):
+        """
+        Returns:
+        """
         super().__init__()
 
         self.id_old = id_old
@@ -59,9 +74,14 @@ class BaseWord(BaseModel):
         self.notes = notes
 
     def __repr__(self):
-        return f"<{self.__class__.__name__}" \
-               f"{' ID ' + str(self.id) + ' ' if self.id else ' '}" \
-               f"'{self.name}'>"
+        """
+        Returns:
+        """
+        return (
+            f"<{self.__class__.__name__}"
+            f"{' ID ' + str(self.id) + ' ' if self.id else ' '}"
+            f"{self.name}>"
+        )
 
     id: Mapped[int] = mapped_column(primary_key=True)
     """Word's internal ID number: Integer"""
@@ -79,79 +99,86 @@ class BaseWord(BaseModel):
     tid_old: Mapped[int | None] = mapped_column("TID_old")  # references
 
     # Relationships
-    type_id: Mapped[int] = mapped_column("type", ForeignKey(f'{T_NAME_TYPES}.id'), nullable=False)
+    type_id: Mapped[int] = mapped_column(
+        "type", ForeignKey(f"{T_NAME_TYPES}.id"), nullable=False
+    )
 
     _type: Mapped[BaseType] = relationship(back_populates="_words")
 
     @property
     def type(self) -> BaseType:
+        """
+        Returns:
+        """
         return self._type
 
-    event_start_id: Mapped[int] = mapped_column(ForeignKey(f'{T_NAME_EVENTS}.id'), nullable=False)
+    event_start_id: Mapped[int] = mapped_column(
+        "event_start", ForeignKey(f"{T_NAME_EVENTS}.id"), nullable=False
+    )
 
     _event_start: Mapped[BaseEvent] = relationship(
-        foreign_keys=[event_start_id],
-        back_populates="_appeared_words")
+        foreign_keys=[event_start_id], back_populates="_appeared_words"
+    )
 
     @property
     def event_start(self) -> BaseEvent:
         """
-
         Returns:
-
         """
         return self._event_start
 
-    event_end_id: Mapped[int | None] = mapped_column(ForeignKey(f'{T_NAME_EVENTS}.id'))
+    event_end_id: Mapped[int | None] = mapped_column(
+        "event_end", ForeignKey(f"{T_NAME_EVENTS}.id")
+    )
 
     _event_end: Mapped[BaseEvent | None] = relationship(
-        foreign_keys=[event_end_id],
-        back_populates="_deprecated_words")
+        foreign_keys=[event_end_id], back_populates="_deprecated_words"
+    )
 
     @property
-    def event_end(self) -> BaseEvent:
+    def event_end(self) -> BaseEvent | None:
         """
-
         Returns:
-
         """
         return self._event_end
 
     _authors: Mapped[list[BaseAuthor]] = relationship(
         secondary=t_connect_authors,
         back_populates="_contribution",
-        lazy='dynamic',
-        enable_typechecks=False,  # TODO Check
+        lazy="dynamic",
+        enable_typechecks=False,
     )
 
     @property
     def authors_query(self):
+        """
+        Returns:
+        """
         return self._authors
 
     @property
     def authors(self) -> list[BaseAuthor]:
         """
-
         Returns:
-
         """
-        return self._authors.all()
+        return self.authors_query.all()
 
     _definitions: Mapped[list[BaseDefinition]] = relationship(
         back_populates="_source_word",
-        lazy='dynamic',
+        lazy="dynamic",
     )
 
     @property
     def definitions_query(self):
+        """
+        Returns:
+        """
         return self._definitions
 
     @property
     def definitions(self) -> list[BaseDefinition]:
         """
-
         Returns:
-
         """
         return self.definitions_query.order_by(BaseDefinition.position.asc()).all()
 
@@ -160,20 +187,32 @@ class BaseWord(BaseModel):
         secondary=t_connect_words,
         primaryjoin=(t_connect_words.c.parent_id == id),
         secondaryjoin=(t_connect_words.c.child_id == id),
-        backref=backref('_parents', lazy='dynamic', enable_typechecks=False),
-        lazy='dynamic', enable_typechecks=False)
+        backref=backref("_parents", lazy="dynamic", enable_typechecks=False),
+        lazy="dynamic",
+        enable_typechecks=False,
+    )
 
     @property
     def derivatives_query(self):
+        """
+        Returns:
+        """
         return self._derivatives
 
     @property
     def derivatives(self):
+        """
+        Returns:
+        """
         return self.derivatives_query.all()
 
     def derivatives_query_by(
-            self, word_type: str = None, word_type_x: str = None,
-            word_group: str = None, type_class=BaseType):
+        self,
+        word_type: str | None = None,
+        word_type_x: str | None = None,
+        word_group: str | None = None,
+        type_class=BaseType,
+    ):
         """Query to get all derivatives of the word, depending on its parameters
 
         Args:
@@ -194,13 +233,16 @@ class BaseWord(BaseModel):
         type_values = [
             (type_class.type, word_type),
             (type_class.type_x, word_type_x),
-            (type_class.group, word_group), ]
+            (type_class.group, word_group),
+        ]
 
         type_filters = [i[0] == i[1] for i in type_values if i[1]]
 
-        return self.derivatives_query.join(type_class)\
-            .filter(self.id == t_connect_words.c.parent_id, *type_filters)\
+        return (
+            self.derivatives_query.join(type_class)
+            .filter(self.id == t_connect_words.c.parent_id, *type_filters)
             .order_by(type(self).name.asc())
+        )
 
     @property
     def affixes(self):
@@ -231,10 +273,13 @@ class BaseWord(BaseModel):
         Returns:
             BaseQuery
         """
-        return self._parents
+        return self._parents  # pylint: disable=E1101
 
     @property
     def parents(self):
+        """
+        Returns:
+        """
         return self.parents_query.all()
 
     @property
@@ -246,11 +291,18 @@ class BaseWord(BaseModel):
 
         Returns:
         """
-        return select(BaseKey).\
-            join(t_connect_keys).\
-            join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID).\
-            join(BaseWord, BaseWord.id == BaseDefinition.word_id).\
-            filter(BaseWord.id == self.id).order_by(BaseKey.word.asc())
+        return (
+            select(BaseKey)
+            .join(t_connect_keys)
+            .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
+            .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
+            .filter(BaseWord.id == self.id)
+            .order_by(BaseKey.word.asc())
+        )
 
-    def keys(self, session: Session) -> list:
-        return session.execute(self.keys_query).scalars().all()
+    @property
+    def keys(self) -> list[BaseKey]:
+        """
+        Returns:
+        """
+        return sorted(set(key for d in self.definitions for key in d.keys_query.all()))

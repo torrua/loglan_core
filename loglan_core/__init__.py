@@ -9,7 +9,11 @@ __email__ = "torrua@gmail.com"
 
 
 from loglan_core.author import BaseAuthor as Author
-from loglan_core.connect_tables import t_connect_authors, t_connect_words, t_connect_keys
+from loglan_core.connect_tables import (
+    t_connect_authors,
+    t_connect_words,
+    t_connect_keys,
+)
 from loglan_core.definition import BaseDefinition as Definition
 from loglan_core.event import BaseEvent as Event
 from loglan_core.key import BaseKey as Key

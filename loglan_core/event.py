@@ -8,16 +8,18 @@ from __future__ import annotations
 
 import datetime
 
-from sqlalchemy import Column, String, Text
-from sqlalchemy import select
-from sqlalchemy.orm import relationship, Session
+from sqlalchemy import Text
+from sqlalchemy import select, func
+from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.sql.selectable import Select
 
 from loglan_core.base import BaseModel, str_016, str_064
 from loglan_core.table_names import T_NAME_EVENTS
 
 __pdoc__ = {
-    'BaseEvent.created': False, 'BaseEvent.updated': False,
+    "BaseEvent.created": False,
+    "BaseEvent.updated": False,
 }
 
 
@@ -38,9 +40,17 @@ class BaseEvent(BaseModel):
     ```
     </p></details>
     """
+
     __tablename__ = T_NAME_EVENTS
 
-    def __init__(self, date, name, definition, annotation, suffix):
+    def __init__(
+        self,
+        date: Mapped[datetime.date],
+        name: Mapped[str_064],
+        definition: Mapped[str],
+        annotation: Mapped[str_016],
+        suffix: Mapped[str_016],
+    ):
         super().__init__()
         self.date = date
         self.name = name
@@ -64,16 +74,22 @@ class BaseEvent(BaseModel):
     """*Event's suffix (used to create filename when exporting HTML file)*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    _deprecated_words = relationship(
-        "BaseWord", back_populates="_event_end",
-        foreign_keys="BaseWord.event_end_id")
+    _deprecated_words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
+        "BaseWord",
+        back_populates="_event_end",
+        foreign_keys="BaseWord.event_end_id",
+        lazy="dynamic",
+    )
 
-    _appeared_words = relationship(
-        "BaseWord", back_populates="_event_start",
-        foreign_keys="BaseWord.event_start_id")
+    _appeared_words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
+        "BaseWord",
+        back_populates="_event_start",
+        foreign_keys="BaseWord.event_start_id",
+        lazy="dynamic",
+    )
 
     @property
-    def deprecated_words(self):
+    def deprecated_words_query(self):
         """
         *Relationship query for getting a list of words deprecated during this event*
 
@@ -82,7 +98,7 @@ class BaseEvent(BaseModel):
         return self._deprecated_words
 
     @property
-    def appeared_words(self):
+    def appeared_words_query(self):
         """
         *Relationship query for getting a list of words appeared during this event*
 
@@ -90,9 +106,30 @@ class BaseEvent(BaseModel):
 
         return self._appeared_words
 
+    @property
+    def deprecated_words(self) -> list["BaseWord"]:  # type: ignore
+        """
+        *Relationship query for getting a list of words deprecated during this event*
+
+        **query** : Optional[List[BaseWord]]"""
+
+        return self.deprecated_words_query.all()
+
+    @property
+    def appeared_words(self) -> list["BaseWord"]:  # type: ignore
+        """
+        *Relationship query for getting a list of words appeared during this event*
+
+        **query** : Optional[List[BaseWord]]"""
+
+        return self.appeared_words_query.all()
+
     @classmethod
-    def latest(cls, session: Session) -> BaseEvent:
+    def latest(cls) -> Select:
         """
         Gets the latest (current) `BaseEvent` from DB
         """
-        return session.execute(select(cls).order_by(cls.id.desc())).scalars().first()
+        event_max_id = select(
+            func.max(BaseEvent.id)  # false-positive pylint: disable=E1102
+        ).scalar_subquery()
+        return select(cls).filter(cls.id == event_max_id)

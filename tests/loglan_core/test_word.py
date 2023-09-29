@@ -7,7 +7,7 @@ class TestWord:
 
     def test_repr(self, db_session):
         kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
-        assert str(kakto) == "<BaseWord ID 2 'kakto'>"
+        assert str(kakto) == "<BaseWord ID 2 kakto>"
 
     def test_type(self, db_session):
         prukao: Word = db_session.query(Word).filter(Word.name == 'prukao').first()
@@ -78,9 +78,9 @@ class TestWord:
 
     def test_keys(self, db_session):
         kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
-        assert len(kakto.keys(db_session)) == 6
+        assert len(kakto.keys) == 5
 
         test: Key = db_session.query(Key).filter(Key.word == "act").first()
-        assert test in kakto.keys(db_session)
+        assert test in kakto.keys
 
 

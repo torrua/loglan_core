@@ -1,9 +1,7 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0303
 """
 This module contains a basic Key Model
 """
-from typing import List
 from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import mapped_column, Mapped
@@ -13,11 +11,13 @@ from loglan_core.connect_tables import t_connect_keys
 from loglan_core.table_names import T_NAME_KEYS
 
 __pdoc__ = {
-    'BaseKey.definitions':
-        """*Relationship query for getting a list of definitions related to this key*
+    "BaseKey.definitions": """
+    *Relationship query for getting a list of definitions related to this key*
 
     **query** : Optional[List[BaseDefinition]]""",
-    'BaseKey.created': False, 'BaseKey.updated': False, }
+    "BaseKey.created": False,
+    "BaseKey.updated": False,
+}
 
 
 class BaseKey(BaseModel):
@@ -40,9 +40,9 @@ class BaseKey(BaseModel):
     ```
     </p></details>
     """
+
     __tablename__ = T_NAME_KEYS
-    __table_args__ = (
-        UniqueConstraint('word', 'language', name='_word_language_uc'), )
+    __table_args__ = (UniqueConstraint("word", "language", name="_word_language_uc"),)
 
     def __init__(self, word, language):
         super().__init__()
@@ -50,7 +50,10 @@ class BaseKey(BaseModel):
         self.language = language
 
     def __repr__(self):
-        return f"<{self.__class__.__name__} '{self.word}' ({self.language})>"
+        return f"<{self.__class__.__name__} {self.id} '{self.word}' ({self.language})>"
+
+    def __lt__(self, other):
+        return (self.word, self.id) < (other.word, other.id)
 
     word: Mapped[str_064] = mapped_column(nullable=False)
     """*Key's vernacular word*  
@@ -60,22 +63,22 @@ class BaseKey(BaseModel):
     """*Key's language*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    _definitions: Mapped[List["BaseDefinition"]] = relationship(secondary=t_connect_keys, lazy='dynamic', back_populates="_keys")
+    _definitions: Mapped[list["BaseDefinition"]] = relationship(  # type: ignore
+        secondary=t_connect_keys,
+        back_populates="_keys",
+        lazy="dynamic",
+    )
 
     @property
     def definitions_query(self):
         """
-
         Returns:
-
         """
         return self._definitions
 
     @property
     def definitions(self):
         """
-
         Returns:
-
         """
         return self.definitions_query.all()
