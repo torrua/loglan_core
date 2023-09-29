@@ -40,7 +40,7 @@ class BaseModel(DeclarativeBase):
     id: Mapped[int] = mapped_column(primary_key=True)
     created: Mapped[datetime] = mapped_column(default=datetime.now(), nullable=False)
     updated: Mapped[datetime | None] = mapped_column(
-        onupdate=func.now()  # false-positive pylint: disable=E1102
+        onupdate=func.now()  # pylint: disable=E1102
     )
 
     @classmethod

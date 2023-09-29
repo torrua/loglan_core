@@ -1,4 +1,4 @@
-name: Tests and Checks for loglan_core
+name: Pytest checks
 
 on: [push]
 
@@ -22,6 +22,3 @@ jobs:
     - name: Test with pytest
       run: |
         pytest --cov loglan_core
-    - name: Check with mypy
-      run: |
-        mypy --no-strict-optional loglan_core
