@@ -15,7 +15,7 @@ setup(
   packages=['loglan_core', 'loglan_core.addons'],
   package_data={'loglan_core': ['*'], },
   include_package_data=True,
-  version='0.0.5',
+  version='0.1.0',
   license='MIT',
   description="Loglan Dictionary Database Model for SQLAlchemy",
   long_description=read("README.md"),
@@ -23,13 +23,13 @@ setup(
   author='torrua',
   author_email='torrua@gmail.com',
   url='https://github.com/torrua/loglan_core',
-  download_url='https://github.com/torrua/loglan_core/archive/0.0.5.tar.gz',
+  download_url='https://github.com/torrua/loglan_core/archive/0.1.0.tar.gz',
   keywords=['Loglan', 'Dictionary', 'Database', 'Model', 'LOD'],
   install_requires=[
-          'sqlalchemy>=1.4.35',
+          'sqlalchemy>=2.0.21',
   ],
   classifiers=[
-    'Development Status :: 3 - Alpha',  # "3 - Alpha", "4 - Beta" or "5 - Production/Stable"
+    'Development Status :: 4 - Beta',  # "3 - Alpha", "4 - Beta" or "5 - Production/Stable"
     'Intended Audience :: Developers',
     'Intended Audience :: Science/Research',
     'Topic :: Database',
