@@ -310,7 +310,9 @@ class BaseWord(BaseModel):
 
     @classmethod
     def filter_by_event_id(cls, event_id: int | None) -> BinaryExpression:
-
+        """
+        Returns:
+        """
         event_id_filter = event_id or BaseEvent.latest_id()
         start_id_condition = cls.event_start_id <= event_id_filter
         end_id_condition = or_(
