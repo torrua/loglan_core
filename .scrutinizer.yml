@@ -1,8 +1,13 @@
-build:
-  environment:
-    python: 3.11.5
-
 checks:
     python:
         code_rating: true
         duplicate_code: true
+
+build:
+  environment:
+    python: 3.10.13
+  nodes:
+    tests:
+      dependencies:
+        before:
+          - pip install -r requirements-tests.txt
