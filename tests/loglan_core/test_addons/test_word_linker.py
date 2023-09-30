@@ -9,7 +9,7 @@ from loglan_core.author import BaseAuthor as Author
 
 
 @pytest.mark.usefixtures("db_session")
-class AddonWordLinker:
+class TestWordLinker:
 
     """Word tests."""
     def test_is_parented(self, db_session):
@@ -43,6 +43,11 @@ class AddonWordLinker:
         WordLinker.add_children(prim, complexes)
         assert prim.derivatives_query.count() == 2
 
+        # adding already existed children
+        complexes = [Word.get_by_id(db_session, 3), Word.get_by_id(db_session, 4)]
+        WordLinker.add_children(prim, complexes)
+        assert prim.derivatives_query.count() == 2
+
     def test_add_author(self, db_session):
         word = Word.get_by_id(db_session, 2)
         assert len(word.authors) == 1
@@ -67,5 +72,9 @@ class AddonWordLinker:
 
         WordLinker.add_authors(word, local_authors)
         assert len(word.authors) == 2
+        assert isinstance(word.authors[0], Author)
 
+        # adding already existed authors
+        WordLinker.add_authors(word, local_authors)
+        assert len(word.authors) == 2
         assert isinstance(word.authors[0], Author)

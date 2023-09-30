@@ -66,7 +66,8 @@ class WordLinker:
         """
         # TODO add check if type of child is allowed to add to this word
         new_children = list(set(children) - set(parent.derivatives_query))
-        _ = parent.derivatives_query.extend(new_children) if new_children else None
+        if new_children:
+            parent.derivatives_query.extend(new_children)
 
     @staticmethod
     def add_author(word: BaseWord, author: BaseAuthor) -> str:
