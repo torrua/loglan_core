@@ -17,7 +17,8 @@ from loglan_core.key import BaseKey
 from loglan_core.word import BaseWord
 
 
-class KeySelector(Select):
+class KeySelector(Select):  # pylint: disable=R0901
+    """KeySelector model"""
 
     def __init__(self, class_=BaseKey, is_sqlite: bool = False) -> None:
         if not issubclass(class_, BaseKey):
