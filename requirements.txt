@@ -1,1 +1,1 @@
-SQLAlchemy>=1.4.35
+SQLAlchemy>=2.0.21
