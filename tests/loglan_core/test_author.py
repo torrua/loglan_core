@@ -1,6 +1,5 @@
 import pytest
 from loglan_core import Author
-from sqlalchemy import select
 
 @pytest.mark.usefixtures("db_session")
 class TestAuthor:
