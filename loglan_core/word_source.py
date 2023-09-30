@@ -35,7 +35,9 @@ class BaseWordSource:
         )
 
     @staticmethod
-    def parse_source(compatibility_search) -> tuple[int, int, str] | tuple[None, None, None]:
+    def parse_source(
+        compatibility_search,
+    ) -> tuple[int, int, str] | tuple[None, None, None]:
         """
 
         Args:

@@ -136,6 +136,4 @@ class BaseEvent(BaseModel):
         """
         Gets the id of the latest (current) `BaseEvent` from DB
         """
-        return select(
-            func.max(BaseEvent.id)  # pylint: disable=E1102
-        ).scalar_subquery()
+        return select(func.max(BaseEvent.id)).scalar_subquery()  # pylint: disable=E1102
