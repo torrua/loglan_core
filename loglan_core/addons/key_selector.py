@@ -7,12 +7,11 @@ which makes it possible to get Key objects by event
 
 from __future__ import annotations
 
-from sqlalchemy import or_, select, func, and_
+from sqlalchemy import select
 from sqlalchemy.sql.selectable import Select
 
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
-from loglan_core.event import BaseEvent
 from loglan_core.key import BaseKey
 from loglan_core.word import BaseWord
 
@@ -40,23 +39,13 @@ class KeySelector(Select):  # pylint: disable=R0901
           event_id: int
         Returns: self object with filter applied
         """
-        max_event_id = select(
-            func.max(BaseEvent.id)  # pylint: disable=E1102
-        ).scalar_subquery()
-        event_id_filter = event_id or max_event_id
 
-        start_id_condition = BaseWord.event_start_id <= event_id_filter
-        end_id_condition = or_(
-            BaseWord.event_end_id > event_id_filter,
-            BaseWord.event_end_id.is_(None),
-        )
-        conditions = and_(start_id_condition, end_id_condition)
         subquery = (
             select(self.class_.id)
             .join(t_connect_keys)
             .join(BaseDefinition)
             .join(BaseWord)
-            .where(conditions)
+            .where(BaseWord.filter_by_event_id(event_id))
             .scalar_subquery()
         )
         return self.where(self.class_.id.in_(subquery))

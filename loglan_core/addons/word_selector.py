@@ -8,14 +8,13 @@ from __future__ import annotations
 
 from functools import wraps
 
-from sqlalchemy import or_, and_, func, select, true
+from sqlalchemy import and_, select, true
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.selectable import Select
 
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
-from loglan_core.event import BaseEvent
 from loglan_core.key import BaseKey
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
@@ -64,19 +63,7 @@ class WordSelector(Select):  # pylint: disable=R0901
           event_id: int
         Returns: self object with filter applied
         """
-        max_event_id = select(
-            func.max(BaseEvent.id)  # pylint: disable=E1102
-        ).scalar_subquery()
-        event_id_filter = event_id or max_event_id
-
-        start_id_condition = self.class_.event_start_id <= event_id_filter
-        end_id_condition = or_(
-            self.class_.event_end_id > event_id_filter,
-            self.class_.event_end_id.is_(None),
-        )
-        conditions = and_(start_id_condition, end_id_condition)
-        query = self.where(conditions)
-        return query
+        return self.where(BaseWord.filter_by_event_id(event_id))
 
     @order_by_name
     def by_name(

@@ -129,7 +129,10 @@ class BaseEvent(BaseModel):
         """
         Gets the latest (current) `BaseEvent` from DB
         """
-        event_max_id = select(
+        return select(cls).filter(cls.id == cls.latest_id())
+
+    @classmethod
+    def latest_id(cls):
+        return select(
             func.max(BaseEvent.id)  # pylint: disable=E1102
         ).scalar_subquery()
-        return select(cls).filter(cls.id == event_max_id)
