@@ -1,0 +1,8 @@
+build:
+  environment:
+    python: 3.11.5
+
+checks:
+    python:
+        code_rating: true
+        duplicate_code: true
