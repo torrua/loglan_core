@@ -4,14 +4,13 @@
 Initial common functions for LOD Model Classes
 """
 from datetime import datetime
-from typing import Set
 from typing_extensions import Annotated
 
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String
-from sqlalchemy.orm import registry
+from sqlalchemy.orm import registry as rg
 
 str_008 = Annotated[str, 8]
 str_016 = Annotated[str, 16]
@@ -24,7 +23,7 @@ str_255 = Annotated[str, 255]
 class BaseModel(DeclarativeBase):
     """Declarative Base Model"""
 
-    registry = registry(
+    registry = rg(
         type_annotation_map={
             str_008: String(8),
             str_016: String(16),
@@ -67,7 +66,6 @@ class BaseModel(DeclarativeBase):
         Export record data from DB
         Should be redefined in model's class
         Returns:
-
         """
         return {
             k: v
@@ -76,56 +74,44 @@ class BaseModel(DeclarativeBase):
         }
 
     @classmethod
-    def attributes_all(cls) -> Set[str]:
+    def attributes_all(cls) -> set[str]:
         """
-
         Returns:
-
         """
         return set(cls.__mapper__.attrs.keys())
 
     @classmethod
-    def attributes_basic(cls) -> Set[str]:
+    def attributes_basic(cls) -> set[str]:
         """
-
         Returns:
-
         """
         return set(cls.attributes_all() - cls.relationships())
 
     @classmethod
-    def attributes_extended(cls) -> Set[str]:
+    def attributes_extended(cls) -> set[str]:
         """
-
         Returns:
-
         """
         return set(cls.attributes_all() - cls.foreign_keys())
 
     @classmethod
-    def relationships(cls) -> Set[str]:
+    def relationships(cls) -> set[str]:
         """
-
         Returns:
-
         """
         return set(cls.__mapper__.relationships.keys())
 
     @classmethod
-    def foreign_keys(cls) -> Set[str]:
+    def foreign_keys(cls) -> set[str]:
         """
-
         Returns:
-
         """
         return set(cls.attributes_all() - cls.relationships() - cls.non_foreign_keys())
 
     @classmethod
-    def non_foreign_keys(cls) -> Set[str]:
+    def non_foreign_keys(cls) -> set[str]:
         """
-
         Returns:
-
         """
         return {
             column.name for column in cls.__table__.columns if not column.foreign_keys
