@@ -1,5 +1,7 @@
 -r requirements-tests.txt
 
-wheel~=0.41.2
-setuptools~=68.2.2
 black~=23.9.1
+mypy~=1.5.1
+radon~=6.0.1
+setuptools~=68.2.2
+wheel~=0.41.2
