@@ -35,7 +35,7 @@
 <dl>
 <dt id="loglan_core.definition.BaseDefinition"><code class="flex name class">
 <span>class <span class="ident">BaseDefinition</span></span>
-<span>(</span><span>word_id, position, usage, grammar_code, slots, case_tags, body, language, notes)</span>
+<span>(</span><span>word_id, position, body, usage=None, grammar_code=None, slots=None, case_tags=None, language=None, notes=None)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>BaseDefinition model</p></div>
@@ -60,13 +60,12 @@
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.definition.BaseDefinition.by_key"><code class="name flex">
-<span>def <span class="ident">by_key</span></span>(<span>session: sqlalchemy.orm.session.Session, key: Union[<a title="loglan_core.key.BaseKey" href="key.html#loglan_core.key.BaseKey">BaseKey</a>, str], language: str = None, case_sensitive: bool = False)</span>
+<span>def <span class="ident">by_key</span></span>(<span>key: <a title="loglan_core.key.BaseKey" href="key.html#loglan_core.key.BaseKey">BaseKey</a> | str, language: str | None = None, case_sensitive: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Definition.Query filtered by specified key</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt>session:</dt>
 <dt><strong><code>key</code></strong></dt>
 <dd>Union[BaseKey, str]:</dd>
 <dt><strong><code>language</code></strong></dt>
@@ -152,7 +151,6 @@
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
-<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>

@@ -60,10 +60,16 @@ identified ones that the parser did not recognize as words',
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.event.BaseEvent.latest"><code class="name flex">
-<span>def <span class="ident">latest</span></span>(<span>session: Session) ‑> <a title="loglan_core.event.BaseEvent" href="#loglan_core.event.BaseEvent">BaseEvent</a></span>
+<span>def <span class="ident">latest</span></span>(<span>) ‑> sqlalchemy.sql.selectable.Select</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Gets the latest (current) <code><a title="loglan_core.event.BaseEvent" href="#loglan_core.event.BaseEvent">BaseEvent</a></code> from DB</p></div>
+</dd>
+<dt id="loglan_core.event.BaseEvent.latest_id"><code class="name flex">
+<span>def <span class="ident">latest_id</span></span>(<span>)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Gets the id of the latest (current) <code><a title="loglan_core.event.BaseEvent" href="#loglan_core.event.BaseEvent">BaseEvent</a></code> from DB</p></div>
 </dd>
 </dl>
 <h3>Instance variables</h3>
@@ -73,7 +79,12 @@ identified ones that the parser did not recognize as words',
 <div class="desc"><p><em>Event's annotation (displayed in old format dictionary HTML file)</em><br>
 <strong>str</strong> : max_length=16, nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.appeared_words"><code class="name">var <span class="ident">appeared_words</span></code></dt>
+<dt id="loglan_core.event.BaseEvent.appeared_words"><code class="name">var <span class="ident">appeared_words</span> : list['BaseWord']</code></dt>
+<dd>
+<div class="desc"><p><em>Relationship query for getting a list of words appeared during this event</em></p>
+<p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
+</dd>
+<dt id="loglan_core.event.BaseEvent.appeared_words_query"><code class="name">var <span class="ident">appeared_words_query</span></code></dt>
 <dd>
 <div class="desc"><p><em>Relationship query for getting a list of words appeared during this event</em></p>
 <p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
@@ -88,7 +99,12 @@ identified ones that the parser did not recognize as words',
 <div class="desc"><p><em>Event's definition</em>
 <strong>str</strong> : nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.deprecated_words"><code class="name">var <span class="ident">deprecated_words</span></code></dt>
+<dt id="loglan_core.event.BaseEvent.deprecated_words"><code class="name">var <span class="ident">deprecated_words</span> : list['BaseWord']</code></dt>
+<dd>
+<div class="desc"><p><em>Relationship query for getting a list of words deprecated during this event</em></p>
+<p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
+</dd>
+<dt id="loglan_core.event.BaseEvent.deprecated_words_query"><code class="name">var <span class="ident">deprecated_words_query</span></code></dt>
 <dd>
 <div class="desc"><p><em>Relationship query for getting a list of words deprecated during this event</em></p>
 <p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
@@ -120,7 +136,6 @@ identified ones that the parser did not recognize as words',
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
-<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>
@@ -144,14 +159,17 @@ identified ones that the parser did not recognize as words',
 <ul>
 <li>
 <h4><code><a title="loglan_core.event.BaseEvent" href="#loglan_core.event.BaseEvent">BaseEvent</a></code></h4>
-<ul class="two-column">
+<ul class="">
 <li><code><a title="loglan_core.event.BaseEvent.annotation" href="#loglan_core.event.BaseEvent.annotation">annotation</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.appeared_words" href="#loglan_core.event.BaseEvent.appeared_words">appeared_words</a></code></li>
+<li><code><a title="loglan_core.event.BaseEvent.appeared_words_query" href="#loglan_core.event.BaseEvent.appeared_words_query">appeared_words_query</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.date" href="#loglan_core.event.BaseEvent.date">date</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.definition" href="#loglan_core.event.BaseEvent.definition">definition</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.deprecated_words" href="#loglan_core.event.BaseEvent.deprecated_words">deprecated_words</a></code></li>
+<li><code><a title="loglan_core.event.BaseEvent.deprecated_words_query" href="#loglan_core.event.BaseEvent.deprecated_words_query">deprecated_words_query</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.id" href="#loglan_core.event.BaseEvent.id">id</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.latest" href="#loglan_core.event.BaseEvent.latest">latest</a></code></li>
+<li><code><a title="loglan_core.event.BaseEvent.latest_id" href="#loglan_core.event.BaseEvent.latest_id">latest_id</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.name" href="#loglan_core.event.BaseEvent.name">name</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.suffix" href="#loglan_core.event.BaseEvent.suffix">suffix</a></code></li>
 </ul>

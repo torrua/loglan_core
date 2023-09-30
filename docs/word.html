@@ -38,7 +38,8 @@
 <span>(</span><span>id_old, name, type_id, event_start_id, event_end_id=None, tid_old=None, origin=None, origin_x=None, match=None, rank=None, year=None, notes=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>BaseWord model</p></div>
+<div class="desc"><p>BaseWord model</p>
+<p>Returns:</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
@@ -46,6 +47,15 @@
 <li>sqlalchemy.inspection.Inspectable</li>
 <li>typing.Generic</li>
 </ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="loglan_core.word.BaseWord.filter_by_event_id"><code class="name flex">
+<span>def <span class="ident">filter_by_event_id</span></span>(<span>event_id: int | None) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
+</dd>
+</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="loglan_core.word.BaseWord.affixes"><code class="name">var <span class="ident">affixes</span></code></dt>
@@ -61,7 +71,7 @@ Only primitives have affixes.</p>
 </dd>
 <dt id="loglan_core.word.BaseWord.authors_query"><code class="name">var <span class="ident">authors_query</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns:</p></div>
 </dd>
 <dt id="loglan_core.word.BaseWord.complexes"><code class="name">var <span class="ident">complexes</span></code></dt>
 <dd>
@@ -76,17 +86,17 @@ Only primitives and Little Words have complexes.</p>
 </dd>
 <dt id="loglan_core.word.BaseWord.definitions_query"><code class="name">var <span class="ident">definitions_query</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns:</p></div>
 </dd>
 <dt id="loglan_core.word.BaseWord.derivatives"><code class="name">var <span class="ident">derivatives</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns:</p></div>
 </dd>
 <dt id="loglan_core.word.BaseWord.derivatives_query"><code class="name">var <span class="ident">derivatives_query</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns:</p></div>
 </dd>
-<dt id="loglan_core.word.BaseWord.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_core.event.BaseEvent" href="event.html#loglan_core.event.BaseEvent">BaseEvent</a></code></dt>
+<dt id="loglan_core.word.BaseWord.event_end"><code class="name">var <span class="ident">event_end</span> : <a title="loglan_core.event.BaseEvent" href="event.html#loglan_core.event.BaseEvent">BaseEvent</a> | None</code></dt>
 <dd>
 <div class="desc"><p>Returns:</p></div>
 </dd>
@@ -109,6 +119,10 @@ Only primitives and Little Words have complexes.</p>
 <dt id="loglan_core.word.BaseWord.id_old"><code class="name">var <span class="ident">id_old</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
+</dd>
+<dt id="loglan_core.word.BaseWord.keys"><code class="name">var <span class="ident">keys</span> : list[<a title="loglan_core.key.BaseKey" href="key.html#loglan_core.key.BaseKey">BaseKey</a>]</code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
 </dd>
 <dt id="loglan_core.word.BaseWord.keys_query"><code class="name">var <span class="ident">keys_query</span></code></dt>
 <dd>
@@ -139,7 +153,7 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 </dd>
 <dt id="loglan_core.word.BaseWord.parents"><code class="name">var <span class="ident">parents</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns:</p></div>
 </dd>
 <dt id="loglan_core.word.BaseWord.parents_query"><code class="name">var <span class="ident">parents_query</span></code></dt>
 <dd>
@@ -157,7 +171,7 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 </dd>
 <dt id="loglan_core.word.BaseWord.type"><code class="name">var <span class="ident">type</span> : <a title="loglan_core.type.BaseType" href="type.html#loglan_core.type.BaseType">BaseType</a></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>Returns:</p></div>
 </dd>
 <dt id="loglan_core.word.BaseWord.type_id"><code class="name">var <span class="ident">type_id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
@@ -171,7 +185,7 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 <h3>Methods</h3>
 <dl>
 <dt id="loglan_core.word.BaseWord.derivatives_query_by"><code class="name flex">
-<span>def <span class="ident">derivatives_query_by</span></span>(<span>self, word_type: str = None, word_type_x: str = None, word_group: str = None, type_class=loglan_core.type.BaseType)</span>
+<span>def <span class="ident">derivatives_query_by</span></span>(<span>self, word_type: str | None = None, word_type_x: str | None = None, word_group: str | None = None, type_class=loglan_core.type.BaseType)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Query to get all derivatives of the word, depending on its parameters</p>
@@ -198,12 +212,6 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 <h2 id="returns">Returns</h2>
 <p>List[Word]</p></div>
 </dd>
-<dt id="loglan_core.word.BaseWord.keys"><code class="name flex">
-<span>def <span class="ident">keys</span></span>(<span>self, session: Session) ‑> list</span>
-</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 </dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
@@ -217,7 +225,6 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
-<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>
@@ -255,6 +262,7 @@ will be counted with <code>.count()</code> but excluded from <code>.all()</code>
 <li><code><a title="loglan_core.word.BaseWord.event_end_id" href="#loglan_core.word.BaseWord.event_end_id">event_end_id</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.event_start" href="#loglan_core.word.BaseWord.event_start">event_start</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.event_start_id" href="#loglan_core.word.BaseWord.event_start_id">event_start_id</a></code></li>
+<li><code><a title="loglan_core.word.BaseWord.filter_by_event_id" href="#loglan_core.word.BaseWord.filter_by_event_id">filter_by_event_id</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.id" href="#loglan_core.word.BaseWord.id">id</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.id_old" href="#loglan_core.word.BaseWord.id_old">id_old</a></code></li>
 <li><code><a title="loglan_core.word.BaseWord.keys" href="#loglan_core.word.BaseWord.keys">keys</a></code></li>

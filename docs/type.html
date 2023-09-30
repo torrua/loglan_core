@@ -35,10 +35,11 @@
 <dl>
 <dt id="loglan_core.type.BaseType"><code class="flex name class">
 <span>class <span class="ident">BaseType</span></span>
-<span>(</span><span>type, type_x, parentable, group, description)</span>
+<span>(</span><span>type, type_x, parentable, group=None, description=None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>BaseType model</p></div>
+<div class="desc"><p>BaseType model</p>
+<p>Returns:</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
@@ -48,13 +49,12 @@
 </ul>
 <h3>Static methods</h3>
 <dl>
-<dt id="loglan_core.type.BaseType.by"><code class="name flex">
-<span>def <span class="ident">by</span></span>(<span>session: sqlalchemy.orm.session.Session, type_filter: str | list[str])</span>
+<dt id="loglan_core.type.BaseType.by_property"><code class="name flex">
+<span>def <span class="ident">by_property</span></span>(<span>type_filter: str | list[str]) ‑> sqlalchemy.sql.selectable.Select</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
 <dl>
-<dt>session:</dt>
 <dt><strong><code>type_filter</code></strong></dt>
 <dd>Union[str, List[str]]:</dd>
 </dl>
@@ -91,6 +91,10 @@
 <dd>
 <div class="desc"><p>words</p></div>
 </dd>
+<dt id="loglan_core.type.BaseType.words_query"><code class="name">var <span class="ident">words_query</span></code></dt>
+<dd>
+<div class="desc"><p>Returns:</p></div>
+</dd>
 </dl>
 <h3>Inherited members</h3>
 <ul class="hlist">
@@ -104,7 +108,6 @@
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
-<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>
@@ -129,7 +132,7 @@
 <li>
 <h4><code><a title="loglan_core.type.BaseType" href="#loglan_core.type.BaseType">BaseType</a></code></h4>
 <ul class="two-column">
-<li><code><a title="loglan_core.type.BaseType.by" href="#loglan_core.type.BaseType.by">by</a></code></li>
+<li><code><a title="loglan_core.type.BaseType.by_property" href="#loglan_core.type.BaseType.by_property">by_property</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.description" href="#loglan_core.type.BaseType.description">description</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.group" href="#loglan_core.type.BaseType.group">group</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.id" href="#loglan_core.type.BaseType.id">id</a></code></li>
@@ -137,6 +140,7 @@
 <li><code><a title="loglan_core.type.BaseType.type" href="#loglan_core.type.BaseType.type">type</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.type_x" href="#loglan_core.type.BaseType.type_x">type_x</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.words" href="#loglan_core.type.BaseType.words">words</a></code></li>
+<li><code><a title="loglan_core.type.BaseType.words_query" href="#loglan_core.type.BaseType.words_query">words_query</a></code></li>
 </ul>
 </li>
 </ul>
