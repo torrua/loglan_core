@@ -34,6 +34,12 @@ class BaseWordSource:
             str(transcription_search[0]).strip() if transcription_search else None
         )
 
+    def __repr__(self):
+        """
+        Returns:
+        """
+        return f"<{self.__class__.__name__} {self.as_string}>"  # TODO Unify instance repr
+
     @staticmethod
     def parse_source(
         compatibility_search,
