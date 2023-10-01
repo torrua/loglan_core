@@ -13,6 +13,10 @@ class TestWordSource:
         assert ws.language == "E"
         assert ws.transcription == "act"
 
+    def test_repr(self):
+        ws: WordSource = WordSource(word_sources[0])  # "2/3E act"
+        assert str(ws) == '<BaseWordSource 2/3E act>'
+
     def test_init_error(self):
         ws: WordSource = WordSource(word_sources[3])  # "4/4S"
         assert ws.coincidence is None
