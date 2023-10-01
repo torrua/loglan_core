@@ -4,5 +4,5 @@
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/torrua/loglan_core/badges/quality-score.png?b=main)](https://scrutinizer-ci.com/g/torrua/loglan_core/?branch=main)
 [![Pylint](https://github.com/torrua/loglan_core/actions/workflows/pylint.yml/badge.svg)](https://github.com/torrua/loglan_core/actions/workflows/pylint.yml)
 [![Pytest](https://github.com/torrua/loglan_core/actions/workflows/pytest.yml/badge.svg)](https://github.com/torrua/loglan_core/actions/workflows/pytest.yml)
-![pylint](https://img.shields.io/badge/pylint-9.91-yellow?logo=python&logoColor=white)
+![pylint](https://img.shields.io/badge/pylint-9.89-yellow?logo=python&logoColor=white)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/loglan_core?color=yellow)
