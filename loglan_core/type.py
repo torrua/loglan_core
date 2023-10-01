@@ -78,10 +78,11 @@ class BaseType(BaseModel):
         return self.words_query.all()
 
     @classmethod
-    def by_property(cls, type_filter: str | list[str]) -> Select:
+    def by_property(cls, type_filter: str | list[str], id_only: bool = False) -> Select:
         """
         Args:
           type_filter: Union[str, List[str]]:
+          id_only: bool:
         Returns:
         """
 
@@ -92,7 +93,8 @@ class BaseType(BaseModel):
             if isinstance(type_filter, str)
             else type_filter
         )
-        type_request = select(cls).filter(
+        item = cls.id if id_only else cls
+        type_request = select(item).filter(
             or_(
                 cls.type.in_(type_filter),
                 cls.type_x.in_(type_filter),
