@@ -25,7 +25,7 @@ class AddonWordSourcer:
         # existing_prim_types = ["C", "D", "I", "L", "N", "O", "S", ]
 
         if not word.type.group == "Prim":
-            return []
+            return None
 
         if word.type.type == "C-Prim":
             return self._get_sources_c_prim(word)
