@@ -10,7 +10,7 @@ from tests.data import Definition, definitions
 from tests.data import Event, events
 from tests.data import Key, keys, un_keys
 from tests.data import Type, types
-from tests.data import Word, words, changed_words
+from tests.data import Word, words, changed_words, other_words
 from tests.data import connect_words, connect_authors, connect_keys
 from tests.data import syllables, settings
 

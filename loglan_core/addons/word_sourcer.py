@@ -12,8 +12,8 @@ from loglan_core.word import BaseWord
 from loglan_core.word_source import BaseWordSource
 
 
-class AddonWordSourcer:
-    """AddonWordSourcer Model"""
+class WordSourcer:
+    """WordSourcer Model"""
 
 
     def get_sources_prim(self, word: BaseWord):
@@ -46,7 +46,7 @@ class AddonWordSourcer:
         return [BaseWordSource(source) for source in sources]
 
     @classmethod
-    def get_sources_cpx(cls, word: BaseWord, as_str: bool = False) -> Select[tuple[BaseWord]]:
+    def get_sources_cpx(cls, word: BaseWord, as_str: bool = False) -> Select[tuple[BaseWord]]:  # TODO fix return type
         """Extract source words from self.origin field accordingly
         Args:
             word (BaseWord):
