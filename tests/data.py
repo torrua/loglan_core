@@ -32,7 +32,10 @@ authors = [author_1, author_2]
 type_1 = {'description': 'Two-term Complex E.g. flicea, from fli(du)+ce(nj)a=liquid-become.', 'group': 'Cpx', 'type': '2-Cpx', 'parentable': True, 'type_x': 'Predicate', }
 type_2 = {'description': 'Composite Primitives, drawn from several target languages in a way that might make them recognizable in most of them. (See Loglan 1 Section 6.3.)', 'group': 'Prim', 'type': 'C-Prim', 'parentable': False, 'type_x': 'Predicate', }
 type_3 = {'description': 'Affix.', 'group': 'Little', 'type': 'Afx', 'parentable': True, 'type_x': 'Affix', }
-types = [type_1, type_2, type_3]
+type_4 = {'description': 'Derived Primitive, one of the primitives that follows the cultural (language, nationality, culture) or animal (male, female, infant, resembling, unspecified) declension.', 'group': 'Prim', 'parentable': False, 'type': 'D-Prim', 'type_x': 'Predicate', }
+type_5 = {'description': 'Compound Little Word E.g. enoi from e+no, "and not".', 'group': 'Little', 'parentable': True, 'type': 'Cpd', 'type_x': 'Struct', }
+type_6 = {'description': 'Little Word, a small word used to give Loglan its grammatical structure.', 'group': 'Little', 'parentable': True, 'type': 'LW', 'type_x': 'Struct', }
+types = [type_1, type_2, type_3, type_4, type_5, type_6]
 
 # ===== WORDS ==================================================================
 word_1 = {'notes': None, 'tid_old': None, 'id_old': 3869, 'name': 'kak', 'type_id': 3, 'origin': 'kak(to)', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'rank': '7+', 'year': datetime.date(1988, 1, 1)}
@@ -115,9 +118,14 @@ word_source_4 = "4/S"
 word_sources = [word_source_1, word_source_2, word_source_3, word_source_4, ]
 
 # ===== OTHER ITEMS ===========================================================
-other_word_1 = {'tid_old': None, 'name': 'cirdui', 'origin': 'cir(na)+du(vr)i', 'type_id': 5, 'origin_x': 'learn discover', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1991, 1, 1), 'notes': None, 'id': 1006, 'id_old': 992}
-other_word_2 = {'notes': None, 'id': 2, 'tid_old': None, 'id_old': 3880, 'name': 'kakto', 'type_id': 9, 'origin': 'R akt | 4/4S | 3/3F acte | 2/3E act | 2/3H kam', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '56%', 'created': datetime.datetime(2020, 10, 25, 7, 53, 54, 873132), 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
-other_author_1 = {'full_name': 'Robert McIvor', 'id': 36, 'notes': '', 'abbreviation': 'RAM'}
+other_word_1 = {'tid_old': None, 'name': 'cirdui', 'origin': 'cir(na)+du(vr)i', 'type_id': 5, 'origin_x': 'learn discover', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1991, 1, 1), 'notes': None, 'id_old': 992}
+other_word_2 = {'notes': None, 'tid_old': None, 'id_old': 3880, 'name': 'kakto', 'type_id': 9, 'origin': 'R akt | 4/4S | 3/3F acte | 2/3E act | 2/3H kam', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '56%', 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
+other_author_1 = {'full_name': 'Robert McIvor', 'notes': '', 'abbreviation': 'RAM'}
+
+other_word_3 = {'event_end_id': None, 'event_start_id': 1, 'id_old': 3589, 'match': '', 'name': 'humnu', 'notes': None, 'origin': 'humni', 'origin_x': '', 'rank': '1.4', 'tid_old': None, 'type_id': 4, 'year': datetime.date(1994, 1, 1)}
+other_word_4 = {'match': '', 'tid_old': None, 'rank': '3.8', 'type_id': 5, 'year': datetime.date(1975, 1, 1), 'event_start_id': 1, 'notes': None, 'event_end_id': None, 'id_old': 58, 'name': 'aiai', 'origin': 'ai+ai', 'origin_x': 'Yes Yes'}
+other_word_5 = {'event_end_id': None, 'event_start_id': 1, 'id_old': 57, 'match': '', 'name': 'ai', 'notes': None, 'origin': '', 'origin_x': '', 'rank': '1.0', 'tid_old': None, 'type_id': 6, 'year': datetime.date(1975, 1, 1)}
+other_words = [other_word_1, other_word_2, other_word_3, other_word_4, other_word_5 ]
 
 
 all_objects = [

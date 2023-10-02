@@ -12,9 +12,23 @@ from loglan_core.word import BaseWord
 from loglan_core.word_source import BaseWordSource
 
 
-class AddonWordSourcer:
-    """AddonWordSourcer Model"""
+class WordSourcer:
+    """WordSourcer Model"""
 
+    # these prims have switched djifoas like 'flo' for 'folma'
+    switch_prims = [
+        "canli",
+        "farfu",
+        "folma",
+        "forli",
+        "kutla",
+        "marka",
+        "mordu",
+        "sanca",
+        "sordi",
+        "suksi",
+        "surna",
+    ]
 
     def get_sources_prim(self, word: BaseWord):
         """
@@ -46,7 +60,9 @@ class AddonWordSourcer:
         return [BaseWordSource(source) for source in sources]
 
     @classmethod
-    def get_sources_cpx(cls, word: BaseWord, as_str: bool = False) -> Select[tuple[BaseWord]]:
+    def get_sources_cpx(
+        cls, word: BaseWord, as_str: bool = False
+    ) -> Select[tuple[BaseWord]]:  # TODO fix return type
         """Extract source words from self.origin field accordingly
         Args:
             word (BaseWord):
@@ -58,11 +74,6 @@ class AddonWordSourcer:
             List of words from which the self.name was created
 
         """
-
-        # these prims have switched djifoas like 'flo' for 'folma'
-        switch_prims = [
-            'canli', 'farfu', 'folma', 'forli', 'kutla', 'marka',
-            'mordu', 'sanca', 'sordi', 'suksi', 'surna']
 
         if not word.type.group == "Cpx":
             return []
@@ -80,11 +91,13 @@ class AddonWordSourcer:
         Returns:
 
         """
-        exclude_type_ids = BaseType.by_property(["LW", "Cpd"], id_only=True).scalar_subquery()
+        exclude_type_ids = BaseType.by_property(
+            ["LW", "Cpd"], id_only=True
+        ).scalar_subquery()
         return (
             select(BaseWord)
-                .filter(BaseWord.name.in_(sources))
-                .filter(BaseWord.type_id.notin_(exclude_type_ids))
+            .filter(BaseWord.name.in_(sources))
+            .filter(BaseWord.type_id.notin_(exclude_type_ids))
         )
 
     @staticmethod
@@ -96,11 +109,15 @@ class AddonWordSourcer:
         sources = sources.split("+")
         sources = [
             s if not s.endswith(("r", "h")) else s[:-1]
-            for s in sources if s not in ["y", "r", "n"]]
+            for s in sources
+            if s not in ["y", "r", "n"]
+        ]
         return sources
 
     @classmethod
-    def get_sources_cpd(cls, word: BaseWord, as_str: bool = False) -> list[None | str | BaseWord]:
+    def get_sources_cpd(
+        cls, word: BaseWord, as_str: bool = False
+    ) -> list[None | str | BaseWord]:
         """Extract source words from self.origin field accordingly
 
         Args:
@@ -123,7 +140,12 @@ class AddonWordSourcer:
         """
         Returns:
         """
-        sources = word.origin.replace("(", "").replace(")", "").replace("/", "").replace("-", "")
+        sources = (
+            word.origin.replace("(", "")
+            .replace(")", "")
+            .replace("/", "")
+            .replace("-", "")
+        )
         sources = [s.strip() for s in sources.split("+") if s]
         return sources
 
@@ -139,5 +161,8 @@ class AddonWordSourcer:
         """
 
         type_ids = BaseType.by_property(["LW", "Cpd"], id_only=True).scalar_subquery()
-        return select(BaseWord).filter(BaseWord.name.in_(sources)) \
+        return (
+            select(BaseWord)
+            .filter(BaseWord.name.in_(sources))
             .filter(BaseWord.type_id.in_(type_ids))
+        )
