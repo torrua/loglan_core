@@ -100,6 +100,12 @@ event, key, type, name</p>
 </ul>
 <h3>Static methods</h3>
 <dl>
+<dt id="loglan_core.addons.word_selector.WordSelector.filter_language"><code class="name flex">
+<span>def <span class="ident">filter_language</span></span>(<span>language: str | None = None)</span>
+</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.type_filters"><code class="name flex">
 <span>def <span class="ident">type_filters</span></span>(<span>type_values: tuple) ‑> list[sqlalchemy.sql.elements.BinaryExpression]</span>
 </code></dt>
@@ -176,14 +182,14 @@ event, key, type, name</p>
 </dl>
 <p>Returns: self object with filter applied</p></div>
 </dd>
-<dt id="loglan_core.addons.word_selector.WordSelector.cs_key_filter"><code class="name flex">
-<span>def <span class="ident">cs_key_filter</span></span>(<span>self, key: str, case_sensitive: bool) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
+<dt id="loglan_core.addons.word_selector.WordSelector.filter_key_cs"><code class="name flex">
+<span>def <span class="ident">filter_key_cs</span></span>(<span>self, key: str, case_sensitive: bool) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
 </code></dt>
 <dd>
 <div class="desc"><p>case sensitive name filter</p></div>
 </dd>
-<dt id="loglan_core.addons.word_selector.WordSelector.cs_name_filter"><code class="name flex">
-<span>def <span class="ident">cs_name_filter</span></span>(<span>self, name: str) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
+<dt id="loglan_core.addons.word_selector.WordSelector.filter_name_cs"><code class="name flex">
+<span>def <span class="ident">filter_name_cs</span></span>(<span>self, name: str) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
 </code></dt>
 <dd>
 <div class="desc"><p>case sensitive name filter</p></div>
@@ -218,8 +224,9 @@ event, key, type, name</p>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.by_key" href="#loglan_core.addons.word_selector.WordSelector.by_key">by_key</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.by_name" href="#loglan_core.addons.word_selector.WordSelector.by_name">by_name</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.by_type" href="#loglan_core.addons.word_selector.WordSelector.by_type">by_type</a></code></li>
-<li><code><a title="loglan_core.addons.word_selector.WordSelector.cs_key_filter" href="#loglan_core.addons.word_selector.WordSelector.cs_key_filter">cs_key_filter</a></code></li>
-<li><code><a title="loglan_core.addons.word_selector.WordSelector.cs_name_filter" href="#loglan_core.addons.word_selector.WordSelector.cs_name_filter">cs_name_filter</a></code></li>
+<li><code><a title="loglan_core.addons.word_selector.WordSelector.filter_key_cs" href="#loglan_core.addons.word_selector.WordSelector.filter_key_cs">filter_key_cs</a></code></li>
+<li><code><a title="loglan_core.addons.word_selector.WordSelector.filter_language" href="#loglan_core.addons.word_selector.WordSelector.filter_language">filter_language</a></code></li>
+<li><code><a title="loglan_core.addons.word_selector.WordSelector.filter_name_cs" href="#loglan_core.addons.word_selector.WordSelector.filter_name_cs">filter_name_cs</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.inherit_cache" href="#loglan_core.addons.word_selector.WordSelector.inherit_cache">inherit_cache</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.type_filters" href="#loglan_core.addons.word_selector.WordSelector.type_filters">type_filters</a></code></li>
 </ul>

@@ -50,13 +50,15 @@
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.type.BaseType.by_property"><code class="name flex">
-<span>def <span class="ident">by_property</span></span>(<span>type_filter: str | list[str]) ‑> sqlalchemy.sql.selectable.Select</span>
+<span>def <span class="ident">by_property</span></span>(<span>type_filter: str | list[str], id_only: bool = False) ‑> sqlalchemy.sql.selectable.Select</span>
 </code></dt>
 <dd>
 <div class="desc"><h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>type_filter</code></strong></dt>
 <dd>Union[str, List[str]]:</dd>
+<dt><strong><code>id_only</code></strong></dt>
+<dd>bool:</dd>
 </dl>
 <p>Returns:</p></div>
 </dd>
@@ -76,6 +78,10 @@
 <div class="desc"></div>
 </dd>
 <dt id="loglan_core.type.BaseType.parentable"><code class="name">var <span class="ident">parentable</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
+<dd>
+<div class="desc"></div>
+</dd>
+<dt id="loglan_core.type.BaseType.relationship_words"><code class="name">var <span class="ident">relationship_words</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"></div>
 </dd>
@@ -137,6 +143,7 @@
 <li><code><a title="loglan_core.type.BaseType.group" href="#loglan_core.type.BaseType.group">group</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.id" href="#loglan_core.type.BaseType.id">id</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.parentable" href="#loglan_core.type.BaseType.parentable">parentable</a></code></li>
+<li><code><a title="loglan_core.type.BaseType.relationship_words" href="#loglan_core.type.BaseType.relationship_words">relationship_words</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.type" href="#loglan_core.type.BaseType.type">type</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.type_x" href="#loglan_core.type.BaseType.type_x">type_x</a></code></li>
 <li><code><a title="loglan_core.type.BaseType.words" href="#loglan_core.type.BaseType.words">words</a></code></li>
