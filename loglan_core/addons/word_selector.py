@@ -80,20 +80,12 @@ class WordSelector(Select):  # pylint: disable=R0901
         """
         name = str(name).replace("*", "%")
         conditions = (
-            self.cs_name_filter(name)
+            self.filter_name_cs(name)
             if case_sensitive
             else self.class_.name.ilike(name)
         )
         query = self.where(conditions)
         return query
-
-    def cs_name_filter(self, name: str) -> BinaryExpression:
-        """case sensitive name filter"""
-        return (
-            self.class_.name.op("GLOB")(name)
-            if self.is_sqlite
-            else self.class_.name.like(name)
-        )
 
     @order_by_name
     def by_key(
@@ -112,26 +104,37 @@ class WordSelector(Select):  # pylint: disable=R0901
         """
 
         key = key.word if isinstance(key, BaseKey) else str(key).replace("*", "%")
-        key_filter = self.cs_key_filter(key, case_sensitive)
-        language_filter = BaseKey.language == language if language else true()
+        filter_key = self.filter_key_cs(key, case_sensitive)
+        filter_language = self.filter_language(language)
 
         subquery = (
             select(self.class_.id)
             .join(BaseDefinition)
             .join(t_connect_keys)
             .join(BaseKey)
-            .where(key_filter, language_filter)
-            .scalar_subquery()
+            .where(filter_key, filter_language)
         )
         query = self.where(self.class_.id.in_(subquery))
         return query
 
-    def cs_key_filter(self, key: str, case_sensitive: bool) -> BinaryExpression:
+    @staticmethod
+    def filter_language(language: str | None = None):
+        return BaseKey.language == language if language else true()
+
+    def filter_key_cs(self, key: str, case_sensitive: bool) -> BinaryExpression:
         """case sensitive name filter"""
         return (
             (BaseKey.word.op("GLOB")(key) if self.is_sqlite else BaseKey.word.like(key))
             if case_sensitive
             else BaseKey.word.ilike(key)
+        )
+
+    def filter_name_cs(self, name: str) -> BinaryExpression:
+        """case sensitive name filter"""
+        return (
+            self.class_.name.op("GLOB")(name)
+            if self.is_sqlite
+            else self.class_.name.like(name)
         )
 
     @order_by_name

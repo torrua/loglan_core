@@ -72,16 +72,16 @@ class BaseDefinition(BaseModel):
     APPROVED_CASE_TAGS = ("B", "C", "D", "F", "G", "J", "K", "N", "P", "S", "V")
     KEY_PATTERN = r"(?<=\«)(.+?)(?=\»)"
 
-    _keys: Mapped[list[BaseKey]] = relationship(
+    relationship_keys: Mapped[list[BaseKey]] = relationship(
         BaseKey.__name__,
         secondary=t_connect_keys,
-        back_populates="_definitions",
+        back_populates="relationship_definitions",
         lazy="dynamic",
     )
 
-    _source_word: Mapped["BaseWord"] = relationship(  # type: ignore
+    relationship_source_word: Mapped["BaseWord"] = relationship(  # type: ignore
         "BaseWord",
-        back_populates="_definitions",
+        back_populates="relationship_definitions",
     )
 
     @property
@@ -89,7 +89,7 @@ class BaseDefinition(BaseModel):
         """
         Returns:
         """
-        return self._keys
+        return self.relationship_keys
 
     @property
     def keys(self):
@@ -103,7 +103,7 @@ class BaseDefinition(BaseModel):
         """
         Returns:
         """
-        return self._source_word
+        return self.relationship_source_word
 
     @property
     def grammar(self) -> str:
@@ -128,7 +128,7 @@ class BaseDefinition(BaseModel):
         """Definition.Query filtered by specified key
 
         Args:
-          key: Union[BaseKey, str]:
+          key: BaseKey | str:
           language: str: Language of key (Default value = None)
           case_sensitive: bool:  (Default value = False)
 
@@ -141,19 +141,19 @@ class BaseDefinition(BaseModel):
             BaseKey.word if isinstance(key, BaseKey) else str(key).replace("*", "%")
         )
 
-        statement = (
-            select(cls)
-            .join(t_connect_keys)
-            .join(BaseKey, BaseKey.id == t_connect_keys.c.KID)
-        )
-
-        if language:
-            statement = statement.filter(BaseKey.language == language)
-
-        statement = statement.filter(
+        filter_key = (
             BaseKey.word.like(search_key)
             if case_sensitive
             else BaseKey.word.ilike(search_key)
         )
+
+        statement = (
+            select(cls)
+            .join(cls.relationship_keys)
+            .filter(filter_key, cls.relationship_keys.any(filter_key))
+        )
+
+        if language:  # todo get language from key if BaseKey
+            statement = statement.filter(BaseKey.language == language)
 
         return statement

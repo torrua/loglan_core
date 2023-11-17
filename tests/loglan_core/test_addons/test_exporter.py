@@ -30,6 +30,14 @@ class TestExporter:
             'acte | 2/3E act | 2/3H kam@@prukao@'
         )
 
+        obj.year = None
+        result = self.e.export(obj)
+        assert result == (
+            '3880@C-Prim@Predicate@kak kao@56%@L4@@1.0'
+            '@3/3R akt | 4/4S acto | 3/3F '
+            'acte | 2/3E act | 2/3H kam@@prukao@'
+        )
+
     def test_export_author(self, db_session):
         """Test Author.export() method"""
         obj = db_session.query(Author).filter(Author.abbreviation == "JCB").scalar()

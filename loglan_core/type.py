@@ -57,8 +57,8 @@ class BaseType(BaseModel):
     parentable: Mapped[bool] = mapped_column(nullable=False)  # E.g. True, False
     description: Mapped[str_255 | None]  # E.g. Two-term Complex, ...
 
-    _words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
-        back_populates="_type",
+    relationship_words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
+        back_populates="relationship_type",
         foreign_keys="BaseWord.type_id",
         lazy="dynamic",
     )
@@ -68,7 +68,7 @@ class BaseType(BaseModel):
         """
         Returns:
         """
-        return self._words
+        return self.relationship_words
 
     @property
     def words(self):

@@ -24,7 +24,7 @@ class TestWordLinker:
 
     def test_add_child(self, db_session):
         cmp = Word.get_by_id(db_session, 2)
-        assert cmp._parents.count() == 0
+        assert cmp.parents_query.count() == 0
 
         for p in [Word.get_by_id(db_session, 4), Word.get_by_id(db_session, 5)]:
             prim = Word.get_by_id(db_session, p.id)
@@ -33,7 +33,7 @@ class TestWordLinker:
 
         parent = Word.get_by_id(db_session, 4)
         WordLinker.add_child(parent, cmp)
-        assert cmp._parents.count() == 2
+        assert cmp.parents_query.count() == 2
 
     def test_add_children(self, db_session):
         prim = Word.get_by_id(db_session, 1)

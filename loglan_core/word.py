@@ -104,21 +104,21 @@ class BaseWord(BaseModel):
         "type", ForeignKey(f"{T_NAME_TYPES}.id"), nullable=False
     )
 
-    _type: Mapped[BaseType] = relationship(back_populates="_words")
+    relationship_type: Mapped[BaseType] = relationship(back_populates="relationship_words")
 
     @property
     def type(self) -> BaseType:
         """
         Returns:
         """
-        return self._type
+        return self.relationship_type
 
     event_start_id: Mapped[int] = mapped_column(
         "event_start", ForeignKey(f"{T_NAME_EVENTS}.id"), nullable=False
     )
 
-    _event_start: Mapped[BaseEvent] = relationship(
-        foreign_keys=[event_start_id], back_populates="_appeared_words"
+    relationship_event_start: Mapped[BaseEvent] = relationship(
+        foreign_keys=[event_start_id], back_populates="relationship_appeared_words"
     )
 
     @property
@@ -126,14 +126,14 @@ class BaseWord(BaseModel):
         """
         Returns:
         """
-        return self._event_start
+        return self.relationship_event_start
 
     event_end_id: Mapped[int | None] = mapped_column(
         "event_end", ForeignKey(f"{T_NAME_EVENTS}.id")
     )
 
-    _event_end: Mapped[BaseEvent | None] = relationship(
-        foreign_keys=[event_end_id], back_populates="_deprecated_words"
+    relationship_event_end: Mapped[BaseEvent | None] = relationship(
+        foreign_keys=[event_end_id], back_populates="relationship_deprecated_words"
     )
 
     @property
@@ -141,11 +141,11 @@ class BaseWord(BaseModel):
         """
         Returns:
         """
-        return self._event_end
+        return self.relationship_event_end
 
-    _authors: Mapped[list[BaseAuthor]] = relationship(
+    relationship_authors: Mapped[list[BaseAuthor]] = relationship(
         secondary=t_connect_authors,
-        back_populates="_contribution",
+        back_populates="relationship_contribution",
         lazy="dynamic",
         enable_typechecks=False,
     )
@@ -155,7 +155,7 @@ class BaseWord(BaseModel):
         """
         Returns:
         """
-        return self._authors
+        return self.relationship_authors
 
     @property
     def authors(self) -> list[BaseAuthor]:
@@ -164,8 +164,8 @@ class BaseWord(BaseModel):
         """
         return self.authors_query.all()
 
-    _definitions: Mapped[list[BaseDefinition]] = relationship(
-        back_populates="_source_word",
+    relationship_definitions: Mapped[list[BaseDefinition]] = relationship(
+        back_populates="relationship_source_word",
         lazy="dynamic",
     )
 
@@ -174,7 +174,7 @@ class BaseWord(BaseModel):
         """
         Returns:
         """
-        return self._definitions
+        return self.relationship_definitions
 
     @property
     def definitions(self) -> list[BaseDefinition]:
@@ -184,11 +184,11 @@ class BaseWord(BaseModel):
         return self.definitions_query.order_by(BaseDefinition.position.asc()).all()
 
     # word's derivatives
-    _derivatives: Mapped[list[BaseWord]] = relationship(
+    relationship_derivatives: Mapped[list[BaseWord]] = relationship(
         secondary=t_connect_words,
         primaryjoin=(t_connect_words.c.parent_id == id),
         secondaryjoin=(t_connect_words.c.child_id == id),
-        backref=backref("_parents", lazy="dynamic", enable_typechecks=False),
+        backref=backref("relationship_parents", lazy="dynamic", enable_typechecks=False),
         lazy="dynamic",
         enable_typechecks=False,
     )
@@ -198,7 +198,7 @@ class BaseWord(BaseModel):
         """
         Returns:
         """
-        return self._derivatives
+        return self.relationship_derivatives
 
     @property
     def derivatives(self):
@@ -274,7 +274,7 @@ class BaseWord(BaseModel):
         Returns:
             BaseQuery
         """
-        return self._parents  # pylint: disable=E1101
+        return self.relationship_parents  # pylint: disable=E1101
 
     @property
     def parents(self):

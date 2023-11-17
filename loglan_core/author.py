@@ -84,8 +84,8 @@ class BaseAuthor(BaseModel):
         **str** : max_length=128, nullable=True, unique=False
     """
 
-    _contribution: Mapped[List["BaseWord"]] = relationship(  # type: ignore
-        back_populates="_authors",
+    relationship_contribution: Mapped[List["BaseWord"]] = relationship(  # type: ignore
+        back_populates="relationship_authors",
         secondary=t_connect_authors,
         enable_typechecks=False,
     )
@@ -96,4 +96,4 @@ class BaseAuthor(BaseModel):
         *Relationship query for getting a list of words coined by this author*
          **query** : Optional[List[BaseWord]]
         """
-        return self._contribution
+        return self.relationship_contribution

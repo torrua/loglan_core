@@ -74,16 +74,16 @@ class BaseEvent(BaseModel):
     """*Event's suffix (used to create filename when exporting HTML file)*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    _deprecated_words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
+    relationship_deprecated_words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
         "BaseWord",
-        back_populates="_event_end",
+        back_populates="relationship_event_end",
         foreign_keys="BaseWord.event_end_id",
         lazy="dynamic",
     )
 
-    _appeared_words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
+    relationship_appeared_words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
         "BaseWord",
-        back_populates="_event_start",
+        back_populates="relationship_event_start",
         foreign_keys="BaseWord.event_start_id",
         lazy="dynamic",
     )
@@ -95,7 +95,7 @@ class BaseEvent(BaseModel):
 
         **query** : Optional[List[BaseWord]]"""
 
-        return self._deprecated_words
+        return self.relationship_deprecated_words
 
     @property
     def appeared_words_query(self):
@@ -104,7 +104,7 @@ class BaseEvent(BaseModel):
 
         **query** : Optional[List[BaseWord]]"""
 
-        return self._appeared_words
+        return self.relationship_appeared_words
 
     @property
     def deprecated_words(self) -> list["BaseWord"]:  # type: ignore
