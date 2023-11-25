@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 """
-
 This module contains an addon for basic Key Model,
 which makes it possible to get Key objects by event
 """
@@ -16,7 +15,7 @@ from loglan_core.key import BaseKey
 from loglan_core.word import BaseWord
 
 
-class KeySelector(Select):  # pylint: disable=R0901
+class KeySelector(Select):  # pylint: disable=too-many-ancestors
     """KeySelector model"""
 
     def __init__(self, class_=BaseKey, is_sqlite: bool = False) -> None:
@@ -43,7 +42,10 @@ class KeySelector(Select):  # pylint: disable=R0901
         self.is_sqlite = is_sqlite
 
     @property
-    def inherit_cache(self):  # pylint: disable=C0116
+    def inherit_cache(self) -> bool:
+        """
+        :return: bool
+        """
         return True
 
     def by_event(self, event_id: int | None = None) -> KeySelector:
@@ -65,17 +67,20 @@ class KeySelector(Select):  # pylint: disable=R0901
         return self.where(self.class_.id.in_(subquery))
 
     def by_word(self, word: str, case_sensitive: bool = False) -> KeySelector:
-        """
+        """Select query filtered by specified searching word
+
         Args:
           word: str
           case_sensitive: bool
         Returns: self object with filter applied
         """
-
-        return self.where(self.class_.filter_by_word_cs(word, case_sensitive, self.is_sqlite))
+        return self.where(
+            self.class_.filter_by_word_cs(word, case_sensitive, self.is_sqlite)
+        )
 
     def by_language(self, language: str | None = None) -> KeySelector:
-        """
+        """Select query filtered by specified language
+
         Args:
           language: str
         Returns: self object with filter applied
