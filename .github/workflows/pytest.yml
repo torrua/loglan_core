@@ -4,7 +4,8 @@ on: [push]
 
 jobs:
   build:
-
+    env:
+      - CC_TEST_REPORTER_ID: 0ab46c7acdcb9951ded95c2cb362eeec513807aa51c459b035509daf84e8f81e
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -19,8 +20,27 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         pip install -r requirements-tests.txt
+        pip install coverage
+
     - name: Test with pytest
       run: |
         pytest --cov loglan_core
         bash <(curl -s https://codecov.io/bash)
         ocular --data-file ".coverage" --config-file ".coveragerc"
+    - run:
+        name: install codeclimate test-reporter
+        command: |
+          # download test reporter as a static binary
+          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+          chmod +x ./cc-test-reporter
+    - run:
+        command: |
+          ./cc-test-reporter before-build
+    - run:
+        name: Run coverage report
+        command: |
+          ./cc-test-reporter format-coverage -t coverage.py
+          ./cc-test-reporter upload-coverage
+    - run:
+        command: |
+          ./cc-test-reporter after-build --exit-code $?
