@@ -1,5 +1,4 @@
 # !/usr/bin/env python
-# from distutils.core import setup
 from io import open
 
 from setuptools import setup
@@ -15,7 +14,7 @@ setup(
   packages=['loglan_core', 'loglan_core.addons'],
   package_data={'loglan_core': ['*'], },
   include_package_data=True,
-  version='0.1.3',
+  version='0.1.4',
   license='MIT',
   description="Loglan Dictionary Database Model for SQLAlchemy",
   long_description=read("README.md"),
@@ -23,7 +22,7 @@ setup(
   author='torrua',
   author_email='torrua@gmail.com',
   url='https://github.com/torrua/loglan_core',
-  download_url='https://github.com/torrua/loglan_core/archive/0.1.3.tar.gz',
+  download_url='https://github.com/torrua/loglan_core/archive/0.1.4.tar.gz',
   keywords=['Loglan', 'Dictionary', 'Database', 'Model', 'LOD'],
   install_requires=[
           'sqlalchemy>=2.0.21',
