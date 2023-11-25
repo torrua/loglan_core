@@ -101,9 +101,9 @@ which makes it possible to get Key objects by event</p>
 </ul>
 <h3>Instance variables</h3>
 <dl>
-<dt id="loglan_core.addons.key_selector.KeySelector.inherit_cache"><code class="name">var <span class="ident">inherit_cache</span></code></dt>
+<dt id="loglan_core.addons.key_selector.KeySelector.inherit_cache"><code class="name">var <span class="ident">inherit_cache</span> : bool</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>:return: bool</p></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -117,6 +117,32 @@ which makes it possible to get Key objects by event</p>
 <dl>
 <dt><strong><code>event_id</code></strong></dt>
 <dd>int</dd>
+</dl>
+<p>Returns: self object with filter applied</p></div>
+</dd>
+<dt id="loglan_core.addons.key_selector.KeySelector.by_language"><code class="name flex">
+<span>def <span class="ident">by_language</span></span>(<span>self, language: str | None = None) ‑> <a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Select query filtered by specified language</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>language</code></strong></dt>
+<dd>str</dd>
+</dl>
+<p>Returns: self object with filter applied</p></div>
+</dd>
+<dt id="loglan_core.addons.key_selector.KeySelector.by_word"><code class="name flex">
+<span>def <span class="ident">by_word</span></span>(<span>self, word: str, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></span>
+</code></dt>
+<dd>
+<div class="desc"><p>Select query filtered by specified searching word</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>word</code></strong></dt>
+<dd>str</dd>
+<dt><strong><code>case_sensitive</code></strong></dt>
+<dd>bool</dd>
 </dl>
 <p>Returns: self object with filter applied</p></div>
 </dd>
@@ -142,6 +168,8 @@ which makes it possible to get Key objects by event</p>
 <h4><code><a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></code></h4>
 <ul class="">
 <li><code><a title="loglan_core.addons.key_selector.KeySelector.by_event" href="#loglan_core.addons.key_selector.KeySelector.by_event">by_event</a></code></li>
+<li><code><a title="loglan_core.addons.key_selector.KeySelector.by_language" href="#loglan_core.addons.key_selector.KeySelector.by_language">by_language</a></code></li>
+<li><code><a title="loglan_core.addons.key_selector.KeySelector.by_word" href="#loglan_core.addons.key_selector.KeySelector.by_word">by_word</a></code></li>
 <li><code><a title="loglan_core.addons.key_selector.KeySelector.inherit_cache" href="#loglan_core.addons.key_selector.KeySelector.inherit_cache">inherit_cache</a></code></li>
 </ul>
 </li>
