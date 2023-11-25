@@ -25,12 +25,49 @@ class TestKeySelector:
     @staticmethod
     def test_by_event_specified( db_session):
         keys = db_session.execute(KeySelector().by_event(2)).scalars().all()
-        result_1 = sorted(key.id for key in keys)
-        assert result_1 == [2, 4, 6, 7, 8, 9, 10, 11, 12]
+        result = sorted(key.id for key in keys)
+        assert result == [2, 4, 6, 7, 8, 9, 10, 11, 12]
 
     @staticmethod
     def test_by_event_unspecified(db_session):
         keys = db_session.execute(KeySelector().by_event()).scalars().all()
 
-        result_2 = sorted(key.id for key in keys)
-        assert result_2 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+        result = sorted(key.id for key in keys)
+        assert result == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
+
+    @staticmethod
+    def test_by_word(db_session):
+        keys = db_session.execute(KeySelector().by_word("act")).scalars().all()
+
+        result = sorted(key.id for key in keys)
+        assert result == [7, 12]
+
+    @staticmethod
+    def test_by_language(db_session):
+        keys = db_session.execute(KeySelector().by_language("es")).scalars().all()
+
+        result = sorted(key.id for key in keys)
+        assert result == [12, 14]
+
+    @staticmethod
+    def test_by_word_and_language(db_session):
+        keys = db_session.execute(KeySelector().by_language("es").by_word("act")).scalars().all()
+
+        result = sorted(key.id for key in keys)
+        assert result == [12, ]
+
+    @staticmethod
+    def test_by_word_cs(db_session):
+        keys = db_session.execute(
+            KeySelector(is_sqlite=True).by_word("Act", case_sensitive=True)
+        ).scalars().all()
+        assert keys == []
+
+    @staticmethod
+    def test_by_word_wildcard(db_session):
+        keys = db_session.execute(
+            KeySelector(is_sqlite=True).by_word("Act*")
+        ).scalars().all()
+
+        result = sorted(key.id for key in keys)
+        assert result == [7, 9, 11, 12, ]

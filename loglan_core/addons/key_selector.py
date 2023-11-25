@@ -63,3 +63,21 @@ class KeySelector(Select):  # pylint: disable=R0901
             .scalar_subquery()
         )
         return self.where(self.class_.id.in_(subquery))
+
+    def by_word(self, word: str, case_sensitive: bool = False) -> KeySelector:
+        """
+        Args:
+          word: str
+          case_sensitive: bool
+        Returns: self object with filter applied
+        """
+
+        return self.where(self.class_.filter_by_word_cs(word, case_sensitive, self.is_sqlite))
+
+    def by_language(self, language: str | None = None) -> KeySelector:
+        """
+        Args:
+          language: str
+        Returns: self object with filter applied
+        """
+        return self.where(self.class_.filter_by_language(language))

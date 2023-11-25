@@ -92,6 +92,7 @@ class BaseKey(BaseModel):
         is_sqlite: bool = False,
     ) -> BinaryExpression:
         """case sensitive name filter"""
+        key = str(key).replace("*", "%")
         return (
             (cls.word.op("GLOB")(key) if is_sqlite else cls.word.like(key))
             if case_sensitive
