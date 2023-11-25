@@ -4,7 +4,7 @@ Main point for export DB models
 """
 
 __author__ = "torrua"
-__copyright__ = "Copyright 2022, loglan_core project"
+__copyright__ = "Copyright 2023, loglan_core project"
 __email__ = "torrua@gmail.com"
 
 

@@ -3,6 +3,7 @@
 ## This module contains a basic WordSource Model
 """
 import re
+
 from loglan_core.table_names import T_NAME_WORD_SOURCES
 
 
@@ -34,11 +35,11 @@ class BaseWordSource:
             str(transcription_search[0]).strip() if transcription_search else None
         )
 
-    def __repr__(self):
+    def __str__(self):
         """
         Returns:
         """
-        return f"<{self.__class__.__name__} {self.as_string}>"  # TODO Unify instance repr
+        return f"<{self.__class__.__name__} {self.as_string}>"
 
     @staticmethod
     def parse_source(

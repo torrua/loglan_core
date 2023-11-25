@@ -47,14 +47,13 @@ class BaseDefinition(BaseModel):
         self.language = language
         self.notes = notes
 
-    def __repr__(self):
+    def __str__(self):
         """
         Returns:
         """
         return (
             f"<{self.__class__.__name__}"
-            f"{' ID ' + str(self.id) + '/' if self.id else ' '}"
-            f"{self.word_id} - {self.body[:20]}...>"
+            f" ID {str(self.id)}/{self.word_id} {self.body[:20]}…>"
         )
 
     word_id: Mapped[int] = mapped_column(
@@ -124,6 +123,7 @@ class BaseDefinition(BaseModel):
         key: BaseKey | str,
         language: str | None = None,
         case_sensitive: bool = False,
+        is_sqlite: bool = False,
     ):
         """Definition.Query filtered by specified key
 
@@ -131,6 +131,7 @@ class BaseDefinition(BaseModel):
           key: BaseKey | str:
           language: str: Language of key (Default value = None)
           case_sensitive: bool:  (Default value = False)
+          is_sqlite: bool:  (Default value = False)
 
         Returns:
           BaseQuery
@@ -138,22 +139,17 @@ class BaseDefinition(BaseModel):
         """
 
         search_key = (
-            BaseKey.word if isinstance(key, BaseKey) else str(key).replace("*", "%")
+            key.word if isinstance(key, BaseKey) else str(key).replace("*", "%")
         )
 
-        filter_key = (
-            BaseKey.word.like(search_key)
-            if case_sensitive
-            else BaseKey.word.ilike(search_key)
-        )
+        if not language and isinstance(key, BaseKey):
+            language = key.language
+
+        filter_key = BaseKey.filter_by_word_cs(search_key, case_sensitive, is_sqlite)
+        filter_language = BaseKey.filter_by_language(language)
 
         statement = (
-            select(cls)
-            .join(cls.relationship_keys)
-            .filter(filter_key, cls.relationship_keys.any(filter_key))
-        )
-
-        if language:  # todo get language from key if BaseKey
-            statement = statement.filter(BaseKey.language == language)
+            select(cls).join(cls.relationship_keys).filter(filter_key, filter_language)
+        ).distinct()
 
         return statement

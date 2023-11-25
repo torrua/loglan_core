@@ -7,6 +7,7 @@ This module contains a basic Word Model
 from __future__ import annotations
 
 import datetime
+
 from sqlalchemy import ForeignKey, JSON
 from sqlalchemy import select, or_, and_
 from sqlalchemy.orm import mapped_column, Mapped
@@ -74,7 +75,7 @@ class BaseWord(BaseModel):
 
         self.notes = notes
 
-    def __repr__(self):
+    def __str__(self):
         """
         Returns:
         """
@@ -104,7 +105,9 @@ class BaseWord(BaseModel):
         "type", ForeignKey(f"{T_NAME_TYPES}.id"), nullable=False
     )
 
-    relationship_type: Mapped[BaseType] = relationship(back_populates="relationship_words")
+    relationship_type: Mapped[BaseType] = relationship(
+        back_populates="relationship_words"
+    )
 
     @property
     def type(self) -> BaseType:
@@ -188,7 +191,9 @@ class BaseWord(BaseModel):
         secondary=t_connect_words,
         primaryjoin=(t_connect_words.c.parent_id == id),
         secondaryjoin=(t_connect_words.c.child_id == id),
-        backref=backref("relationship_parents", lazy="dynamic", enable_typechecks=False),
+        backref=backref(
+            "relationship_parents", lazy="dynamic", enable_typechecks=False
+        ),
         lazy="dynamic",
         enable_typechecks=False,
     )
@@ -311,7 +316,7 @@ class BaseWord(BaseModel):
     @classmethod
     def filter_by_event_id(cls, event_id: int | None) -> BinaryExpression:
         """
-        Returns:
+        Returns: BinaryExpression
         """
         event_id_filter = event_id or BaseEvent.latest_id()
         start_id_condition = cls.event_start_id <= event_id_filter
@@ -320,3 +325,21 @@ class BaseWord(BaseModel):
             cls.event_end_id.is_(None),
         )
         return and_(start_id_condition, end_id_condition)
+
+    @classmethod
+    def filter_by_name_cs(
+        cls,
+        name: str,
+        case_sensitive: bool = False,
+        is_sqlite: bool = False,
+    ) -> BinaryExpression:
+        """
+        case-sensitive name filter
+        Returns: BinaryExpression
+        """
+        name = str(name).replace("*", "%")
+        return (
+            (cls.name.op("GLOB")(name) if is_sqlite else cls.name.like(name))
+            if case_sensitive
+            else cls.name.ilike(name)
+        )

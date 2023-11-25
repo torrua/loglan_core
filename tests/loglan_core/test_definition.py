@@ -5,9 +5,9 @@ from loglan_core import Definition, Key, Word
 @pytest.mark.usefixtures("db_session")
 class TestDefinition:
 
-    def test_repr(self, db_session):
+    def test_str(self, db_session):
         definition: Definition = db_session.query(Definition).filter_by(id=1).first()
-        assert str(definition) == '<BaseDefinition ID 1/6 - K «test»/«examine» B...>'
+        assert str(definition) == '<BaseDefinition ID 1/6 K «test»/«examine» B…>'
 
     def test_keys_query(self, db_session):
         definition: Definition = db_session.query(Definition).filter_by(id=1).first()
@@ -35,5 +35,24 @@ class TestDefinition:
         assert len(result) == 5
 
         definitions_act = Definition.by_key("act")
+        result = db_session.execute(definitions_act).scalars().all()
+        assert len(result) == 4
+
+    def test_by_key_specified_language(self, db_session):
+        definitions_act = Definition.by_key("act", language="es")
+        result = db_session.execute(definitions_act).scalars().all()
+        assert len(result) == 1
+
+    def test_by_key_as_object_language_from_key(self, db_session):
+        key_act = db_session.query(Key).filter(Key.word == "act", Key.language == "es").first()
+
+        definitions_act = Definition.by_key(key=key_act)
+        result = db_session.execute(definitions_act).scalars().all()
+        assert len(result) == 1
+
+
+    def test_by_key_as_object_language_separate(self, db_session):
+        key_act = db_session.query(Key).filter(Key.word == "act", Key.language == "es").first()
+        definitions_act = Definition.by_key(key=key_act, language="en")
         result = db_session.execute(definitions_act).scalars().all()
         assert len(result) == 4

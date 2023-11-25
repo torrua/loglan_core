@@ -16,7 +16,9 @@ key_8 = {'word': 'undertake', 'language': 'en', }
 key_9 = {'word': 'actor', 'language': 'en', }
 key_10 = {'word': 'end', 'language': 'en', }
 key_11 = {'word': 'activity', 'language': 'en', }
-keys = [key_1, key_2, key_3, key_4, key_5, key_6, key_7, key_8, key_9, key_10, key_11]
+key_12 = {'word': 'act', 'language': 'es', }
+
+keys = [key_1, key_2, key_3, key_4, key_5, key_6, key_7, key_8, key_9, key_10, key_11, key_12]
 keys_pair = (keys, Key)
 
 un_key_1 = {'word': 'test', 'language': 'fr', }
@@ -69,7 +71,7 @@ definitions = [definition_1, definition_2, definition_3, definition_4, definitio
 
 # ===== CONNECTIONS ============================================================
 connect_authors = [(1, 1), (1, 2), (1, 3), (2, 4), (2, 5), (1, 6), (2, 6)]  # (AID, WID)
-connect_keys = [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (2, 5), (7, 6), (8, 6), (9, 7), (10, 8), (7, 9), (11, 10), (6, 11), (2, 11), (2, 12), (4, 13), (4, 14), (7, 15), (7, 16), (2, 17)]  # (KID, DID)
+connect_keys = [(1, 1), (2, 1), (3, 2), (4, 3), (5, 4), (6, 5), (2, 5), (7, 6), (8, 6), (9, 7), (10, 8), (7, 9), (11, 10), (6, 11), (2, 11), (2, 12), (4, 13), (4, 14), (7, 15), (7, 16), (2, 17), (12, 15), ]  # (KID, DID)
 connect_words = [(2, 1), (2, 3), (2, 6), (5, 4), (5, 6)]  # (parent_id, child_id)
 
 

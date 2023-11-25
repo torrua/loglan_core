@@ -13,7 +13,7 @@ class TestWordSource:
         assert ws.language == "E"
         assert ws.transcription == "act"
 
-    def test_repr(self):
+    def test_str(self):
         ws: WordSource = WordSource(word_sources[0])  # "2/3E act"
         assert str(ws) == '<BaseWordSource 2/3E act>'
 

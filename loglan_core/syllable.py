@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0303
 """
 This module contains a basic Syllable Model
 """
@@ -42,7 +41,7 @@ class BaseSyllable(BaseModel):
         self.type = type
         self.allowed = allowed
 
-    def __repr__(self):
+    def __str__(self):
         """
         Returns:
         """

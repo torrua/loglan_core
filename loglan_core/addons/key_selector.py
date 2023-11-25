@@ -20,6 +20,20 @@ class KeySelector(Select):  # pylint: disable=R0901
     """KeySelector model"""
 
     def __init__(self, class_=BaseKey, is_sqlite: bool = False) -> None:
+        """
+        Initializes the object with the given parameters.
+
+        Args:
+            class_ (Type[BaseKey]): The class to be used as the base key.
+            Must be a subclass of BaseKey.
+            is_sqlite (bool): Whether the object is being used with SQLite or not.
+
+        Raises:
+            ValueError: If the provided class_ is not a subclass of BaseKey.
+
+        Returns:
+            None
+        """
         if not issubclass(class_, BaseKey):
             raise ValueError(
                 f"Provided attribute class_={class_} is not a {BaseKey} or its child"

@@ -4,13 +4,13 @@
 Initial common functions for LOD Model Classes
 """
 from datetime import datetime
-from typing_extensions import Annotated
 
-from sqlalchemy import func
-from sqlalchemy.orm import Session
-from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy import String
+from sqlalchemy import func
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
+from sqlalchemy.orm import Session
 from sqlalchemy.orm import registry as rg
+from typing_extensions import Annotated
 
 str_008 = Annotated[str, 8]
 str_016 = Annotated[str, 16]
@@ -41,6 +41,18 @@ class BaseModel(DeclarativeBase):
     updated: Mapped[datetime | None] = mapped_column(
         onupdate=func.now()  # pylint: disable=E1102
     )
+
+    def __repr__(self):
+        obj_str = ", ".join(
+            sorted(
+                [
+                    f"{k}={v!r}"
+                    for k, v in self.__dict__.items()
+                    if not k.startswith("_") and k not in ["created", "updated"]
+                ]
+            )
+        )
+        return f"{self.__class__.__name__}({obj_str})"
 
     @classmethod
     def get_by_id(cls, session: Session, cid: int):

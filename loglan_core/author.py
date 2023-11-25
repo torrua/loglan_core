@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0303
 """
 This module contains a basic Author Model
 """
@@ -54,7 +53,7 @@ class BaseAuthor(BaseModel):
         self.full_name = full_name
         self.notes = notes
 
-    def __repr__(self):
+    def __str__(self):
         """
         Returns:
         """

@@ -15,7 +15,7 @@ from loglan_core.word_source import BaseWordSource
 class WordSourcer:
     """WordSourcer Model"""
 
-    # these prims have switched djifoas like 'flo' for 'folma'
+    # these primes have switched djifoas like 'flo' for 'folma'
     switch_prims = [
         "canli",
         "farfu",

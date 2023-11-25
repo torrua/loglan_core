@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0303
 """
 This module contains a basic Connection Table Models
 """
 from sqlalchemy import Column, ForeignKey, Table
+
 from loglan_core.base import BaseModel as Base
 from loglan_core.table_names import (
     T_NAME_AUTHORS,

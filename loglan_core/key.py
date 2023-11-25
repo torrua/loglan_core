@@ -2,9 +2,10 @@
 """
 This module contains a basic Key Model
 """
-from sqlalchemy import UniqueConstraint
-from sqlalchemy.orm import relationship
+from sqlalchemy import UniqueConstraint, true
 from sqlalchemy.orm import mapped_column, Mapped
+from sqlalchemy.orm import relationship
+from sqlalchemy.sql.elements import BinaryExpression
 
 from loglan_core.base import BaseModel, str_016, str_064
 from loglan_core.connect_tables import t_connect_keys
@@ -49,7 +50,7 @@ class BaseKey(BaseModel):
         self.word = word
         self.language = language
 
-    def __repr__(self):
+    def __str__(self):
         return f"<{self.__class__.__name__} {self.id} '{self.word}' ({self.language})>"
 
     def __lt__(self, other):
@@ -82,3 +83,31 @@ class BaseKey(BaseModel):
         Returns:
         """
         return self.definitions_query.all()
+
+    @classmethod
+    def filter_by_word_cs(
+        cls,
+        key: str,
+        case_sensitive: bool = False,
+        is_sqlite: bool = False,
+    ) -> BinaryExpression:
+        """case sensitive name filter"""
+        return (
+            (cls.word.op("GLOB")(key) if is_sqlite else cls.word.like(key))
+            if case_sensitive
+            else cls.word.ilike(key)
+        )
+
+    @classmethod
+    def filter_by_language(cls, language: str | None = None) -> BinaryExpression:
+        """
+        Filter the language of the base key.
+
+        Args:
+            language (str or None): The language to filter by.
+            If None, no language filter will be applied.
+
+        Returns:
+            BinaryExpression: A filter condition for the base key's language.
+        """
+        return (cls.language == language) if language else true()

@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0303
 
 """
 This module contains a basic Event Model
@@ -10,8 +9,8 @@ import datetime
 
 from sqlalchemy import Text
 from sqlalchemy import select, func
-from sqlalchemy.orm import relationship
 from sqlalchemy.orm import Mapped, mapped_column
+from sqlalchemy.orm import relationship
 from sqlalchemy.sql.selectable import Select
 
 from loglan_core.base import BaseModel, str_016, str_064
@@ -57,6 +56,13 @@ class BaseEvent(BaseModel):
         self.definition = definition
         self.annotation = annotation
         self.suffix = suffix
+
+    def __str__(self):
+        return (
+            f"<{self.__class__.__name__}"
+            f"{' ID ' + str(self.id) + ' ' if self.id else ' '}"
+            f"{self.name} ({self.date})>"
+        )
 
     date: Mapped[datetime.date] = mapped_column(nullable=False)
     """*Event's starting day*  
@@ -136,4 +142,4 @@ class BaseEvent(BaseModel):
         """
         Gets the id of the latest (current) `BaseEvent` from DB
         """
-        return select(func.max(BaseEvent.id)).scalar_subquery()  # pylint: disable=E1102
+        return select(func.max(cls.id)).scalar_subquery()  # pylint: disable=E1102

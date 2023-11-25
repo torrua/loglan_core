@@ -41,7 +41,7 @@ class BaseType(BaseModel):
         self.group = group
         self.description = description
 
-    def __repr__(self):
+    def __str__(self):
         """
         Returns:
         """

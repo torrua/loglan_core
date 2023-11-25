@@ -4,21 +4,30 @@ This module contains an "Export extensions" for LOD dictionary SQL model.
 Add export() function to db object for returning its text string presentation.
 """
 
+from loglan_core.author import BaseAuthor
 from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
 from loglan_core.setting import BaseSetting
 from loglan_core.syllable import BaseSyllable
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
-from loglan_core.author import BaseAuthor
 from loglan_core.word_spell import BaseWordSpell
 
 
 class Exporter:
     """General Exporter Class"""
+
     @classmethod
     def export(cls, obj):
-        """general export function"""
+        """
+        Export the given object using the appropriate exporter function.
+        Args:
+            obj: The object to be exported.
+        Returns:
+            The exported object.
+        Raises:
+            ValueError: If the object type is not supported.
+        """
 
         exporters = {
             BaseAuthor: cls.export_author,
@@ -37,7 +46,6 @@ class Exporter:
 
         raise ValueError(f"Unsupported object type: {obj.__class__}")
 
-
     @staticmethod
     def export_author(obj: BaseAuthor) -> str:
         """
@@ -54,9 +62,11 @@ class Exporter:
         Returns:
             Formatted basic string
         """
-        return f"{obj.id}@{obj.name}" \
-               f"@{obj.date.strftime('%m/%d/%Y')}@{obj.definition}" \
-               f"@{obj.annotation}@{obj.suffix}"
+        return (
+            f"{obj.id}@{obj.name}"
+            f"@{obj.date.strftime('%m/%d/%Y')}@{obj.definition}"
+            f"@{obj.annotation}@{obj.suffix}"
+        )
 
     @staticmethod
     def export_syllable(obj) -> str:
@@ -74,10 +84,12 @@ class Exporter:
         Returns:
             Formatted basic string
         """
-        return f"{obj.date.strftime('%d.%m.%Y %H:%M:%S')}" \
-               f"@{obj.db_version}" \
-               f"@{obj.last_word_id}" \
-               f"@{obj.db_release}"
+        return (
+            f"{obj.date.strftime('%d.%m.%Y %H:%M:%S')}"
+            f"@{obj.db_version}"
+            f"@{obj.last_word_id}"
+            f"@{obj.db_release}"
+        )
 
     @staticmethod
     def export_type(obj) -> str:
@@ -86,8 +98,10 @@ class Exporter:
         Returns:
             Formatted basic string
         """
-        return f"{obj.type}@{obj.type_x}@{obj.group}@{obj.parentable}" \
-               f"@{obj.description if obj.description else ''}"
+        return (
+            f"{obj.type}@{obj.type_x}@{obj.group}@{obj.parentable}"
+            f"@{obj.description if obj.description else ''}"
+        )
 
     @staticmethod
     def export_word(obj) -> str:
@@ -102,9 +116,11 @@ class Exporter:
         origin_x = ewc.stringer(obj.origin_x)
         origin = ewc.stringer(obj.origin)
 
-        return f"{obj.id_old}@{obj.type.type}@{obj.type.type_x}@{ewc.e_affixes}" \
-               f"@{match}@{ewc.e_source}@{ewc.e_year}@{ewc.e_rank}" \
-               f"@{origin}@{origin_x}@{ewc.e_usedin}@{tid_old}"
+        return (
+            f"{obj.id_old}@{obj.type.type}@{obj.type.type_x}@{ewc.e_affixes}"
+            f"@{match}@{ewc.e_source}@{ewc.e_year}@{ewc.e_rank}"
+            f"@{origin}@{origin_x}@{ewc.e_usedin}@{tid_old}"
+        )
 
     @staticmethod
     def export_definition(obj) -> str:
@@ -113,11 +129,15 @@ class Exporter:
         Returns:
             Formatted basic string
         """
-        e_grammar = f"{obj.slots if obj.slots else ''}" \
+        e_grammar = (
+            f"{obj.slots if obj.slots else ''}"
             f"{obj.grammar_code if obj.grammar_code else ''}"
+        )
 
-        return f"{obj.source_word.id_old}@{obj.position}@{obj.usage if obj.usage else ''}" \
-               f"@{e_grammar}@{obj.body}@@{obj.case_tags if obj.case_tags else ''}"
+        return (
+            f"{obj.source_word.id_old}@{obj.position}@{obj.usage if obj.usage else ''}"
+            f"@{e_grammar}@{obj.body}@@{obj.case_tags if obj.case_tags else ''}"
+        )
 
     @staticmethod
     def export_word_spell(obj) -> str:
@@ -126,10 +146,14 @@ class Exporter:
         Returns:
             Formatted basic string
         """
-        code_name = "".join("0" if symbol.isupper() else "5" for symbol in str(obj.name))
+        code_name = "".join(
+            "0" if symbol.isupper() else "5" for symbol in str(obj.name)
+        )
 
-        return f"{obj.id_old}@{obj.name}@{obj.name.lower()}@{code_name}" \
-               f"@{obj.event_start_id}@{obj.event_end_id if obj.event_end else 9999}@"
+        return (
+            f"{obj.id_old}@{obj.name}@{obj.name.lower()}@{code_name}"
+            f"@{obj.event_start_id}@{obj.event_end_id if obj.event_end else 9999}@"
+        )
 
 
 class ExportWordConverter:
@@ -145,7 +169,7 @@ class ExportWordConverter:
         """
         Returns:
         """
-        source = '/'.join(sorted([author.abbreviation for author in self.word.authors]))
+        source = "/".join(sorted([author.abbreviation for author in self.word.authors]))
         notes: dict[str, str] = self.word.notes if self.word.notes else {}
 
         return f"{source} {notes.get('author', str())}".strip()
@@ -165,14 +189,14 @@ class ExportWordConverter:
         """
         Returns:
         """
-        return ' | '.join(cpx.name for cpx in self.word.complexes)
+        return " | ".join(cpx.name for cpx in self.word.complexes)
 
     @property
     def e_affixes(self) -> str:
         """
         Returns:
         """
-        return ' '.join(afx.name.replace("-", "") for afx in self.word.affixes).strip()
+        return " ".join(afx.name.replace("-", "") for afx in self.word.affixes).strip()
 
     @property
     def e_rank(self) -> str:

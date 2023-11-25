@@ -26,11 +26,11 @@ class TestKeySelector:
     def test_by_event_specified( db_session):
         keys = db_session.execute(KeySelector().by_event(2)).scalars().all()
         result_1 = sorted(key.id for key in keys)
-        assert result_1 == [2, 4, 6, 7, 8, 9, 10, 11]
+        assert result_1 == [2, 4, 6, 7, 8, 9, 10, 11, 12]
 
     @staticmethod
     def test_by_event_unspecified(db_session):
         keys = db_session.execute(KeySelector().by_event()).scalars().all()
 
         result_2 = sorted(key.id for key in keys)
-        assert result_2 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11]
+        assert result_2 == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]

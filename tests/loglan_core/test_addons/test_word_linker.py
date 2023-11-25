@@ -3,13 +3,23 @@
 
 import pytest
 
+from sqlalchemy import select, delete
 from loglan_core.addons.word_linker import WordLinker
 from loglan_core.word import BaseWord as Word
 from loglan_core.author import BaseAuthor as Author
-
+from loglan_core.connect_tables import t_connect_words
 
 @pytest.mark.usefixtures("db_session")
 class TestWordLinker:
+
+    @staticmethod
+    def get_word_by_name(name: str, session):
+        return session.execute(select(Word).where(Word.name==name)).scalars().first()
+
+    @staticmethod
+    def delete_links(db_session):
+        delete_query = delete(t_connect_words)
+        db_session.execute(delete_query)
 
     """Word tests."""
     def test_is_parented(self, db_session):
@@ -22,31 +32,60 @@ class TestWordLinker:
         result = WordLinker._is_parented(parent, child)
         assert result is False
 
-    def test_add_child(self, db_session):
-        cmp = Word.get_by_id(db_session, 2)
+    def test_removed_links(self, db_session):
+        self.delete_links(db_session)
+        cmp = self.get_word_by_name(name="prukao", session=db_session)
         assert cmp.parents_query.count() == 0
 
-        for p in [Word.get_by_id(db_session, 4), Word.get_by_id(db_session, 5)]:
-            prim = Word.get_by_id(db_session, p.id)
-            result = WordLinker.add_child(prim, cmp)
-            assert result == cmp.name
+    def test_add_child_correct(self, db_session):
+        self.delete_links(db_session)
+        prukao = self.get_word_by_name(name="prukao", session=db_session)
+        kakto = self.get_word_by_name(name="kakto", session=db_session)
+        pruci = self.get_word_by_name(name="pruci", session=db_session)
 
-        parent = Word.get_by_id(db_session, 4)
-        WordLinker.add_child(parent, cmp)
-        assert cmp.parents_query.count() == 2
+        WordLinker.add_child(kakto, prukao)
+        assert prukao.parents_query.count() == 1
 
-    def test_add_children(self, db_session):
-        prim = Word.get_by_id(db_session, 1)
-        assert prim.derivatives_query.count() == 0
+        WordLinker.add_child(pruci, prukao)
+        assert prukao.parents_query.count() == 2
 
-        complexes = [Word.get_by_id(db_session, 3), Word.get_by_id(db_session, 4)]
-        WordLinker.add_children(prim, complexes)
-        assert prim.derivatives_query.count() == 2
+        # adding already existed child
+        WordLinker.add_child(pruci, prukao)
+        assert prukao.parents_query.count() == 2
+
+
+    def test_add_child_exception(self, db_session):
+        kakto = self.get_word_by_name(name="kakto", session=db_session)
+        pruci = self.get_word_by_name(name="pruci", session=db_session)
+        with pytest.raises(TypeError):
+            WordLinker.add_child(kakto, pruci)
+
+    def test_add_children_correct(self, db_session):
+        self.delete_links(db_session)
+
+        kakto = self.get_word_by_name(name="kakto", session=db_session)
+        kak = self.get_word_by_name(name="kak", session=db_session)
+        kao = self.get_word_by_name(name="kao", session=db_session)
+
+        assert kak.parents_query.count() == 0
+        assert kao.parents_query.count() == 0
+
+        WordLinker.add_children(kakto, [kak, kao])
+        assert kak.parents_query.count() == 1
+        assert kao.parents_query.count() == 1
 
         # adding already existed children
-        complexes = [Word.get_by_id(db_session, 3), Word.get_by_id(db_session, 4)]
-        WordLinker.add_children(prim, complexes)
-        assert prim.derivatives_query.count() == 2
+        WordLinker.add_children(kakto, [kak, kao])
+        assert kak.parents_query.count() == 1
+        assert kao.parents_query.count() == 1
+
+
+    def test_add_children_exception(self, db_session):
+        pruci = self.get_word_by_name(name="pruci", session=db_session)
+        pru = self.get_word_by_name(name="pru", session=db_session)
+
+        with pytest.raises(TypeError):
+            WordLinker.add_children(pru, [pruci, ])
 
     def test_add_author(self, db_session):
         word = Word.get_by_id(db_session, 2)

@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
-# pylint: disable=C0303
 """
 This module contains a basic Setting Model
 """
 from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column
+
 from loglan_core.base import BaseModel, str_016
 from loglan_core.table_names import T_NAME_SETTINGS
 
@@ -44,7 +44,7 @@ class BaseSetting(BaseModel):
         self.last_word_id = last_word_id
         self.date = date
 
-    def __repr__(self):
+    def __str__(self):
         """
         Returns:
         """
