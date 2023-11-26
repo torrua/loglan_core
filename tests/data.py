@@ -64,8 +64,8 @@ definition_12 = {'position': 2, 'notes': None, 'body': '«test», test for ... a
 definition_13 = {'position': 3, 'notes': None, 'body': '«testable», of classes with -able members.', 'slots': None, 'usage': 'fu %', 'word_id': 5, 'language': 'en', 'case_tags': '', 'grammar_code': 'a'}
 definition_14 = {'position': 4, 'notes': None, 'body': '«testable», of testable properties.', 'slots': None, 'usage': 'nu %', 'word_id': 5, 'language': 'en', 'case_tags': '', 'grammar_code': 'a'}
 definition_15 = {'position': 1, 'notes': None, 'body': 'a combining form of {kakto}, «act».', 'slots': None, 'usage': '', 'word_id': 1, 'language': 'en', 'case_tags': '', 'grammar_code': 'af'}
-definition_16 = {'position': 1, 'notes': None, 'body': 'a combining form of {kakto}, «act».', 'slots': None, 'usage': '', 'word_id': 3, 'language': 'en', 'case_tags': '', 'grammar_code': 'af'}
-definition_17 = {'position': 1, 'notes': None, 'body': 'a combining form of {pruci}, «test».', 'slots': None, 'usage': '', 'word_id': 4, 'language': 'en', 'case_tags': '', 'grammar_code': 'af'}
+definition_16 = {'position': 1, 'notes': None, 'body': 'a combining form of {kakto}, «act».', 'slots': None, 'usage': '', 'word_id': 3, 'language': 'es', 'case_tags': '', 'grammar_code': 'af'}
+definition_17 = {'position': 1, 'notes': None, 'body': 'a combining form of {pruci}, «test».', 'slots': None, 'usage': '', 'word_id': 4, 'language': 'es', 'case_tags': '', 'grammar_code': 'af'}
 definitions = [definition_1, definition_2, definition_3, definition_4, definition_5, definition_6, definition_7, definition_8, definition_9, definition_10, definition_11, definition_12, definition_13, definition_14, definition_15, definition_16, definition_17]
 
 

@@ -85,7 +85,7 @@ class BaseKey(BaseModel):
         return self.definitions_query.all()
 
     @classmethod
-    def filter_by_word_cs(
+    def filter_by_key_cs(
         cls,
         key: str,
         case_sensitive: bool = False,

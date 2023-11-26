@@ -36,8 +36,8 @@ class TestKeySelector:
         assert result == [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 
     @staticmethod
-    def test_by_word(db_session):
-        keys = db_session.execute(KeySelector().by_word("act")).scalars().all()
+    def test_by_key(db_session):
+        keys = db_session.execute(KeySelector().by_key("act")).scalars().all()
 
         result = sorted(key.id for key in keys)
         assert result == [7, 12]
@@ -50,23 +50,23 @@ class TestKeySelector:
         assert result == [12, 14]
 
     @staticmethod
-    def test_by_word_and_language(db_session):
-        keys = db_session.execute(KeySelector().by_language("es").by_word("act")).scalars().all()
+    def test_by_key_and_language(db_session):
+        keys = db_session.execute(KeySelector().by_language("es").by_key("act")).scalars().all()
 
         result = sorted(key.id for key in keys)
         assert result == [12, ]
 
     @staticmethod
-    def test_by_word_cs(db_session):
+    def test_by_key_cs(db_session):
         keys = db_session.execute(
-            KeySelector(is_sqlite=True).by_word("Act", case_sensitive=True)
+            KeySelector(is_sqlite=True).by_key("Act", case_sensitive=True)
         ).scalars().all()
         assert keys == []
 
     @staticmethod
-    def test_by_word_wildcard(db_session):
+    def test_by_key_wildcard(db_session):
         keys = db_session.execute(
-            KeySelector(is_sqlite=True).by_word("Act*")
+            KeySelector(is_sqlite=True).by_key("Act*")
         ).scalars().all()
 
         result = sorted(key.id for key in keys)

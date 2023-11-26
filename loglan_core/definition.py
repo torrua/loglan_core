@@ -3,7 +3,7 @@
 This module contains a basic Definition Model
 """
 from sqlalchemy import ForeignKey, Text
-from sqlalchemy import select
+from sqlalchemy import select, true, BinaryExpression
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -138,14 +138,12 @@ class BaseDefinition(BaseModel):
 
         """
 
-        search_key = (
-            key.word if isinstance(key, BaseKey) else str(key).replace("*", "%")
-        )
+        search_key = key.word if isinstance(key, BaseKey) else str(key)
 
         if not language and isinstance(key, BaseKey):
             language = key.language
 
-        filter_key = BaseKey.filter_by_word_cs(search_key, case_sensitive, is_sqlite)
+        filter_key = BaseKey.filter_by_key_cs(search_key, case_sensitive, is_sqlite)
         filter_language = BaseKey.filter_by_language(language)
 
         statement = (
@@ -153,3 +151,8 @@ class BaseDefinition(BaseModel):
         ).distinct()
 
         return statement
+
+    @classmethod
+    def filter_language(cls, language: str | None = None) -> BinaryExpression:
+        """Definition.Query filtered by specified language"""
+        return cls.language == language if language else true()

@@ -66,16 +66,16 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
         )
         return self.where(self.class_.id.in_(subquery))
 
-    def by_word(self, word: str, case_sensitive: bool = False) -> KeySelector:
+    def by_key(self, key: str, case_sensitive: bool = False) -> KeySelector:
         """Select query filtered by specified searching word
 
         Args:
-          word: str
+          key: str
           case_sensitive: bool
         Returns: self object with filter applied
         """
         return self.where(
-            self.class_.filter_by_word_cs(word, case_sensitive, self.is_sqlite)
+            self.class_.filter_by_key_cs(key, case_sensitive, self.is_sqlite)
         )
 
     def by_language(self, language: str | None = None) -> KeySelector:
