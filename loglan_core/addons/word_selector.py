@@ -13,7 +13,6 @@ from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.selectable import Select
 
-from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
