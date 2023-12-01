@@ -13,10 +13,10 @@ from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.selectable import Select
 
-from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
+from loglan_core.addons.definition_selector import DefinitionSelector
 
 
 def order_by_name(function):
@@ -113,11 +113,10 @@ class WordSelector(Select):  # pylint: disable=R0901
         Returns: self object with filter applied
         """
 
-        definition_query = BaseDefinition.by_key(
+        definition_query = DefinitionSelector(is_sqlite=self.is_sqlite).by_key(
             key=key,
             language=language,
             case_sensitive=case_sensitive,
-            is_sqlite=self.is_sqlite,
         )
         subquery = select(definition_query.subquery().c.word_id)
         query = self.where(self.class_.id.in_(subquery))

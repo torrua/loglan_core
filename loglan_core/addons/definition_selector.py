@@ -70,15 +70,13 @@ class DefinitionSelector(Select):  # pylint: disable=too-many-ancestors
         key: BaseKey | str,
         language: str | None = None,
         case_sensitive: bool = False,
-        is_sqlite: bool = False,
-    ):
+    ) -> DefinitionSelector:
         """Definition.Query filtered by specified key
 
         Args:
           key: BaseKey | str:
           language: str | None:  (Default value = None)
           case_sensitive: bool:  (Default value = False)
-          is_sqlite: bool:  (Default value = False)
 
         Returns:
           BaseQuery
@@ -86,7 +84,9 @@ class DefinitionSelector(Select):  # pylint: disable=too-many-ancestors
         """
 
         search_key = key.word if isinstance(key, BaseKey) else str(key)
-        filter_key = BaseKey.filter_by_key_cs(search_key, case_sensitive, is_sqlite)
+        filter_key = BaseKey.filter_by_key_cs(
+            search_key, case_sensitive, self.is_sqlite
+        )
         filter_language = BaseKey.filter_by_language(
             key.language if isinstance(key, BaseKey) else language
         )

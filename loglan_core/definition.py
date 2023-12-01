@@ -3,7 +3,7 @@
 This module contains a basic Definition Model
 """
 from sqlalchemy import ForeignKey, Text
-from sqlalchemy import select, true, BinaryExpression
+from sqlalchemy import true, BinaryExpression
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -20,7 +20,25 @@ __pdoc__ = {
 
 
 class BaseDefinition(BaseModel):
-    """BaseDefinition model"""
+    """
+    The BaseDefinition model.
+
+    Attributes:
+        word_id (Mapped[int]): The ID of the word.
+        position (Mapped[int]): The position of the word.
+        body (Mapped[str]): The body of the word.
+        usage (Mapped[str_064] | None): The usage of the word.
+        grammar_code (Mapped[str_008] | None): The grammar code of the word.
+        slots (Mapped[int] | None): The slots of the word.
+        case_tags (Mapped[str_016] | None): The case tags of the word.
+        language (Mapped[str_016] | None): The language of the word.
+        notes (Mapped[str_255] | None): The notes of the word.
+        APPROVED_CASE_TAGS (tuple): A tuple of approved case tags.
+        KEY_PATTERN (str): The pattern for the key.
+        relationship_keys (Mapped[list[BaseKey]]): The relationship of keys.
+        relationship_source_word (Mapped["BaseWord"]): The relationship of source word.
+
+    """
 
     __tablename__ = T_NAME_DEFINITIONS
 
@@ -49,7 +67,10 @@ class BaseDefinition(BaseModel):
 
     def __str__(self):
         """
+        String representation of the BaseDefinition object.
+
         Returns:
+            str: A string representation of the object.
         """
         return (
             f"<{self.__class__.__name__}"
@@ -93,14 +114,20 @@ class BaseDefinition(BaseModel):
     @property
     def keys(self):
         """
+        Get all keys related to the BaseDefinition.
+
         Returns:
+            list[BaseKey]: All keys related to the BaseDefinition.
         """
         return self.keys_query.all()
 
     @property
     def source_word(self):
         """
+        Get source word related to the BaseDefinition.
+
         Returns:
+            BaseWord: Source word of the BaseDefinition.
         """
         return self.relationship_source_word
 
@@ -118,41 +145,14 @@ class BaseDefinition(BaseModel):
         )
 
     @classmethod
-    def by_key(
-        cls,
-        key: BaseKey | str,
-        language: str | None = None,
-        case_sensitive: bool = False,
-        is_sqlite: bool = False,
-    ):
-        """Definition.Query filtered by specified key
+    def filter_language(cls, language: str | None = None) -> BinaryExpression:
+        """
+        Filter by specified language.
 
         Args:
-          key: BaseKey | str:
-          language: str: Language of key (Default value = None)
-          case_sensitive: bool:  (Default value = False)
-          is_sqlite: bool:  (Default value = False)
+            language (str, optional): The language to filter by. Defaults to None.
 
         Returns:
-          BaseQuery
-
+            BinaryExpression: The filtered query.
         """
-
-        search_key = key.word if isinstance(key, BaseKey) else str(key)
-
-        if not language and isinstance(key, BaseKey):
-            language = key.language
-
-        filter_key = BaseKey.filter_by_key_cs(search_key, case_sensitive, is_sqlite)
-        filter_language = BaseKey.filter_by_language(language)
-
-        statement = (
-            select(cls).join(cls.relationship_keys).filter(filter_key, filter_language)
-        ).distinct()
-
-        return statement
-
-    @classmethod
-    def filter_language(cls, language: str | None = None) -> BinaryExpression:
-        """Definition.Query filtered by specified language"""
         return cls.language == language if language else true()
