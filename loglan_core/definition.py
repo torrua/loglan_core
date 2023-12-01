@@ -3,11 +3,10 @@
 This module contains a basic Definition Model
 """
 from sqlalchemy import ForeignKey, Text
-from sqlalchemy import select, true, BinaryExpression
+from sqlalchemy import true, BinaryExpression
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.selectable import Select
 
 from loglan_core.base import BaseModel, str_008, str_016, str_064, str_255
 from loglan_core.connect_tables import t_connect_keys
@@ -40,6 +39,7 @@ class BaseDefinition(BaseModel):
         relationship_source_word (Mapped["BaseWord"]): The relationship of source word.
 
     """
+
     __tablename__ = T_NAME_DEFINITIONS
 
     def __init__(
