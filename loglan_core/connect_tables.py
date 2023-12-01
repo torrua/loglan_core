@@ -2,7 +2,7 @@
 """
 This module contains a basic Connection Table Models
 """
-from sqlalchemy import Column, ForeignKey, Table
+from sqlalchemy import Column, ForeignKey, Table, Index
 
 from loglan_core.base import BaseModel as Base
 from loglan_core.table_names import (
@@ -20,6 +20,9 @@ t_connect_authors = Table(
     Base.metadata,
     Column("AID", ForeignKey(f"{T_NAME_AUTHORS}.id"), primary_key=True),
     Column("WID", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
+
+    Index('index_AID', 'AID'),
+    Index('index_WID', 'WID'),
 )
 """`(sqlalchemy.sql.schema.Table)`: 
 Connecting table for "many-to-many" relationship 
@@ -30,6 +33,9 @@ t_connect_words = Table(
     Base.metadata,
     Column("parent_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
     Column("child_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
+
+    Index('index_parent_id', 'parent_id'),
+    Index('index_child_id', 'child_id'),
 )
 """`(sqlalchemy.sql.schema.Table)`: 
 Connecting table for "many-to-many" relationship 
@@ -40,6 +46,9 @@ t_connect_keys = Table(
     Base.metadata,
     Column("KID", ForeignKey(f"{T_NAME_KEYS}.id"), primary_key=True),
     Column("DID", ForeignKey(f"{T_NAME_DEFINITIONS}.id"), primary_key=True),
+
+    Index('index_KID', 'KID'),
+    Index('index_DID', 'DID'),
 )
 """`(sqlalchemy.sql.schema.Table)`: 
 Connecting table for "many-to-many" relationship 
