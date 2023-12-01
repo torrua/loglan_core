@@ -40,13 +40,19 @@ which makes it possible to get Key objects by event</p>
 <span>(</span><span>class_=loglan_core.key.BaseKey, is_sqlite: bool = False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>KeySelector model</p>
-<p>Initializes the object with the given parameters.</p>
+<div class="desc"><p>A class used to select keys meeting certain criteria.</p>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>class_</code></strong> :&ensp;<code>Type[BaseKey]</code></dt>
+<dd>The class to be used as the base key. It must be a subclass of BaseKey.</dd>
+<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Indicator if the object is being used with SQLite or not.</dd>
+</dl>
+<p>Initializes the KeySelector object with the provided parameters.</p>
 <h2 id="args">Args</h2>
 <dl>
 <dt><strong><code>class_</code></strong> :&ensp;<code>Type[BaseKey]</code></dt>
-<dd>The class to be used as the base key.</dd>
-<dt>Must be a subclass of BaseKey.</dt>
+<dd>The class to be used as the base key. Must be a subclass of BaseKey.</dd>
 <dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether the object is being used with SQLite or not.</dd>
 </dl>
@@ -54,9 +60,7 @@ which makes it possible to get Key objects by event</p>
 <dl>
 <dt><code>ValueError</code></dt>
 <dd>If the provided class_ is not a subclass of BaseKey.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+</dl></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li>sqlalchemy.sql.selectable.Select</li>
@@ -112,39 +116,42 @@ which makes it possible to get Key objects by event</p>
 <span>def <span class="ident">by_event</span></span>(<span>self, event_id: int | None = None) ‑> <a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Select query filtered by specified Event (the latest by default)</p>
+<div class="desc"><p>Filters the select query by the specified Event.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>event_id</code></strong></dt>
-<dd>int</dd>
+<dt><strong><code>event_id</code></strong> :&ensp;<code>int</code></dt>
+<dd>The identifier of the event to filter by.</dd>
 </dl>
-<p>Returns: self object with filter applied</p></div>
+<h2 id="returns">Returns</h2>
+<p>A KeySelector object with the filter applied.</p></div>
 </dd>
 <dt id="loglan_core.addons.key_selector.KeySelector.by_key"><code class="name flex">
 <span>def <span class="ident">by_key</span></span>(<span>self, key: str, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Select query filtered by specified searching word</p>
+<div class="desc"><p>Filters the select query by a specified key.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>key</code></strong></dt>
-<dd>str</dd>
-<dt><strong><code>case_sensitive</code></strong></dt>
-<dd>bool</dd>
+<dt><strong><code>key</code></strong> :&ensp;<code>str</code></dt>
+<dd>The key to filter by.</dd>
+<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the key search should be case-sensitive.</dd>
 </dl>
-<p>Returns: self object with filter applied</p></div>
+<h2 id="returns">Returns</h2>
+<p>A KeySelector object with the filter applied.</p></div>
 </dd>
 <dt id="loglan_core.addons.key_selector.KeySelector.by_language"><code class="name flex">
 <span>def <span class="ident">by_language</span></span>(<span>self, language: str | None = None) ‑> <a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Select query filtered by specified language</p>
+<div class="desc"><p>Filters the select query by a specified language.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>language</code></strong></dt>
-<dd>str</dd>
+<dt><strong><code>language</code></strong> :&ensp;<code>str</code></dt>
+<dd>The language to filter by.</dd>
 </dl>
-<p>Returns: self object with filter applied</p></div>
+<h2 id="returns">Returns</h2>
+<p>A KeySelector object with the filter applied.</p></div>
 </dd>
 </dl>
 </dd>

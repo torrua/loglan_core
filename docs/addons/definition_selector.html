@@ -121,7 +121,7 @@ which makes it possible to get Definition objects by different criteria such as 
 <p>Returns: self object with filter applied</p></div>
 </dd>
 <dt id="loglan_core.addons.definition_selector.DefinitionSelector.by_key"><code class="name flex">
-<span>def <span class="ident">by_key</span></span>(<span>self, key: BaseKey | str, language: str | None = None, case_sensitive: bool = False, is_sqlite: bool = False)</span>
+<span>def <span class="ident">by_key</span></span>(<span>self, key: BaseKey | str, language: str | None = None, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></span>
 </code></dt>
 <dd>
 <div class="desc"><p>Definition.Query filtered by specified key</p>
@@ -133,9 +133,6 @@ which makes it possible to get Definition objects by different criteria such as 
 <dd>str | None:
 (Default value = None)</dd>
 <dt><strong><code>case_sensitive</code></strong></dt>
-<dd>bool:
-(Default value = False)</dd>
-<dt><strong><code>is_sqlite</code></strong></dt>
 <dd>bool:
 (Default value = False)</dd>
 </dl>
