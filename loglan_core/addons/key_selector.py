@@ -20,7 +20,8 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
     A class used to select keys meeting certain criteria.
 
     Attributes:
-        class_ (Type[BaseKey]): The class to be used as the base key. It must be a subclass of BaseKey.
+        class_ (Type[BaseKey]): The class to be used as the base key.
+        Must be a subclass of BaseKey.
         is_sqlite (bool): Indicator if the object is being used with SQLite or not.
     """
 
@@ -29,8 +30,9 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
         Initializes the KeySelector object with the provided parameters.
 
         Args:
-            class_ (Type[BaseKey]): The class to be used as the base key. Must be a subclass of BaseKey.
-            is_sqlite (bool): Whether the object is being used with SQLite or not.
+            class_ (Type[BaseKey]): The class to be used as the base key.
+            Must be a subclass of BaseKey.
+            is_sqlite (bool): Indicator if the object is being used with SQLite or not.
 
         Raises:
             ValueError: If the provided class_ is not a subclass of BaseKey.
