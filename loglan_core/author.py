@@ -4,8 +4,6 @@ This module contains a basic Author Model
 """
 from __future__ import annotations
 
-from typing import List
-
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -23,21 +21,22 @@ __pdoc__ = {
 class BaseAuthor(BaseModel):
     """Base Author's DB Model
 
-    Describes a table structure for storing information about words authors.
+    Describes a table structure for storing information about word authors.
 
-    Connects with words with "many-to-many" relationship. See `t_connect_authors`.
+    This class connects with words using a "many-to-many" relationship using `t_connect_authors`.
 
-    <details><summary>Show Examples</summary><p>
-    ```python
-    {'id': 13, 'full_name': 'James Cooke Brown',
-    'abbreviation': 'JCB', 'notes': ''}
+    Examples:
+        .. code-block:: python
 
-    {'id': 29, 'full_name': 'Loglan 4&5',
-    'abbreviation': 'L4',
-    'notes': 'The printed-on-paper book,
-              1975 version of the dictionary.'}
-    ```
-    </p></details>
+            {
+                'id': 13, 'full_name': 'James Cooke Brown',
+                'abbreviation': 'JCB', 'notes': ''
+            },
+            {
+                'id': 29, 'full_name': 'Loglan 4&5', 'abbreviation': 'L4',
+                'notes': 'The printed-on-paper book, 1975 version of the dictionary.'
+             }
+
     """
 
     __tablename__ = T_NAME_AUTHORS
@@ -48,14 +47,24 @@ class BaseAuthor(BaseModel):
         full_name: Mapped[str_064 | None],
         notes: Mapped[str_128 | None],
     ):
+        """Initializes a BaseAuthor instance.
+
+        Args:
+            abbreviation (str): Author's abbreviation (used in the LOD dictionary).
+            full_name (str, optional): Author's full name if it exists.
+            notes (str, optional): Any additional information about the author.
+        """
         super().__init__()
         self.abbreviation = abbreviation
         self.full_name = full_name
         self.notes = notes
 
     def __str__(self):
-        """
+        """Returns a string representation of the BaseAuthor instance.
+
         Returns:
+            str: A string representing the instance with class name,
+            author's ID (if available), and abbreviation.
         """
         return (
             f"<{self.__class__.__name__}"
@@ -64,35 +73,47 @@ class BaseAuthor(BaseModel):
         )
 
     abbreviation: Mapped[str_064] = mapped_column(nullable=False, unique=True)
-    """*Author's abbreviation (used in the LOD dictionary)*  
-        **str** : max_length=64, nullable=False, unique=True
-    Example:
-        > JCB, L4
+    """Author's abbreviation (used in the LOD dictionary).
+    
+    :type: :class:`~loglan_core.base.str_064` with max_length=64, nullable=False, unique=True
+
+    Examples:
+        ``JCB``, ``L4``
     """
 
     full_name: Mapped[str_064 | None]
-    """
-    *Author's full name (if exists)*  
-        **str** : max_length=64, nullable=True, unique=False
-    Example:
-        > James Cooke Brown, Loglan 4&5
+    """Author's full name if it exists.
+    
+    :type: :class:`~loglan_core.base.str_064` with max_length=64, nullable=True, unique=False
+
+    Examples:
+        ``James Cooke Brown``, ``Loglan 4&5``
     """
 
     notes: Mapped[str_128 | None]
-    """*Any additional information about author*  
-        **str** : max_length=128, nullable=True, unique=False
+    """Additional information (notes) if it exists.
+    
+    :type: :class:`~loglan_core.base.str_128` with max_length=128, nullable=True, unique=False
     """
 
-    relationship_contribution: Mapped[List["BaseWord"]] = relationship(  # type: ignore
+    relationship_contribution: Mapped[list["BaseWord"]] = relationship(  # type: ignore
         back_populates="relationship_authors",
         secondary=t_connect_authors,
         enable_typechecks=False,
     )
+    """
+    This is a relationship that establishes a 'many-to-many' connection between the Author and his Words. 
+    It is done via the :class:`~loglan_core.connect_tables.t_connect_authors` secondary table and does not enable typechecks.
+
+    Returns:
+        Mapped[list[BaseWord]]: A list of BaseWord instances associated with the current instance.
+    """
 
     @property
-    def contribution(self) -> list:
-        """
-        *Relationship query for getting a list of words coined by this author*
-         **query** : Optional[List[BaseWord]]
+    def contribution(self) -> list["BaseWord"]:
+        """Get a list of words coined by this author.
+
+        Returns:
+            list[BaseWord]: List of words coined by this author.
         """
         return self.relationship_contribution
