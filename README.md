@@ -13,7 +13,7 @@
 
 # SQLAlchemy Database Model for Loglan Dictionary
 
-This project represent a SQLAlchemy database model for the dictionary of constructed language Loglan. 
+This project represent a SQLAlchemy database model for the dictionary of [constructed language Loglan](http://www.loglan.org/). 
 It contains schemas for information about words, authors, lexical events, and even more.
 
 ![SQL LOD Schema](.images/LOD.pgerd.png)
