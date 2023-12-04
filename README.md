@@ -8,5 +8,40 @@
 ![pylint](https://img.shields.io/badge/pylint-9.84-yellow?logo=python&logoColor=white)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/loglan_core?color=yellow)
 ![PyPI - Version](https://img.shields.io/pypi/v/loglan-core?logo=PyPi&logoColor=%23FFFFFF)
+![GitHub License](https://img.shields.io/github/license/torrua/loglan_core)
+
+
+# Loglan Dictionary: SQLAlchemy Database Model
+
+This project is a SQLAlchemy database model of the constructed language Loglan. It contains information about words, authors, lexical events, and more.
 
 ![SQL LOD Schema](.images/LOD.pgerd.png)
+
+## Features
+Provides a structured SQLAlchemy model for the Loglan dictionary.
+Includes classes for handling words, authors, lexical events, and more.
+Can be easily integrated into Python projects to provide Loglan language support.
+
+## Prerequisites
+
+Before installing, ensure you have the following software installed on your system:
+
+- Python 3.10+
+- pip (Python package manager)
+
+## Installation
+You can install Loglan-Core using pip:
+```bash
+pip install Loglan-Core
+```
+
+## Usage
+After installing the package, you can use it as follows:
+
+```bash
+from loglan_core import Word, Type, Event, Key
+# your code here...
+```
+
+## License
+Loglan-Core is licensed under the MIT license.
