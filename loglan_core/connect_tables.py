@@ -48,7 +48,8 @@ Each row represents a word that is associated with an author.
 
 Variables:
     T_NAME_CONNECT_AUTHORS (str): The name of the table.
-    Column("AID", ForeignKey(f"{T_NAME_AUTHORS}.id"), primary_key=True): The ID column for the author.
+    Column("AID", ForeignKey(f"{T_NAME_AUTHORS}.id"), primary_key=True): 
+    The ID column for the author.
     Column("WID", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True): The ID column for the word.
     Index("index_AID", "AID"): An index on the "AID" column to enhance query performance.
     Index("index_WID", "WID"): An index on the "WID" column to enhance query performance.
@@ -71,10 +72,14 @@ Each row represents a child word that is associated with a parent word.
 
 Variables:
     T_NAME_CONNECT_WORDS (str): The name of the table.
-    Column("parent_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True): The ID column for the parent word.
-    Column("child_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True): The ID column for the child word.
-    Index("index_parent_id", "parent_id"): An index on the "parent_id" column to enhance query performance.
-    Index("index_child_id", "child_id"): An index on the "child_id" column to enhance query performance.
+    Column("parent_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True): 
+    The ID column for the parent word.
+    Column("child_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True): 
+    The ID column for the child word.
+    Index("index_parent_id", "parent_id"): An index on the "parent_id" 
+    column to enhance query performance.
+    Index("index_child_id", "child_id"): An index on the "child_id" 
+    column to enhance query performance.
 """
 
 t_connect_keys = Table(
@@ -93,8 +98,10 @@ Each row represents a definition that is associated with a key.
 
 Variables:
     T_NAME_CONNECT_KEYS (str): The name of the table.
-    Column("KID", ForeignKey(f"{T_NAME_KEYS}.id"), primary_key=True): The ID column for the key.
-    Column("DID", ForeignKey(f"{T_NAME_DEFINITIONS}.id"), primary_key=True): The ID column for the definition.
+    Column("KID", ForeignKey(f"{T_NAME_KEYS}.id"), primary_key=True): 
+    The ID column for the key.
+    Column("DID", ForeignKey(f"{T_NAME_DEFINITIONS}.id"), primary_key=True): 
+    The ID column for the definition.
     Index("index_KID", "KID"): An index on the "KID" column to enhance query performance.
     Index("index_DID", "DID"): An index on the "DID" column to enhance query performance.
 """

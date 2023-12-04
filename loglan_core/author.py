@@ -102,8 +102,10 @@ class BaseAuthor(BaseModel):
         enable_typechecks=False,
     )
     """
-    This is a relationship that establishes a 'many-to-many' connection between the Author and his Words. 
-    It is done via the :class:`~loglan_core.connect_tables.t_connect_authors` secondary table and does not enable typechecks.
+    This is a relationship that establishes a 'many-to-many' 
+    connection between the Author and his Words. 
+    It is done via the :class:`~loglan_core.connect_tables.t_connect_authors`
+     secondary table and does not enable typechecks.
 
     Returns:
         Mapped[list[BaseWord]]: A list of BaseWord instances associated with the current instance.
