@@ -8,3 +8,5 @@
 ![pylint](https://img.shields.io/badge/pylint-9.96-yellow?logo=python&logoColor=white)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/loglan_core?color=yellow)
 ![PyPI - Version](https://img.shields.io/pypi/v/loglan-core?logo=PyPi&logoColor=%23FFFFFF)
+
+![SQL LOD Schema](.images/LOD.pgerd.png)
