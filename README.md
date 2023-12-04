@@ -11,9 +11,10 @@
 ![GitHub License](https://img.shields.io/github/license/torrua/loglan_core)
 
 
-# Loglan Dictionary: SQLAlchemy Database Model
+# SQLAlchemy Database Model for Loglan Dictionary
 
-This project is a SQLAlchemy database model of the constructed language Loglan. It contains information about words, authors, lexical events, and more.
+This project represent a SQLAlchemy database model for the dictionary of constructed language Loglan. 
+It contains schemas for information about words, authors, lexical events, and even more.
 
 ![SQL LOD Schema](.images/LOD.pgerd.png)
 
