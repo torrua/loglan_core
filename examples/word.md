@@ -68,7 +68,7 @@ Now we will get more information regarding this word.
 #### Authors
 _The author of a word is not necessarily one person and not even necessarily a person._
 
-_This word has only one author, but there may be more._
+_This word has only one author, but there may be more in the list._
 ```python
 print(word.authors)
 >>> [
@@ -82,7 +82,7 @@ print(word.authors)
 ```
 
 #### Definitions
-_The word in this example has only one definition, but there may be more in the list._
+_This word has only one definition, but there may be more in the list._
 ```python
 print(word.definitions)
 >>> [
@@ -101,7 +101,7 @@ print(word.definitions)
     ]
 ```
 
-#### Word type
+#### Word's Type
 _All words in Loglan are divided into three main types and several subtypes._
 ```python
 print(word.type)
@@ -120,15 +120,18 @@ print(word.event_end)
 
 #### Keys
 _Keys are keywords that define a word in a foreign language. They are taken from the definitions._
+
+_This word has only one key, but there may be more in the list._
+
 ```python
 print(word.keys)
 >>> [BaseKey(id=****, language='en', word='program'), ]
 ```
 
-#### Words derived from the original
-_This includes the so-called “djifoa”, that is, short forms of the word and complexes - 
-derived words consisting of several djifoa. For example, the short form of the word “proga” is “pog”. 
-And “pogleu” is a complex consisting of two parts - p(r)og(a)+le(ng)u - and means “programming language”._
+#### Word's Derivatives
+_This includes the so-called __“djifoa”__, that is, short forms of the word and complexes - 
+derived words consisting of several djifoa. For example, the short form of the word __“proga”__ is __“pog”__. 
+And __“pogleu”__ is a complex consisting of two parts - p(r)og(a)+le(ng)u - and means “programming language”._
 ```python
 print(word.derivatives)
 >>> [
@@ -142,7 +145,7 @@ print(word.derivatives)
         BaseWord(name='pogpai', origin='p(r)og(a)+pa(rt)i', origin_x='program part', type_id=5, ...), 
         BaseWord(name='pogsea', origin='p(r)og(a)+se(tf)a', origin_x='program set', type_id=5, ...), 
         BaseWord(name='selkopyproga', origin='sel(ji)+kop(ca)+y+proga', origin_x='self copy program', type_id=6, ...),
-]
+    ]
 ```
 
 #### Finally
