@@ -135,5 +135,5 @@ print(word.derivatives)
 ]
 ```
 
-#### Resume
+#### Finally
 Thus, we received all the information about the word from the original entry in the dictionary.
