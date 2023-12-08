@@ -67,12 +67,22 @@ Now we will get more information regarding this word.
 
 #### Authors
 _The author of a word is not necessarily one person and not even necessarily a person._
+
+_This word has only one author, but there may be more._
 ```python
 print(word.authors)
->>> [BaseAuthor(abbreviation='SLR', full_name='Steve Rice', id=**, notes='')]
+>>> [
+        BaseAuthor(
+            abbreviation='SLR',
+            full_name='Steve Rice',
+            id=**,
+            notes='',
+        ),
+    ]
 ```
 
 #### Definitions
+_The word in this example has only one definition, but there may be more in the list._
 ```python
 print(word.definitions)
 >>> [
@@ -122,16 +132,16 @@ And “pogleu” is a complex consisting of two parts - p(r)og(a)+le(ng)u - and 
 ```python
 print(word.derivatives)
 >>> [
-    BaseWord(name='fanpogsea', origin='fan(ve)+p(r)og(a)+se(tf)a', origin_x='reverse program set', type_id=6, ...),
-    BaseWord(name='pog', origin='p(r)og(a)', origin_x='', type_id=2, ...), 
-    BaseWord(name='pogdai', origin='p(r)og(a)+da(nc)i', origin_x='program design', type_id=5, ...), 
-    BaseWord(name='pogleu', origin='p(r)og(a)+le(ng)u', origin_x='program language', type_id=5, ...), 
-    BaseWord(name='pogmai', origin='p(r)og(a)+ma(tc)i', origin_x='program(mable) machine', type_id=5, ...), 
-    BaseWord(name='pogmao', origin='p(r)og(a)+ma(dz)o', origin_x='program make', type_id=5, ...), 
-    BaseWord(name='pognakso', notes=None, origin='p(r)og(a)+nakso', origin_x='program fix', type_id=5, ...), 
-    BaseWord(name='pogpai', origin='p(r)og(a)+pa(rt)i', origin_x='program part', type_id=5, ...), 
-    BaseWord(name='pogsea', origin='p(r)og(a)+se(tf)a', origin_x='program set', type_id=5, ...), 
-    BaseWord(name='selkopyproga', origin='sel(ji)+kop(ca)+y+proga', origin_x='self copy program', type_id=6, ...),
+        BaseWord(name='fanpogsea', origin='fan(ve)+p(r)og(a)+se(tf)a', origin_x='reverse program set', type_id=6, ...),
+        BaseWord(name='pog', origin='p(r)og(a)', origin_x='', type_id=2, ...), 
+        BaseWord(name='pogdai', origin='p(r)og(a)+da(nc)i', origin_x='program design', type_id=5, ...), 
+        BaseWord(name='pogleu', origin='p(r)og(a)+le(ng)u', origin_x='program language', type_id=5, ...), 
+        BaseWord(name='pogmai', origin='p(r)og(a)+ma(tc)i', origin_x='program(mable) machine', type_id=5, ...), 
+        BaseWord(name='pogmao', origin='p(r)og(a)+ma(dz)o', origin_x='program make', type_id=5, ...), 
+        BaseWord(name='pognakso', notes=None, origin='p(r)og(a)+nakso', origin_x='program fix', type_id=5, ...), 
+        BaseWord(name='pogpai', origin='p(r)og(a)+pa(rt)i', origin_x='program part', type_id=5, ...), 
+        BaseWord(name='pogsea', origin='p(r)og(a)+se(tf)a', origin_x='program set', type_id=5, ...), 
+        BaseWord(name='selkopyproga', origin='sel(ji)+kop(ca)+y+proga', origin_x='self copy program', type_id=6, ...),
 ]
 ```
 
