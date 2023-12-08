@@ -13,19 +13,23 @@ engine = create_engine(SQLALCHEMY_DATABASE_URI)
 Session = scoped_session(sessionmaker(bind=engine, future=True))
 session = Session()
 ```
-where ``LOD_DATABASE_URL`` is the database URI starting with ``postgresql://***``
+where `LOD_DATABASE_URL` is the database URI starting with `postgresql://***`.
 
 Next, we will use the resulting instance of the `Session` class to retrieve data from the database and work with it.
 
 ## Example 1 - Loglan Word
 Let's look at the definition of the word "proga" from the LOD dictionary.
 
-> &nbsp;&nbsp;&nbsp;&nbsp;__proga__,<br>
-> &nbsp;&nbsp;&nbsp;&nbsp;<font color="green">_pog <Int.>_</font> I-Prim SLR '93 7+<br>
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4n) B is a <font color="blue">_program_</font> for/to do P on system F written by K. [B-PFK]<br>
-> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Used in: fanpogsea; pogdai; pogleu; pogmai; pogmao; pognakso; pogpai; pogsea; selkopyproga;
+&nbsp;&nbsp;&nbsp;&nbsp;__proga__,<br>
+&nbsp;&nbsp;&nbsp;&nbsp;<font color="green">_pog <Int.>_</font> I-Prim SLR '93 7+<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4n) B is a <font color="blue">_program_</font> for/to do P on system F written by K. [B-PFK]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Used in: fanpogsea; pogdai; pogleu; pogmai; pogmao; pognakso; pogpai; pogsea; selkopyproga;
 
 ### Retrieving an object
+First we need to get the Word object.
+This can be done using `by_name` method of special class `WordSelector`. 
+This method returns a statement for the database, which we execute using the `session` object.
+
 ```python
 from loglan_core.addons.word_selector import WordSelector
 
@@ -118,7 +122,7 @@ And “pogleu” is a complex consisting of two parts - p(r)og(a)+le(ng)u - and 
 ```python
 print(word.derivatives)
 >>> [
-    BaseWord(name='fanpogsea', notes=None, origin='fan(ve)+p(r)og(a)+se(tf)a', origin_x='reverse program set', type_id=6, ...),
+    BaseWord(name='fanpogsea', origin='fan(ve)+p(r)og(a)+se(tf)a', origin_x='reverse program set', type_id=6, ...),
     BaseWord(name='pog', origin='p(r)og(a)', origin_x='', type_id=2, ...), 
     BaseWord(name='pogdai', origin='p(r)og(a)+da(nc)i', origin_x='program design', type_id=5, ...), 
     BaseWord(name='pogleu', origin='p(r)og(a)+le(ng)u', origin_x='program language', type_id=5, ...), 
