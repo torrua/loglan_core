@@ -125,7 +125,13 @@ _This word has only one key, but there may be more in the list._
 
 ```python
 print(word.keys)
->>> [BaseKey(id=****, language='en', word='program'), ]
+>>> [
+        BaseKey(
+            id=****,
+            language='en',
+            word='program',
+        ), 
+    ]
 ```
 
 #### Word's Derivatives
