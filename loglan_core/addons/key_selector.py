@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
-This module provides the KeySelector class which is used for filtering keys
-based on certain criteria. The KeySelector class inherits from the Select class.
+This module provides the `KeySelector` class, which inherits from `Select`
+and provides methods for filtering keys based on certain criteria.
 
 The KeySelector class has methods to filter keys by event ID, key, and language.
 Each method returns a new instance of KeySelector with the applied filters.
@@ -9,6 +9,9 @@ Each method returns a new instance of KeySelector with the applied filters.
 The KeySelector class is initialized with a class object and a boolean
 indicating if it is being used with SQLite. The class object must be
 a subclass of BaseKey.
+
+Classes:
+    KeySelector: A class used to select keys meeting certain criteria.
 
 Example:
     key_selector = KeySelector(MyKeyClass)
@@ -36,7 +39,7 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
     Attributes:
         class_ (Type[BaseKey]): The class to be used as the base key.
-        Must be a subclass of BaseKey.
+            Must be a subclass of BaseKey.
         is_sqlite (bool): Indicator if the object is being used with SQLite or not.
     """
 
@@ -46,7 +49,7 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
         Args:
             class_ (Type[BaseKey]): The class to be used as the base key.
-            Must be a subclass of BaseKey.
+                Must be a subclass of BaseKey.
             is_sqlite (bool): Indicator if the object is being used with SQLite or not.
 
         Raises:
@@ -69,11 +72,11 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
     def by_event(self, event_id: int | None = None) -> KeySelector:
         """
-        This method filters the keys by the given event ID.
+        Filters the keys by the given event ID.
 
-        Parameters:
+        Args:
             event_id (int | None): The identifier of the event to filter by.
-                                   If None, no event filtering is applied.
+                If None, no event filtering is applied.
 
         Returns:
             KeySelector: The filtered KeySelector instance.
@@ -91,12 +94,12 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
     def by_key(self, key: str, case_sensitive: bool = False) -> KeySelector:
         """
-        This method filters the keys by the given key.
+        Filters the keys by the given key.
 
-        Parameters:
+        Args:
             key (str): The key to filter by.
             case_sensitive (bool): Determines whether the key search should be
-                                   case-sensitive. Defaults to False.
+                case-sensitive. Defaults to False.
 
         Returns:
             KeySelector: The filtered KeySelector instance.
@@ -107,11 +110,11 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
     def by_language(self, language: str | None = None) -> KeySelector:
         """
-        This method filters the keys by the given language.
+        Filters the keys by the given language.
 
-        Parameters:
-            language (str | None): The language to filter by. If None,
-                                   no language filtering is applied.
+        Args:
+            language (str | None): The language to filter by.
+                If None, no language filtering is applied.
 
         Returns:
             KeySelector: The filtered KeySelector instance.
