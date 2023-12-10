@@ -247,7 +247,6 @@ class ExportWordConverter:
         """
         return " ".join(afx.name.replace("-", "") for afx in self.word.affixes).strip()
 
-
     @property
     def e_djifoa(self) -> str:
         """
