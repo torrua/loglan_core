@@ -223,13 +223,13 @@ class BaseWord(BaseModel):
 
         Args:
           word_type: str:  (Default value = None)
-          E.g. "2-Cpx", "C-Prim", "LW"<hr>
+          E.g. "2-Cpx", "C-Prim", "LW"
 
           word_type_x: str:  (Default value = None)
-          E.g. "Predicate", "Name", "Affix"<hr>
+          E.g. "Predicate", "Name", "Affix"
 
           word_group: str:  (Default value = None)
-          E.g. "Cpx", "Prim", "Little"<hr>
+          E.g. "Cpx", "Prim", "Little"
 
           type_class:
         Returns:
