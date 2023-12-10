@@ -57,7 +57,7 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
         Filters the select query by the specified Event.
 
         Args:
-            event_id (int): The identifier of the event to filter by.
+            event_id (int, optional): The identifier of the event to filter by.
 
         Returns:
             A KeySelector object with the filter applied.
