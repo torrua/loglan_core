@@ -50,8 +50,10 @@ class Exporter:
     def export_author(obj: BaseAuthor) -> str:
         """
         Prepare Author data for exporting to text file
+
         Returns:
-            Formatted basic string
+            Formatted basic string.
+
         """
         return f"{obj.abbreviation}@{obj.full_name}@{obj.notes}"
 
@@ -59,8 +61,9 @@ class Exporter:
     def export_event(obj: BaseEvent) -> str:
         """
         Prepare Event data for exporting to text file
+
         Returns:
-            Formatted basic string
+            Formatted basic string.
         """
         return (
             f"{obj.id}@{obj.name}"
@@ -69,20 +72,22 @@ class Exporter:
         )
 
     @staticmethod
-    def export_syllable(obj) -> str:
+    def export_syllable(obj: BaseSyllable) -> str:
         """
         Prepare Syllable data for exporting to text file
+
         Returns:
-            Formatted basic string
+            Formatted basic string.
         """
         return f"{obj.name}@{obj.type}@{obj.allowed}"
 
     @staticmethod
-    def export_setting(obj) -> str:
+    def export_setting(obj: BaseSetting) -> str:
         """
         Prepare Setting data for exporting to text file
+
         Returns:
-            Formatted basic string
+            Formatted basic string.
         """
         return (
             f"{obj.date.strftime('%d.%m.%Y %H:%M:%S')}"
@@ -92,11 +97,12 @@ class Exporter:
         )
 
     @staticmethod
-    def export_type(obj) -> str:
+    def export_type(obj: BaseType) -> str:
         """
         Prepare Type data for exporting to text file
+
         Returns:
-            Formatted basic string
+            Formatted basic string.
         """
         return (
             f"{obj.type}@{obj.type_x}@{obj.group}@{obj.parentable}"
@@ -104,11 +110,12 @@ class Exporter:
         )
 
     @staticmethod
-    def export_word(obj) -> str:
+    def export_word(obj: BaseWord) -> str:
         """
         Prepare Word data for exporting to text file
+
         Returns:
-            Formatted basic string
+            Formatted basic string.
         """
         ewc = ExportWordConverter(obj)
         match = ewc.stringer(obj.match)
@@ -123,11 +130,12 @@ class Exporter:
         )
 
     @staticmethod
-    def export_definition(obj) -> str:
+    def export_definition(obj: BaseDefinition) -> str:
         """
         Prepare Definition data for exporting to text file
+
         Returns:
-            Formatted basic string
+            Formatted basic string.
         """
         e_grammar = (
             f"{obj.slots if obj.slots else ''}"
@@ -140,11 +148,12 @@ class Exporter:
         )
 
     @staticmethod
-    def export_word_spell(obj) -> str:
+    def export_word_spell(obj: BaseWord) -> str:
         """
         Prepare WordSpell data for exporting to text file
+
         Returns:
-            Formatted basic string
+            Formatted basic string.
         """
         code_name = "".join(
             "0" if symbol.isupper() else "5" for symbol in str(obj.name)
