@@ -66,7 +66,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
             class_ (BaseWord): The class to select from. Defaults to BaseWord.
             is_sqlite (bool): If SQLite is being used. Defaults to False.
         """
-        if not issubclass(type(class_), BaseWord):
+        if not issubclass(class_, BaseWord):
             raise ValueError(
                 f"Provided attribute class_={class_} is not a {BaseWord} or its child"
             )
