@@ -1,23 +1,5 @@
-## Requirements
-Loglan-Core is only a __data model__, a wrapper, and does not contain the dictionary data itself.
-To work with a dictionary as an ORM, you need to set up your own database locally or remotely.
 
-You can connect it as follows:
-```python
-import os
-from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, scoped_session
-
-SQLALCHEMY_DATABASE_URI = os.environ.get('LOD_DATABASE_URL')
-engine = create_engine(SQLALCHEMY_DATABASE_URI)
-Session = scoped_session(sessionmaker(bind=engine, future=True))
-session = Session()
-```
-where `LOD_DATABASE_URL` is the database URI starting with `postgresql://***`.
-
-Next, we will use the resulting instance of the `Session` class to retrieve data from the database and work with it.
-
-## Example 1 - Loglan Word
+# Loglan Word — Example 1
 Let's look at the definition of the word "proga" from the LOD dictionary.
 
 &nbsp;&nbsp;&nbsp;&nbsp;__proga__,<br>
@@ -25,9 +7,9 @@ Let's look at the definition of the word "proga" from the LOD dictionary.
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;(4n) B is a <font color="blue">_program_</font> for/to do P on system F written by K. [B-PFK]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Used in: fanpogsea; pogdai; pogleu; pogmai; pogmao; pognakso; pogpai; pogsea; selkopyproga;
 
-### Retrieving an object
+## Get Word Object Itself
 First we need to get the Word object.
-This can be done using `by_name` method of special class `WordSelector`. 
+This can be done using `by_name` method of special class [WordSelector](word_selector.md). 
 This method returns a statement for the database, which we execute using the `session` object.
 
 ```python
@@ -62,10 +44,10 @@ print(word.__dict__)
         'notes': None,
 }
 ```
-### Retrieving additional data
+## Get Related Information
 Now we will get more information regarding this word.
 
-#### Authors
+### Authors
 _The author of a word is not necessarily one person and not even necessarily a person._
 
 _This word has only one author, but there may be more in the list._
@@ -81,7 +63,7 @@ print(word.authors)
     ]
 ```
 
-#### Definitions
+### Definitions
 _This word has only one definition, but there may be more in the list._
 ```python
 print(word.definitions)
@@ -101,14 +83,14 @@ print(word.definitions)
     ]
 ```
 
-#### Word's Type
+### Word's Type
 _All words in Loglan are divided into three main types and several subtypes._
 ```python
 print(word.type)
 >>> <BaseType ID 11 I-Prim (Predicate)>
 ```
 
-#### Lexical Events
+### Lexical Events
 _Events when a word appeared and when (and if) it was excluded from the lexicon._
 ```python
 print(word.event_start)
@@ -118,7 +100,7 @@ print(word.event_end)
 >>> None
 ```
 
-#### Keys
+### Keys
 _Keys are keywords that define a word in a foreign language. They are taken from the definitions._
 
 _This word has only one key, but there may be more in the list._
@@ -134,7 +116,7 @@ print(word.keys)
     ]
 ```
 
-#### Word's Derivatives
+### Word's Derivatives
 _This includes the so-called __“djifoa”__, that is, short forms of the word and complexes - 
 derived words consisting of several djifoa. For example, the short form of the word __“proga”__ is __“pog”__. 
 And __“pogleu”__ is a complex consisting of two parts - p(r)og(a)+le(ng)u - and means “programming language”._
@@ -154,5 +136,5 @@ print(word.derivatives)
     ]
 ```
 
-#### Finally
+## Finally
 Thus, we received all the information about the word from the original entry in the dictionary.
