@@ -27,6 +27,45 @@
 <section>
 </section>
 <section>
+<h2 class="section-title" id="header-variables">Global variables</h2>
+<dl>
+<dt id="loglan_core.base.str_008"><code class="name">var <span class="ident">str_008</span></code></dt>
+<dd>
+<div class="desc"><p>A custom type annotation that annotates a string with a metadata value
+of 8. It can be used to associate a string with the number 8 in certain
+contexts, such as specifying the length for a string field in a database.</p></div>
+</dd>
+<dt id="loglan_core.base.str_016"><code class="name">var <span class="ident">str_016</span></code></dt>
+<dd>
+<div class="desc"><p>A custom type annotation that annotates a string with a metadata value
+of 16. It can be used to associate a string with the number 16 in certain
+contexts, such as specifying the length for a string field in a database.</p></div>
+</dd>
+<dt id="loglan_core.base.str_032"><code class="name">var <span class="ident">str_032</span></code></dt>
+<dd>
+<div class="desc"><p>A custom type annotation that annotates a string with a metadata value
+of 32. It can be used to associate a string with the number 32 in certain
+contexts, such as specifying the length for a string field in a database.</p></div>
+</dd>
+<dt id="loglan_core.base.str_064"><code class="name">var <span class="ident">str_064</span></code></dt>
+<dd>
+<div class="desc"><p>A custom type annotation that annotates a string with a metadata value
+of 64. It can be used to associate a string with the number 64 in certain
+contexts, such as specifying the length for a string field in a database.</p></div>
+</dd>
+<dt id="loglan_core.base.str_128"><code class="name">var <span class="ident">str_128</span></code></dt>
+<dd>
+<div class="desc"><p>A custom type annotation that annotates a string with a metadata value
+of 128. It can be used to associate a string with the number 128 in certain
+contexts, such as specifying the length for a string field in a database.</p></div>
+</dd>
+<dt id="loglan_core.base.str_255"><code class="name">var <span class="ident">str_255</span></code></dt>
+<dd>
+<div class="desc"><p>A custom type annotation that annotates a string with a metadata value
+of 255. It can be used to associate a string with the number 255 in certain
+contexts, such as specifying the length for a string field in a database.</p></div>
+</dd>
+</dl>
 </section>
 <section>
 </section>
@@ -38,7 +77,9 @@
 <span>(</span><span>**kwargs: Any)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Declarative Base Model</p>
+<div class="desc"><p>BaseModel is a subclass of DeclarativeBase. It serves as the parent class
+for other database models, providing common attributes and methods to its
+child classes. It doesn't contain any class-specific attributes/methods.</p>
 <p>A simple constructor that allows initialization from kwargs.</p>
 <p>Sets attributes on the constructed instance using the names and
 values in <code>kwargs</code>.</p>
@@ -67,11 +108,16 @@ for example, any mapped columns or relationships.</p></div>
 <dl>
 <dt id="loglan_core.base.BaseModel.created"><code class="name">var <span class="ident">created</span> : sqlalchemy.orm.base.Mapped[datetime.datetime]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>A class attribute mapped to a column in the database table. It represents
+the timestamp when a row is created. The default value is the current
+timestamp, and it can't be null.</p>
+<p>:type: datetime</p></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.id"><code class="name">var <span class="ident">id</span> : sqlalchemy.orm.base.Mapped[int]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>A class attribute mapped to a column in the database table. It serves as
+the primary key for the table.</p>
+<p>:type: int</p></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.metadata"><code class="name">var <span class="ident">metadata</span></code></dt>
 <dd>
@@ -79,11 +125,18 @@ for example, any mapped columns or relationships.</p></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.registry"><code class="name">var <span class="ident">registry</span></code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>This code creates a registry that maps custom type annotations to
+SQLAlchemy String types with specified lengths. The keys are custom
+type annotation names and the values are SQLAlchemy String types with
+the specified lengths.</p></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.updated"><code class="name">var <span class="ident">updated</span> : sqlalchemy.orm.base.Mapped[datetime.datetime | None]</code></dt>
 <dd>
-<div class="desc"></div>
+<div class="desc"><p>A class attribute mapped to a column in the database table. It represents
+the timestamp when a row is last updated. Whenever the row is updated,
+this timestamp is automatically set to the current time. It can be <code>null</code>
+if the row has never been updated.</p>
+<p>:type: datetime</p></div>
 </dd>
 </dl>
 <h3>Static methods</h3>
@@ -92,54 +145,111 @@ for example, any mapped columns or relationships.</p></div>
 <span>def <span class="ident">attributes_all</span></span>(<span>) ‑> set[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Class method that computes the all attribute keys from the class
+mapper and returns their names as a set.</p>
+<p>It doesn't require any parameters as it operates on the class itself.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>set[str]</code></dt>
+<dd>A set of strings with names of all attribute keys.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.attributes_basic"><code class="name flex">
 <span>def <span class="ident">attributes_basic</span></span>(<span>) ‑> set[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Class method that computes the set of basic attributes for the class.
+It subtracts any relationships from all attributes.</p>
+<p>It doesn’t require any parameters as it operates on the class itself.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>set[str]</code></dt>
+<dd>A set of strings with names of basic attributes.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.attributes_extended"><code class="name flex">
 <span>def <span class="ident">attributes_extended</span></span>(<span>) ‑> set[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Class method that computes the extended attributes of the class.
+It does this by subtracting foreign keys from all attributes.</p>
+<p>It doesn’t require any parameters as it operates on the class itself.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>set[str]</code></dt>
+<dd>A set of strings with names of the extended attributes.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.foreign_keys"><code class="name flex">
 <span>def <span class="ident">foreign_keys</span></span>(<span>) ‑> set[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Class method that computes the names of foreign keys of the class.
+It does this by subtracting relationship keys and non-foreign keys
+from all attributes.</p>
+<p>It doesn’t require any parameters as it operates on the class itself.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>set[str]</code></dt>
+<dd>A set of strings with names of the foreign keys.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.get_all"><code class="name flex">
 <span>def <span class="ident">get_all</span></span>(<span>session: sqlalchemy.orm.session.Session)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Get all model objects from DB
-:param session: session
-:return:</p></div>
+<div class="desc"><p>Class method that retrieves all instances of the class from the
+database using the provided session.</p>
+<h2 id="parameters">Parameters</h2>
+<p>session (Session): The session to use for the database query.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list</code></dt>
+<dd>A list of all instances of the class.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.get_by_id"><code class="name flex">
 <span>def <span class="ident">get_by_id</span></span>(<span>session: sqlalchemy.orm.session.Session, cid: int)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Get model object from DB by its id
-:param session: session
-:param cid: cls id
-:return:</p></div>
+<div class="desc"><p>Class method that retrieves an instance of the class from the
+database using the provided session and id.</p>
+<h2 id="parameters">Parameters</h2>
+<p>session (Session): The session to use for the database query.
+cid (int): The id of the instance to retrieve.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Object</code> of <code>class type</code> or <code>None</code></dt>
+<dd>The instance of the class with</dd>
+</dl>
+<p>the given id, or None if no such instance exists.</p></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.non_foreign_keys"><code class="name flex">
 <span>def <span class="ident">non_foreign_keys</span></span>(<span>) ‑> set[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Class method that computes the non-foreign keys of the class.
+It does this by inspecting the class columns and selecting those
+without foreign keys.</p>
+<p>It doesn’t require any parameters as it operates on the class itself.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>set[str]</code></dt>
+<dd>A set of strings with names of the non-foreign keys.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.base.BaseModel.relationships"><code class="name flex">
 <span>def <span class="ident">relationships</span></span>(<span>) ‑> set[str]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Class method that computes the relationship names from the
+class mapper and returns them as a set.</p>
+<p>It doesn't require any parameters as it operates on the class itself.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>set[str]</code></dt>
+<dd>A set of strings with names of the relationships.</dd>
+</dl></div>
 </dd>
 </dl>
 <h3>Methods</h3>
@@ -148,9 +258,15 @@ for example, any mapped columns or relationships.</p></div>
 <span>def <span class="ident">export</span></span>(<span>self)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Export record data from DB
-Should be redefined in model's class
-Returns:</p></div>
+<div class="desc"><p>Class method that exports the object's attributes into a dictionary.
+It filters out keys that start with "_" and keys that are
+"created" or "updated", then sorts the remaining keys.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>dict</code></dt>
+<dd>A dictionary with sorted keys and corresponding</dd>
+</dl>
+<p>values of the object's attributes.</p></div>
 </dd>
 </dl>
 </dd>
@@ -166,6 +282,16 @@ Returns:</p></div>
 <li><h3>Super-module</h3>
 <ul>
 <li><code><a title="loglan_core" href="index.html">loglan_core</a></code></li>
+</ul>
+</li>
+<li><h3><a href="#header-variables">Global variables</a></h3>
+<ul class="two-column">
+<li><code><a title="loglan_core.base.str_008" href="#loglan_core.base.str_008">str_008</a></code></li>
+<li><code><a title="loglan_core.base.str_016" href="#loglan_core.base.str_016">str_016</a></code></li>
+<li><code><a title="loglan_core.base.str_032" href="#loglan_core.base.str_032">str_032</a></code></li>
+<li><code><a title="loglan_core.base.str_064" href="#loglan_core.base.str_064">str_064</a></code></li>
+<li><code><a title="loglan_core.base.str_128" href="#loglan_core.base.str_128">str_128</a></code></li>
+<li><code><a title="loglan_core.base.str_255" href="#loglan_core.base.str_255">str_255</a></code></li>
 </ul>
 </li>
 <li><h3><a href="#header-classes">Classes</a></h3>

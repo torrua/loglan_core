@@ -4,9 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
-<title>loglan_core.addons.key_selector API documentation</title>
-<meta name="description" content="This module provides the `KeySelector` class, which inherits from `Select`
-and provides methods for filtering keys based on certain criteria …" />
+<title>loglan_core.addons.base_selector API documentation</title>
+<meta name="description" content="This module provides a base selector for SQLAlchemy" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -20,24 +19,10 @@ and provides methods for filtering keys based on certain criteria …" />
 <main>
 <article id="content">
 <header>
-<h1 class="title">Module <code>loglan_core.addons.key_selector</code></h1>
+<h1 class="title">Module <code>loglan_core.addons.base_selector</code></h1>
 </header>
 <section id="section-intro">
-<p>This module provides the <code><a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></code> class, which inherits from <code>Select</code>
-and provides methods for filtering keys based on certain criteria.</p>
-<p>The KeySelector class has methods to filter keys by event ID, key, and language.
-Each method returns a new instance of KeySelector with the applied filters.</p>
-<p>The KeySelector class is initialized with a class object and a boolean
-indicating if it is being used with SQLite. The class object must be
-a subclass of BaseKey.</p>
-<h2 id="classes">Classes</h2>
-<p>KeySelector: A class used to select keys meeting certain criteria.</p>
-<h2 id="example">Example</h2>
-<p>key_selector = KeySelector(MyKeyClass)
-filtered_by_event = key_selector.by_event(1)
-filtered_by_key = key_selector.by_key('mykey')
-filtered_by_language = key_selector.by_language('English')</p>
-<p>This allows for flexible and powerful querying of keys in a codebase.</p>
+<p>This module provides a base selector for SQLAlchemy</p>
 </section>
 <section>
 </section>
@@ -48,37 +33,28 @@ filtered_by_language = key_selector.by_language('English')</p>
 <section>
 <h2 class="section-title" id="header-classes">Classes</h2>
 <dl>
-<dt id="loglan_core.addons.key_selector.KeySelector"><code class="flex name class">
-<span>class <span class="ident">KeySelector</span></span>
-<span>(</span><span>class_=loglan_core.key.BaseKey, is_sqlite: bool = False)</span>
+<dt id="loglan_core.addons.base_selector.BaseSelector"><code class="flex name class">
+<span>class <span class="ident">BaseSelector</span></span>
+<span>(</span><span>*entities: _ColumnsClauseArgument[Any])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>A class used to select keys meeting certain criteria.</p>
-<h2 id="attributes">Attributes</h2>
-<dl>
-<dt><strong><code>class_</code></strong> :&ensp;<code>Type[BaseKey]</code></dt>
-<dd>The class to be used as the base key.
-Must be a subclass of BaseKey.</dd>
-<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Indicator if the object is being used with SQLite or not.</dd>
-</dl>
-<p>Initializes the KeySelector object with the provided parameters.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>class_</code></strong> :&ensp;<code>Type[BaseKey]</code></dt>
-<dd>The class to be used as the base key.
-Must be a subclass of BaseKey.</dd>
-<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Indicator if the object is being used with SQLite or not.</dd>
-</dl>
-<h2 id="raises">Raises</h2>
-<dl>
-<dt><code>ValueError</code></dt>
-<dd>If the provided class_ is not a subclass of BaseKey.</dd>
-</dl></div>
+<div class="desc"><p>A custom base selector that inherits from SQLAlchemy's Select class.
+This class provides methods to execute a session and fetch results
+in different ways. It also provides a way to fetch many results.</p>
+<h2 id="methods">Methods:</h2>
+<p>execute(session: Session) -&gt; ResultProxy:
+Executes the session and returns the result.</p>
+<p>all(session: Session) -&gt; List[ResultRow]:
+Executes the session and returns all the results.</p>
+<p>scalar(session: Session) -&gt; Any:
+Executes the session and returns a scalar result.</p>
+<p>fetchmany(session: Session, size: int | None = None) -&gt; List[ResultRow]:
+Executes the session and fetches a specified number of results.</p>
+<p>Construct a new :class:<code>_expression.Select</code>.</p>
+<p>The public constructor for :class:<code>_expression.Select</code> is the
+:func:<code>_sql.select</code> function.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
-<li><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></li>
 <li>sqlalchemy.sql.selectable.Select</li>
 <li>sqlalchemy.sql.selectable.HasPrefixes</li>
 <li>sqlalchemy.sql.selectable.HasSuffixes</li>
@@ -119,74 +95,56 @@ Must be a subclass of BaseKey.</dd>
 <li>sqlalchemy.sql.visitors.Visitable</li>
 <li>typing.Generic</li>
 </ul>
-<h3>Instance variables</h3>
-<dl>
-<dt id="loglan_core.addons.key_selector.KeySelector.inherit_cache"><code class="name">var <span class="ident">inherit_cache</span> : bool</code></dt>
-<dd>
-<div class="desc"><p>:return: bool</p></div>
-</dd>
-</dl>
+<h3>Subclasses</h3>
+<ul class="hlist">
+<li><a title="loglan_core.addons.definition_selector.DefinitionSelector" href="definition_selector.html#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></li>
+<li><a title="loglan_core.addons.key_selector.KeySelector" href="key_selector.html#loglan_core.addons.key_selector.KeySelector">KeySelector</a></li>
+<li><a title="loglan_core.addons.word_selector.WordSelector" href="word_selector.html#loglan_core.addons.word_selector.WordSelector">WordSelector</a></li>
+</ul>
 <h3>Methods</h3>
 <dl>
-<dt id="loglan_core.addons.key_selector.KeySelector.by_event"><code class="name flex">
-<span>def <span class="ident">by_event</span></span>(<span>self, event_id: int | None = None) ‑> <a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></span>
+<dt id="loglan_core.addons.base_selector.BaseSelector.all"><code class="name flex">
+<span>def <span class="ident">all</span></span>(<span>self, session: Session)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Filters the keys by the given event ID.</p>
-<h2 id="args">Args</h2>
-<p>event_id (int | None): The identifier of the event to filter by.
-If None, no event filtering is applied.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code><a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></code></dt>
-<dd>The filtered KeySelector instance.</dd>
-</dl></div>
+<div class="desc"><p>Executes the given session and returns all the results as a list.</p>
+<p>Args:
+session (Session): SQLAlchemy Session object.</p>
+<p>Returns:
+List[ResultRow]: All the results of the executed session.</p></div>
 </dd>
-<dt id="loglan_core.addons.key_selector.KeySelector.by_key"><code class="name flex">
-<span>def <span class="ident">by_key</span></span>(<span>self, key: str, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></span>
+<dt id="loglan_core.addons.base_selector.BaseSelector.execute"><code class="name flex">
+<span>def <span class="ident">execute</span></span>(<span>self, session: Session)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Filters the keys by the given key.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>key</code></strong> :&ensp;<code>str</code></dt>
-<dd>The key to filter by.</dd>
-<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Determines whether the key search should be
-case-sensitive. Defaults to False.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code><a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></code></dt>
-<dd>The filtered KeySelector instance.</dd>
-</dl></div>
+<div class="desc"><p>Executes the given session and returns the result.</p>
+<p>Args:
+session (Session): SQLAlchemy Session object.</p>
+<p>Returns:
+ResultProxy: The result of the executed session.</p></div>
 </dd>
-<dt id="loglan_core.addons.key_selector.KeySelector.by_language"><code class="name flex">
-<span>def <span class="ident">by_language</span></span>(<span>self, language: str | None = None) ‑> <a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></span>
+<dt id="loglan_core.addons.base_selector.BaseSelector.fetchmany"><code class="name flex">
+<span>def <span class="ident">fetchmany</span></span>(<span>self, session: Session, size: int | None = None)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Filters the keys by the given language.</p>
-<h2 id="args">Args</h2>
-<p>language (str | None): The language to filter by.
-If None, no language filtering is applied.</p>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code><a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></code></dt>
-<dd>The filtered KeySelector instance.</dd>
-</dl></div>
+<div class="desc"><p>Executes the given session and fetches a specified number of results.</p>
+<p>Args:
+session (Session): SQLAlchemy Session object.
+size (int, optional): Number of results to fetch. If None, fetches all results.</p>
+<p>Returns:
+List[ResultRow]: The fetched results.</p></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.scalar"><code class="name flex">
+<span>def <span class="ident">scalar</span></span>(<span>self, session: Session)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Executes the given session and returns a scalar result.</p>
+<p>Args:
+session (Session): SQLAlchemy Session object.</p>
+<p>Returns:
+Any: The scalar result of the executed session.</p></div>
 </dd>
 </dl>
-<h3>Inherited members</h3>
-<ul class="hlist">
-<li><code><b><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></b></code>:
-<ul class="hlist">
-<li><code><a title="loglan_core.addons.base_selector.BaseSelector.all" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.all">all</a></code></li>
-<li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.execute">execute</a></code></li>
-<li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.fetchmany">fetchmany</a></code></li>
-<li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.scalar">scalar</a></code></li>
-</ul>
-</li>
-</ul>
 </dd>
 </dl>
 </section>
@@ -205,12 +163,12 @@ If None, no language filtering is applied.</p>
 <li><h3><a href="#header-classes">Classes</a></h3>
 <ul>
 <li>
-<h4><code><a title="loglan_core.addons.key_selector.KeySelector" href="#loglan_core.addons.key_selector.KeySelector">KeySelector</a></code></h4>
+<h4><code><a title="loglan_core.addons.base_selector.BaseSelector" href="#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></code></h4>
 <ul class="">
-<li><code><a title="loglan_core.addons.key_selector.KeySelector.by_event" href="#loglan_core.addons.key_selector.KeySelector.by_event">by_event</a></code></li>
-<li><code><a title="loglan_core.addons.key_selector.KeySelector.by_key" href="#loglan_core.addons.key_selector.KeySelector.by_key">by_key</a></code></li>
-<li><code><a title="loglan_core.addons.key_selector.KeySelector.by_language" href="#loglan_core.addons.key_selector.KeySelector.by_language">by_language</a></code></li>
-<li><code><a title="loglan_core.addons.key_selector.KeySelector.inherit_cache" href="#loglan_core.addons.key_selector.KeySelector.inherit_cache">inherit_cache</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.all" href="#loglan_core.addons.base_selector.BaseSelector.all">all</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute" href="#loglan_core.addons.base_selector.BaseSelector.execute">execute</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany" href="#loglan_core.addons.base_selector.BaseSelector.fetchmany">fetchmany</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar" href="#loglan_core.addons.base_selector.BaseSelector.scalar">scalar</a></code></li>
 </ul>
 </li>
 </ul>

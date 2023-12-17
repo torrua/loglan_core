@@ -96,10 +96,6 @@ and Definition should be many-to-many. See <code>t_connect_keys</code>.</p>
 <dd>
 <div class="desc"><p>Returns:</p></div>
 </dd>
-<dt id="loglan_core.key.BaseKey.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_core.key.BaseKey.language"><code class="name">var <span class="ident">language</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Key's language</em><br>
@@ -127,7 +123,9 @@ It is non-unique, as words can be the same in spelling in different languages</p
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.id" href="base.html#loglan_core.base.BaseModel.id">id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>
@@ -156,7 +154,6 @@ It is non-unique, as words can be the same in spelling in different languages</p
 <li><code><a title="loglan_core.key.BaseKey.definitions_query" href="#loglan_core.key.BaseKey.definitions_query">definitions_query</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.filter_by_key_cs" href="#loglan_core.key.BaseKey.filter_by_key_cs">filter_by_key_cs</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.filter_by_language" href="#loglan_core.key.BaseKey.filter_by_language">filter_by_language</a></code></li>
-<li><code><a title="loglan_core.key.BaseKey.id" href="#loglan_core.key.BaseKey.id">id</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.language" href="#loglan_core.key.BaseKey.language">language</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.relationship_definitions" href="#loglan_core.key.BaseKey.relationship_definitions">relationship_definitions</a></code></li>
 <li><code><a title="loglan_core.key.BaseKey.word" href="#loglan_core.key.BaseKey.word">word</a></code></li>

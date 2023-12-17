@@ -1,27 +1,45 @@
 # -*- coding: utf-8 -*-
 """
-This module contains an addon for basic Key Model,
-which makes it possible to get Key objects by event
+This module provides the `KeySelector` class, which inherits from `Select`
+and provides methods for filtering keys based on certain criteria.
+
+The KeySelector class has methods to filter keys by event ID, key, and language.
+Each method returns a new instance of KeySelector with the applied filters.
+
+The KeySelector class is initialized with a class object and a boolean
+indicating if it is being used with SQLite. The class object must be
+a subclass of BaseKey.
+
+Classes:
+    KeySelector: A class used to select keys meeting certain criteria.
+
+Example:
+    key_selector = KeySelector(MyKeyClass)
+    filtered_by_event = key_selector.by_event(1)
+    filtered_by_key = key_selector.by_key('mykey')
+    filtered_by_language = key_selector.by_language('English')
+
+This allows for flexible and powerful querying of keys in a codebase.
 """
 
 from __future__ import annotations
 
 from sqlalchemy import select
-from sqlalchemy.sql.selectable import Select
 
+from loglan_core.addons.base_selector import BaseSelector
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
 from loglan_core.word import BaseWord
 
 
-class KeySelector(Select):  # pylint: disable=too-many-ancestors
+class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
     """
     A class used to select keys meeting certain criteria.
 
     Attributes:
         class_ (Type[BaseKey]): The class to be used as the base key.
-        Must be a subclass of BaseKey.
+            Must be a subclass of BaseKey.
         is_sqlite (bool): Indicator if the object is being used with SQLite or not.
     """
 
@@ -31,7 +49,7 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
         Args:
             class_ (Type[BaseKey]): The class to be used as the base key.
-            Must be a subclass of BaseKey.
+                Must be a subclass of BaseKey.
             is_sqlite (bool): Indicator if the object is being used with SQLite or not.
 
         Raises:
@@ -54,13 +72,14 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
     def by_event(self, event_id: int | None = None) -> KeySelector:
         """
-        Filters the select query by the specified Event.
+        Filters the keys by the given event ID.
 
         Args:
-            event_id (int): The identifier of the event to filter by.
+            event_id (int | None): The identifier of the event to filter by.
+                If None, no event filtering is applied.
 
         Returns:
-            A KeySelector object with the filter applied.
+            KeySelector: The filtered KeySelector instance.
         """
 
         subquery = (
@@ -75,14 +94,15 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
     def by_key(self, key: str, case_sensitive: bool = False) -> KeySelector:
         """
-        Filters the select query by a specified key.
+        Filters the keys by the given key.
 
         Args:
             key (str): The key to filter by.
-            case_sensitive (bool): Whether the key search should be case-sensitive.
+            case_sensitive (bool): Determines whether the key search should be
+                case-sensitive. Defaults to False.
 
         Returns:
-            A KeySelector object with the filter applied.
+            KeySelector: The filtered KeySelector instance.
         """
         return self.where(
             self.class_.filter_by_key_cs(key, case_sensitive, self.is_sqlite)
@@ -90,12 +110,13 @@ class KeySelector(Select):  # pylint: disable=too-many-ancestors
 
     def by_language(self, language: str | None = None) -> KeySelector:
         """
-        Filters the select query by a specified language.
+        Filters the keys by the given language.
 
         Args:
-            language (str): The language to filter by.
+            language (str | None): The language to filter by.
+                If None, no language filtering is applied.
 
         Returns:
-            A KeySelector object with the filter applied.
+            KeySelector: The filtered KeySelector instance.
         """
         return self.where(self.class_.filter_by_language(language))

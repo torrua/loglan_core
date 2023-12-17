@@ -5,8 +5,9 @@
 
 import pytest
 
-from loglan_core.addons.exporter import Exporter
+from loglan_core.addons.exporter import Exporter, ExportWordConverter
 from loglan_core import Author, Word, Event, Syllable, Setting, Type, Definition
+
 
 @pytest.mark.usefixtures("db_session")
 class TestExporter:
@@ -31,12 +32,19 @@ class TestExporter:
         )
 
         obj.year = None
+
         result = self.e.export(obj)
         assert result == (
             '3880@C-Prim@Predicate@kak kao@56%@L4@@1.0'
             '@3/3R akt | 4/4S acto | 3/3F '
             'acte | 2/3E act | 2/3H kam@@prukao@'
         )
+
+    def test_affixes_djifoa(self, db_session):
+        obj = db_session.query(Word).filter(Word.name == "kakto").scalar()
+        ewc = ExportWordConverter(obj)
+        assert ewc.e_affixes == ewc.e_djifoa
+
 
     def test_export_author(self, db_session):
         """Test Author.export() method"""
@@ -72,7 +80,9 @@ class TestExporter:
 
     def test_export_definition(self, db_session):
         """Test Definition.export() method"""
-        obj = db_session.query(Definition).filter(Definition.body == 'K «test»/«examine» B for P with test V.').scalar()
+        obj = db_session.query(Definition).filter(
+            Definition.body == 'K «test»/«examine» B for P with test V.'
+        ).scalar()
         result = self.e.export(obj)
         assert result == "7191@1@@4v@K «test»/«examine» B for P with test V.@@K-BPV"
 

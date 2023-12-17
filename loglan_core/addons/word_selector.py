@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 """
-This module contains a special class WordSelector for
-extracting words from db by criteria or combinations thereof:
-    event, key, type, name
+This module provides a mechanism to extract words
+from a database based on various criteria such as
+event, key, type, and name through the WordSelector class.
 """
+
 from __future__ import annotations
 
 from functools import wraps
@@ -11,24 +12,24 @@ from functools import wraps
 from sqlalchemy import and_, select
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
-from sqlalchemy.sql.selectable import Select
 
+from loglan_core.addons.base_selector import BaseSelector
+from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.key import BaseKey
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
-from loglan_core.addons.definition_selector import DefinitionSelector
 
 
 def order_by_name(function):
     """
-    Decorator that sorts the result of a function by the `name` attribute of its class.
+    A decorator that sorts the output of a function by the `name` attribute of
+    the resulting class instances.
 
     Args:
-        function: The function to be decorated.
+        function (callable): The function whose result is to be sorted.
 
     Returns:
-        The decorated function that applies the sorting logic.
-
+        callable: A function that will execute the input function and sort its result.
     """
 
     @wraps(function)
@@ -50,10 +51,21 @@ def order_by_name(function):
     return wrapper
 
 
-class WordSelector(Select):  # pylint: disable=R0901
-    """WordSelector model"""
+class WordSelector(BaseSelector):  # pylint: disable=R0901
+    """
+    Class to extract words from a database based on various criteria.
 
-    def __init__(self, class_=BaseWord, is_sqlite: bool = False) -> None:
+    Extends the SQLAlchemy Select class to provide additional functionality.
+    """
+
+    def __init__(self, class_=BaseWord, is_sqlite: bool = False):
+        """
+        Initialize a WordSelector instance.
+
+        Args:
+            class_ (BaseWord): The class to select from. Defaults to BaseWord.
+            is_sqlite (bool): If SQLite is being used. Defaults to False.
+        """
         if not issubclass(class_, BaseWord):
             raise ValueError(
                 f"Provided attribute class_={class_} is not a {BaseWord} or its child"
@@ -68,11 +80,14 @@ class WordSelector(Select):  # pylint: disable=R0901
 
     @order_by_name
     def by_event(self, event_id: int | None = None) -> WordSelector:
-        """Select query filtered by specified Event (the latest by default)
+        """
+        Applies a filter to select words associated with a specific event.
 
         Args:
-          event_id: int
-        Returns: self object with filter applied
+            event_id (int | None): The id of the event to filter by. Defaults to None.
+
+        Returns:
+            WordSelector: A query with the filter applied.
         """
         return self.where(self.class_.filter_by_event_id(event_id))
 
@@ -82,12 +97,16 @@ class WordSelector(Select):  # pylint: disable=R0901
         name: str,
         case_sensitive: bool = False,
     ) -> WordSelector:
-        """Select query filtered by specified name
+        """
+        Applies a filter to select words by a specific name.
 
         Args:
-          name: str:
-          case_sensitive: bool:  (Default value = False)
-        Returns: self object with filter applied
+            name (str): The name to filter by.
+            case_sensitive (bool): Whether the search should be case sensitive.
+            Defaults to False.
+
+        Returns:
+            WordSelector: A query with the filter applied.
         """
         statement = self.class_.filter_by_name_cs(
             name=name,
@@ -104,13 +123,17 @@ class WordSelector(Select):  # pylint: disable=R0901
         language: str | None = None,
         case_sensitive: bool = False,
     ) -> WordSelector:
-        """Select query filtered by specified key
+        """
+        Applies a filter to select words by a specific key.
 
         Args:
-          key: Union[BaseKey, str]
-          language: str: Language of key (Default value = None)
-          case_sensitive: bool:  (Default value = False)
-        Returns: self object with filter applied
+            key (BaseKey | str): The key to filter by.
+            It can either be an instance of BaseKey or a string.
+            language (str | None): The language of the key. Defaults to None.
+            case_sensitive (bool): Whether the search should be case sensitive. Defaults to False.
+
+        Returns:
+            WordSelector: A query with the filter applied.
         """
 
         definition_query = DefinitionSelector(is_sqlite=self.is_sqlite).by_key(
@@ -130,16 +153,17 @@ class WordSelector(Select):  # pylint: disable=R0901
         group: str | None = None,
     ) -> WordSelector:
         """
-        Select query filtered by specified type
+        Applies a filter to select words by a specific type.
 
         Args:
-          type_: BaseType | str | None
-          type_x: str | None
-          group: str | None
-        Returns:
-            self object with filter applied
-        """
+            type_ (BaseType | str | None): The type to filter by.
+            It can either be an instance of BaseType, a string, or None.
+            type_x (str | None): The extended type to filter by. Defaults to None.
+            group (str | None): The group to filter by. Defaults to None.
 
+        Returns:
+            WordSelector: A query with the filter applied.
+        """
         if isinstance(type_, BaseType):
             return self.join(BaseType).where(BaseType.id == type_.id)
 
@@ -157,7 +181,17 @@ class WordSelector(Select):  # pylint: disable=R0901
 
     @staticmethod
     def type_filters(type_values: tuple) -> list[BinaryExpression]:
-        """collection of type filters"""
+        """
+        Builds a collection of type filters based on provided type values.
+
+        Args:
+            type_values (tuple): A tuple containing values for type, type_x, and group.
+
+        Returns:
+            list[BinaryExpression]: A list of SQLAlchemy BinaryExpression
+            instances representing the filters.
+        """
+
         type_filters = [
             i[0].ilike(str(i[1]).replace("*", "%")) for i in type_values if i[1]
         ]

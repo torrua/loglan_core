@@ -3,6 +3,7 @@ from io import open
 
 from setuptools import setup
 
+current_version = "0.1.7"
 
 def read(filename):
     with open(filename, encoding='utf-8') as file:
@@ -14,7 +15,7 @@ setup(
   packages=['loglan_core', 'loglan_core.addons'],
   package_data={'loglan_core': ['*'], },
   include_package_data=True,
-  version='0.1.6',
+  version=current_version,
   license='MIT',
   description="Loglan Dictionary Database Model for SQLAlchemy",
   long_description=read("README.md"),
@@ -22,7 +23,7 @@ setup(
   author='torrua',
   author_email='torrua@gmail.com',
   url='https://github.com/torrua/loglan_core',
-  download_url='https://github.com/torrua/loglan_core/archive/0.1.6.tar.gz',
+  download_url=f'https://github.com/torrua/loglan_core/archive/{current_version}.tar.gz',
   keywords=['Loglan', 'Dictionary', 'Database', 'Model', 'LOD'],
   install_requires=[
           'sqlalchemy>=2.0.21',

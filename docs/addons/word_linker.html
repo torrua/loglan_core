@@ -5,8 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>loglan_core.addons.word_linker API documentation</title>
-<meta name="description" content="This module contains an addon for basic Word Model,
-which makes it possible to specify the authors and derivatives of words" />
+<meta name="description" content="This module offers the ability to establish relationships
+between BaseWord instances and BaseAuthor instances.
+This is done via the WordLinker class …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,8 +24,10 @@ which makes it possible to specify the authors and derivatives of words" />
 <h1 class="title">Module <code>loglan_core.addons.word_linker</code></h1>
 </header>
 <section id="section-intro">
-<p>This module contains an addon for basic Word Model,
-which makes it possible to specify the authors and derivatives of words</p>
+<p>This module offers the ability to establish relationships
+between BaseWord instances and BaseAuthor instances.
+This is done via the WordLinker class which provides methods to check and add
+parent-child relationships between words and associate authors with words.</p>
 </section>
 <section>
 </section>
@@ -39,68 +42,85 @@ which makes it possible to specify the authors and derivatives of words</p>
 <span>class <span class="ident">WordLinker</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>AddonWordLinker Model</p></div>
+<div class="desc"><p>This class provides methods to manage parent-child
+relationships between words and to associate authors with words.</p></div>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.addons.word_linker.WordLinker.add_author"><code class="name flex">
 <span>def <span class="ident">add_author</span></span>(<span>word: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>, author: <a title="loglan_core.author.BaseAuthor" href="../author.html#loglan_core.author.BaseAuthor">BaseAuthor</a>) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Connect Author object with BaseWord object</p>
+<div class="desc"><p>Associates an 'author' with a 'word', indicating
+that the author has contributed to the word.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>word</code></strong></dt>
-<dd>BaseWord:</dd>
-<dt><strong><code>author</code></strong></dt>
-<dd>BaseAuthor:</dd>
+<dt><strong><code>word</code></strong> :&ensp;<code>BaseWord</code></dt>
+<dd>The word to be associated with the author.</dd>
+<dt><strong><code>author</code></strong> :&ensp;<code>BaseAuthor</code></dt>
+<dd>The author to be associated with the word.</dd>
 </dl>
-<p>Returns:</p></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The abbreviation of the author's name.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.word_linker.WordLinker.add_authors"><code class="name flex">
 <span>def <span class="ident">add_authors</span></span>(<span>word: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>, authors: list[<a title="loglan_core.author.BaseAuthor" href="../author.html#loglan_core.author.BaseAuthor">BaseAuthor</a>])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Connect Author objects with BaseWord object</p>
+<div class="desc"><p>Associates multiple 'authors' with a 'word',
+indicating that these authors have contributed to the word.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>word</code></strong></dt>
-<dd>BaseWord</dd>
-<dt><strong><code>authors</code></strong></dt>
-<dd>List[BaseAuthor]:</dd>
-</dl>
-<p>Returns:</p></div>
+<dt><strong><code>word</code></strong> :&ensp;<code>BaseWord</code></dt>
+<dd>The word to be associated with the authors.</dd>
+<dt><strong><code>authors</code></strong> :&ensp;<code>list[BaseAuthor]</code></dt>
+<dd>The authors to be associated with the word.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.word_linker.WordLinker.add_child"><code class="name flex">
 <span>def <span class="ident">add_child</span></span>(<span>parent: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>, child: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>) ‑> str</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Add derivative for the source word
-Get word from Used In and add relationship in database</p>
+<div class="desc"><p>Associates a 'child' word with a 'parent' word,
+indicating that the child is derived from the parent.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>parent</code></strong></dt>
-<dd>BaseWord</dd>
-<dt><strong><code>child</code></strong></dt>
-<dd>BaseWord: Object to add</dd>
+<dt><strong><code>parent</code></strong> :&ensp;<code>BaseWord</code></dt>
+<dd>The original word.</dd>
+<dt><strong><code>child</code></strong> :&ensp;<code>BaseWord</code></dt>
+<dd>The word derived from the parent.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>String with the name of the added child (BaseWord.name)</p></div>
+<dl>
+<dt><code>str</code></dt>
+<dd>The name of the child word.</dd>
+</dl>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>If the child word is not parentable.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.word_linker.WordLinker.add_children"><code class="name flex">
 <span>def <span class="ident">add_children</span></span>(<span>parent: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>, children: list[<a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>])</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Add derivatives for the source word
-Get words from Used In and add relationships in database</p>
+<div class="desc"><p>Associates multiple 'children' words with a 'parent' word,
+indicating that those children are derived from the parent.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>parent</code></strong></dt>
-<dd>BaseWord</dd>
-<dt><strong><code>children</code></strong></dt>
-<dd>List[BaseWord]:</dd>
+<dt><strong><code>parent</code></strong> :&ensp;<code>BaseWord</code></dt>
+<dd>The original word.</dd>
+<dt><strong><code>children</code></strong> :&ensp;<code>list[BaseWord]</code></dt>
+<dd>The words derived from the parent.</dd>
 </dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>TypeError</code></dt>
+<dd>If any of the children words are not parentable.</dd>
+</dl></div>
 </dd>
 </dl>
 </dd>

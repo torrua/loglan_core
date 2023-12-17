@@ -5,9 +5,9 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>loglan_core.addons.word_selector API documentation</title>
-<meta name="description" content="This module contains a special class WordSelector for
-extracting words from db by criteria or combinations thereof:
-event, key, type, name" />
+<meta name="description" content="This module provides a mechanism to extract words
+from a database based on various criteria such as
+event, key, type, and name through the …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -24,9 +24,9 @@ event, key, type, name" />
 <h1 class="title">Module <code>loglan_core.addons.word_selector</code></h1>
 </header>
 <section id="section-intro">
-<p>This module contains a special class WordSelector for
-extracting words from db by criteria or combinations thereof:
-event, key, type, name</p>
+<p>This module provides a mechanism to extract words
+from a database based on various criteria such as
+event, key, type, and name through the WordSelector class.</p>
 </section>
 <section>
 </section>
@@ -39,14 +39,18 @@ event, key, type, name</p>
 <span>def <span class="ident">order_by_name</span></span>(<span>function)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Decorator that sorts the result of a function by the <code>name</code> attribute of its class.</p>
+<div class="desc"><p>A decorator that sorts the output of a function by the <code>name</code> attribute of
+the resulting class instances.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>function</code></strong></dt>
-<dd>The function to be decorated.</dd>
+<dt><strong><code>function</code></strong> :&ensp;<code>callable</code></dt>
+<dd>The function whose result is to be sorted.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
-<p>The decorated function that applies the sorting logic.</p></div>
+<dl>
+<dt><code>callable</code></dt>
+<dd>A function that will execute the input function and sort its result.</dd>
+</dl></div>
 </dd>
 </dl>
 </section>
@@ -58,12 +62,19 @@ event, key, type, name</p>
 <span>(</span><span>class_=loglan_core.word.BaseWord, is_sqlite: bool = False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>WordSelector model</p>
-<p>Construct a new :class:<code>_expression.Select</code>.</p>
-<p>The public constructor for :class:<code>_expression.Select</code> is the
-:func:<code>_sql.select</code> function.</p></div>
+<div class="desc"><p>Class to extract words from a database based on various criteria.</p>
+<p>Extends the SQLAlchemy Select class to provide additional functionality.</p>
+<p>Initialize a WordSelector instance.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>class_</code></strong> :&ensp;<code>BaseWord</code></dt>
+<dd>The class to select from. Defaults to BaseWord.</dd>
+<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If SQLite is being used. Defaults to False.</dd>
+</dl></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></li>
 <li>sqlalchemy.sql.selectable.Select</li>
 <li>sqlalchemy.sql.selectable.HasPrefixes</li>
 <li>sqlalchemy.sql.selectable.HasSuffixes</li>
@@ -110,7 +121,18 @@ event, key, type, name</p>
 <span>def <span class="ident">type_filters</span></span>(<span>type_values: tuple) ‑> list[sqlalchemy.sql.elements.BinaryExpression]</span>
 </code></dt>
 <dd>
-<div class="desc"><p>collection of type filters</p></div>
+<div class="desc"><p>Builds a collection of type filters based on provided type values.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>type_values</code></strong> :&ensp;<code>tuple</code></dt>
+<dd>A tuple containing values for type, type_x, and group.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>list[BinaryExpression]</code></dt>
+<dd>A list of SQLAlchemy BinaryExpression</dd>
+</dl>
+<p>instances representing the filters.</p></div>
 </dd>
 </dl>
 <h3>Instance variables</h3>
@@ -126,64 +148,81 @@ event, key, type, name</p>
 <span>def <span class="ident">by_event</span></span>(<span>self, event_id: int | None = None) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Select query filtered by specified Event (the latest by default)</p>
+<div class="desc"><p>Applies a filter to select words associated with a specific event.</p>
 <h2 id="args">Args</h2>
+<p>event_id (int | None): The id of the event to filter by. Defaults to None.</p>
+<h2 id="returns">Returns</h2>
 <dl>
-<dt><strong><code>event_id</code></strong></dt>
-<dd>int</dd>
-</dl>
-<p>Returns: self object with filter applied</p></div>
+<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dd>A query with the filter applied.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.by_key"><code class="name flex">
 <span>def <span class="ident">by_key</span></span>(<span>self, key: BaseKey | str, language: str | None = None, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Select query filtered by specified key</p>
+<div class="desc"><p>Applies a filter to select words by a specific key.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>key</code></strong></dt>
-<dd>Union[BaseKey, str]</dd>
-<dt><strong><code>language</code></strong></dt>
-<dd>str: Language of key (Default value = None)</dd>
-<dt><strong><code>case_sensitive</code></strong></dt>
-<dd>bool:
-(Default value = False)</dd>
+<dt>key (BaseKey | str): The key to filter by.</dt>
+<dt>It can either be an instance of BaseKey or a string.</dt>
+<dt>language (str | None): The language of the key. Defaults to None.</dt>
+<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the search should be case sensitive. Defaults to False.</dd>
 </dl>
-<p>Returns: self object with filter applied</p></div>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dd>A query with the filter applied.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.by_name"><code class="name flex">
 <span>def <span class="ident">by_name</span></span>(<span>self, name: str, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Select query filtered by specified name</p>
+<div class="desc"><p>Applies a filter to select words by a specific name.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>name</code></strong></dt>
-<dd>str:</dd>
-<dt><strong><code>case_sensitive</code></strong></dt>
-<dd>bool:
-(Default value = False)</dd>
+<dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
+<dd>The name to filter by.</dd>
+<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the search should be case sensitive.</dd>
 </dl>
-<p>Returns: self object with filter applied</p></div>
+<p>Defaults to False.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dd>A query with the filter applied.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.by_type"><code class="name flex">
 <span>def <span class="ident">by_type</span></span>(<span>self, type_: BaseType | str | None = None, type_x: str | None = None, group: str | None = None) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Select query filtered by specified type</p>
+<div class="desc"><p>Applies a filter to select words by a specific type.</p>
 <h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>type_</code></strong></dt>
-<dd>BaseType | str | None</dd>
-<dt><strong><code>type_x</code></strong></dt>
-<dd>str | None</dd>
-<dt><strong><code>group</code></strong></dt>
-<dd>str | None</dd>
-</dl>
+<p>type_ (BaseType | str | None): The type to filter by.
+It can either be an instance of BaseType, a string, or None.
+type_x (str | None): The extended type to filter by. Defaults to None.
+group (str | None): The group to filter by. Defaults to None.</p>
 <h2 id="returns">Returns</h2>
-<p>self object with filter applied</p></div>
+<dl>
+<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dd>A query with the filter applied.</dd>
+</dl></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.all" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.all">all</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.execute">execute</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.fetchmany">fetchmany</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.scalar">scalar</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 </dl>
 </section>
