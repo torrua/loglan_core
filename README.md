@@ -43,6 +43,7 @@ After installing the package, you can use it as follows:
 from loglan_core import Word, Type, Event, Key
 # your code here...
 ```
+For more details please see [Intro](.\examples\intro.md), [Word](.\examples\word.md) and [WordSelector](.\examples\word_selector.md) documentation with examples.
 
 ## License
 Loglan-Core is licensed under the MIT license.
