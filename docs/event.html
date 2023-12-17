@@ -109,10 +109,6 @@ identified ones that the parser did not recognize as words',
 <div class="desc"><p><em>Relationship query for getting a list of words deprecated during this event</em></p>
 <p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.id"><code class="name">var <span class="ident">id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
-<dd>
-<div class="desc"></div>
-</dd>
 <dt id="loglan_core.event.BaseEvent.name"><code class="name">var <span class="ident">name</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Event's short name</em><br>
@@ -143,7 +139,9 @@ identified ones that the parser did not recognize as words',
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.id" href="base.html#loglan_core.base.BaseModel.id">id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.relationships" href="base.html#loglan_core.base.BaseModel.relationships">relationships</a></code></li>
 </ul>
 </li>
@@ -175,7 +173,6 @@ identified ones that the parser did not recognize as words',
 <li><code><a title="loglan_core.event.BaseEvent.definition" href="#loglan_core.event.BaseEvent.definition">definition</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.deprecated_words" href="#loglan_core.event.BaseEvent.deprecated_words">deprecated_words</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.deprecated_words_query" href="#loglan_core.event.BaseEvent.deprecated_words_query">deprecated_words_query</a></code></li>
-<li><code><a title="loglan_core.event.BaseEvent.id" href="#loglan_core.event.BaseEvent.id">id</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.latest" href="#loglan_core.event.BaseEvent.latest">latest</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.latest_id" href="#loglan_core.event.BaseEvent.latest_id">latest_id</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.name" href="#loglan_core.event.BaseEvent.name">name</a></code></li>

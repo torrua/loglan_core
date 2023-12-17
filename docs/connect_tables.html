@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>loglan_core.connect_tables API documentation</title>
-<meta name="description" content="This module contains a basic Connection Table Models" />
+<meta name="description" content="This module defines the relational mapping between various elements in the database …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -22,7 +22,26 @@
 <h1 class="title">Module <code>loglan_core.connect_tables</code></h1>
 </header>
 <section id="section-intro">
-<p>This module contains a basic Connection Table Models</p>
+<p>This module defines the relational mapping between various elements in the database.</p>
+<p>It contains the following tables:</p>
+<ul>
+<li>
+<p><code><a title="loglan_core.connect_tables.t_connect_authors" href="#loglan_core.connect_tables.t_connect_authors">t_connect_authors</a></code>: This table maps authors to their words, creating a many-to-many relationship.
+Each row in the table represents a word that is associated with an author.</p>
+</li>
+<li>
+<p><code><a title="loglan_core.connect_tables.t_connect_words" href="#loglan_core.connect_tables.t_connect_words">t_connect_words</a></code>: This table maps parent words to their child words,
+creating a many-to-many relationship. Each row in the table represents a child word
+that is associated with a parent word.</p>
+</li>
+<li>
+<p><code><a title="loglan_core.connect_tables.t_connect_keys" href="#loglan_core.connect_tables.t_connect_keys">t_connect_keys</a></code>: This table maps definitions to their keys in the database,
+creating a many-to-many relationship. Each row in the table represents
+a definition that is associated with a key.</p>
+</li>
+</ul>
+<p>Each of these tables is defined with SQLAlchemy's Table construct
+and includes indices on key columns to enhance query performance.</p>
 </section>
 <section>
 </section>
@@ -31,21 +50,46 @@
 <dl>
 <dt id="loglan_core.connect_tables.t_connect_authors"><code class="name">var <span class="ident">t_connect_authors</span></code></dt>
 <dd>
-<div class="desc"><p><code>(sqlalchemy.sql.schema.Table)</code>:
-Connecting table for "many-to-many" relationship
-between <code>BaseAuthor</code> and <code>BaseWord</code> objects</p></div>
+<div class="desc"><p>sqlalchemy.sql.schema.Table: Maps authors to their words in the database.</p>
+<p>This table creates a many-to-many relationship between authors and their words.
+Each row represents a word that is associated with an author.</p>
+<h2 id="variables">Variables</h2>
+<p>T_NAME_CONNECT_AUTHORS (str): The name of the table.
+Column("AID", ForeignKey(f"{T_NAME_AUTHORS}.id"), primary_key=True):
+The ID column for the author.
+Column("WID", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True): The ID column for the word.
+Index("index_AID", "AID"): An index on the "AID" column to enhance query performance.
+Index("index_WID", "WID"): An index on the "WID" column to enhance query performance.</p></div>
 </dd>
 <dt id="loglan_core.connect_tables.t_connect_keys"><code class="name">var <span class="ident">t_connect_keys</span></code></dt>
 <dd>
-<div class="desc"><p><code>(sqlalchemy.sql.schema.Table)</code>:
-Connecting table for "many-to-many" relationship
-between <code>BaseDefinition</code> and <code>BaseKey</code> objects</p></div>
+<div class="desc"><p>sqlalchemy.sql.schema.Table: Maps definitions to their keys in the database.</p>
+<p>This table creates a many-to-many relationship between definitions and their keys.
+Each row represents a definition that is associated with a key.</p>
+<h2 id="variables">Variables</h2>
+<p>T_NAME_CONNECT_KEYS (str): The name of the table.
+Column("KID", ForeignKey(f"{T_NAME_KEYS}.id"), primary_key=True):
+The ID column for the key.
+Column("DID", ForeignKey(f"{T_NAME_DEFINITIONS}.id"), primary_key=True):
+The ID column for the definition.
+Index("index_KID", "KID"): An index on the "KID" column to enhance query performance.
+Index("index_DID", "DID"): An index on the "DID" column to enhance query performance.</p></div>
 </dd>
 <dt id="loglan_core.connect_tables.t_connect_words"><code class="name">var <span class="ident">t_connect_words</span></code></dt>
 <dd>
-<div class="desc"><p><code>(sqlalchemy.sql.schema.Table)</code>:
-Connecting table for "many-to-many" relationship
-(parent-child) between <code>BaseWord</code> objects</p></div>
+<div class="desc"><p>sqlalchemy.sql.schema.Table: Maps parent words to their child words in the database.</p>
+<p>This table creates a many-to-many relationship between parent words and child words.
+Each row represents a child word that is associated with a parent word.</p>
+<h2 id="variables">Variables</h2>
+<p>T_NAME_CONNECT_WORDS (str): The name of the table.
+Column("parent_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True):
+The ID column for the parent word.
+Column("child_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True):
+The ID column for the child word.
+Index("index_parent_id", "parent_id"): An index on the "parent_id"
+column to enhance query performance.
+Index("index_child_id", "child_id"): An index on the "child_id"
+column to enhance query performance.</p></div>
 </dd>
 </dl>
 </section>

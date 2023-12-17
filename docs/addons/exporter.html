@@ -40,7 +40,25 @@ Add export() function to db object for returning its text string presentation.</
 <span>(</span><span>word: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>Addon for ExportWord class with converters for properties</p></div>
+<div class="desc"><p>A class that provides conversion methods for exporting Word data.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>word</code></strong> :&ensp;<code>BaseWord</code></dt>
+<dd>The word to be converted.</dd>
+</dl>
+<h2 id="properties">Properties</h2>
+<ul>
+<li>e_source (str): Returns the source of the word.</li>
+<li>e_year (str): Returns the year of the word, along with any additional notes.</li>
+<li>e_usedin (str): Returns the names of the complexes in which the word is used.</li>
+<li>e_affixes (str): Returns the affixes (djifoa) created from the word.</li>
+<li>e_djifoa (str): Alias for the property <code>e_affixes</code>.</li>
+<li>e_rank (str): Returns the rank of the word and any additional notes.</li>
+</ul>
+<h2 id="methods">Methods</h2>
+<ul>
+<li>stringer(value) -&gt; str: Convert a variable to a string.</li>
+</ul></div>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.addons.exporter.ExportWordConverter.stringer"><code class="name flex">
@@ -49,19 +67,39 @@ Add export() function to db object for returning its text string presentation.</
 <dd>
 <div class="desc"><p>Convert variable to string</p>
 <h2 id="args">Args</h2>
-<p>value:
-Returns:</p></div>
+<p>value (any):</p>
+<h2 id="returns">Returns</h2>
+<p>str:</p></div>
 </dd>
 </dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="loglan_core.addons.exporter.ExportWordConverter.e_affixes"><code class="name">var <span class="ident">e_affixes</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Returns a string representation of the affixes (djifoa) created from the word.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>A string containing all affixes of the word with hyphens removed.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.exporter.ExportWordConverter.e_djifoa"><code class="name">var <span class="ident">e_djifoa</span> : str</code></dt>
+<dd>
+<div class="desc"><p>Alias for the property <code>e_affixes</code>.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The value of the property <code>e_affixes</code>.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.exporter.ExportWordConverter.e_rank"><code class="name">var <span class="ident">e_rank</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Return the rank of the word and any additional notes about the rank.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The rank of the word and any additional notes about the rank.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.exporter.ExportWordConverter.e_source"><code class="name">var <span class="ident">e_source</span> : str</code></dt>
 <dd>
@@ -69,11 +107,22 @@ Returns:</p></div>
 </dd>
 <dt id="loglan_core.addons.exporter.ExportWordConverter.e_usedin"><code class="name">var <span class="ident">e_usedin</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Returns a string that represents the names of the complexes in which the word is used.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>A string with the names of the complexes separated by a vertical bar.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.exporter.ExportWordConverter.e_year"><code class="name">var <span class="ident">e_year</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Returns:</p></div>
+<div class="desc"><p>Returns the year of the word, along with any additional notes related to the year.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>str</code></dt>
+<dd>The year of the word, along with any additional notes.</dd>
+</dl>
+<p>If no year is available, an empty string is returned.</p></div>
 </dd>
 </dl>
 </dd>
@@ -81,7 +130,27 @@ Returns:</p></div>
 <span>class <span class="ident">Exporter</span></span>
 </code></dt>
 <dd>
-<div class="desc"><p>General Exporter Class</p></div>
+<div class="desc"><p>This class serves as a general exporter for various types of objects. The types of objects
+that can be exported include: BaseAuthor, BaseDefinition, BaseEvent, BaseSetting,
+BaseSyllable, BaseType, BaseWord, and BaseWordSpell. For each of these types of objects,
+there's an associated method that takes the object as an input and returns a formatted
+string suitable for export.</p>
+<h2 id="methods">Methods</h2>
+<p>export: The main method that uses a dictionary to map the type of the input object
+to the respective export method.
+export_author: Converts a BaseAuthor object to a formatted string.
+export_definition: Converts a BaseDefinition object to a formatted string.
+export_event: Converts a BaseEvent object to a formatted string.
+export_setting: Converts a BaseSetting object to a formatted string.
+export_syllable: Converts a BaseSyllable object to a formatted string.
+export_type: Converts a BaseType object to a formatted string.
+export_word: Converts a BaseWord object to a formatted string.
+export_word_spell: Converts a BaseWordSpell object to a formatted string.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If the object type is not supported for export.</dd>
+</dl></div>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.addons.exporter.Exporter.export"><code class="name flex">
@@ -108,15 +177,15 @@ Returns:</p></div>
 <dd>
 <div class="desc"><p>Prepare Author data for exporting to text file</p>
 <h2 id="returns">Returns</h2>
-<p>Formatted basic string</p></div>
+<p>Formatted basic string.</p></div>
 </dd>
 <dt id="loglan_core.addons.exporter.Exporter.export_definition"><code class="name flex">
-<span>def <span class="ident">export_definition</span></span>(<span>obj) ‑> str</span>
+<span>def <span class="ident">export_definition</span></span>(<span>obj: <a title="loglan_core.definition.BaseDefinition" href="../definition.html#loglan_core.definition.BaseDefinition">BaseDefinition</a>) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Prepare Definition data for exporting to text file</p>
 <h2 id="returns">Returns</h2>
-<p>Formatted basic string</p></div>
+<p>Formatted basic string.</p></div>
 </dd>
 <dt id="loglan_core.addons.exporter.Exporter.export_event"><code class="name flex">
 <span>def <span class="ident">export_event</span></span>(<span>obj: <a title="loglan_core.event.BaseEvent" href="../event.html#loglan_core.event.BaseEvent">BaseEvent</a>) ‑> str</span>
@@ -124,47 +193,47 @@ Returns:</p></div>
 <dd>
 <div class="desc"><p>Prepare Event data for exporting to text file</p>
 <h2 id="returns">Returns</h2>
-<p>Formatted basic string</p></div>
+<p>Formatted basic string.</p></div>
 </dd>
 <dt id="loglan_core.addons.exporter.Exporter.export_setting"><code class="name flex">
-<span>def <span class="ident">export_setting</span></span>(<span>obj) ‑> str</span>
+<span>def <span class="ident">export_setting</span></span>(<span>obj: <a title="loglan_core.setting.BaseSetting" href="../setting.html#loglan_core.setting.BaseSetting">BaseSetting</a>) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Prepare Setting data for exporting to text file</p>
 <h2 id="returns">Returns</h2>
-<p>Formatted basic string</p></div>
+<p>Formatted basic string.</p></div>
 </dd>
 <dt id="loglan_core.addons.exporter.Exporter.export_syllable"><code class="name flex">
-<span>def <span class="ident">export_syllable</span></span>(<span>obj) ‑> str</span>
+<span>def <span class="ident">export_syllable</span></span>(<span>obj: <a title="loglan_core.syllable.BaseSyllable" href="../syllable.html#loglan_core.syllable.BaseSyllable">BaseSyllable</a>) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Prepare Syllable data for exporting to text file</p>
 <h2 id="returns">Returns</h2>
-<p>Formatted basic string</p></div>
+<p>Formatted basic string.</p></div>
 </dd>
 <dt id="loglan_core.addons.exporter.Exporter.export_type"><code class="name flex">
-<span>def <span class="ident">export_type</span></span>(<span>obj) ‑> str</span>
+<span>def <span class="ident">export_type</span></span>(<span>obj: <a title="loglan_core.type.BaseType" href="../type.html#loglan_core.type.BaseType">BaseType</a>) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Prepare Type data for exporting to text file</p>
 <h2 id="returns">Returns</h2>
-<p>Formatted basic string</p></div>
+<p>Formatted basic string.</p></div>
 </dd>
 <dt id="loglan_core.addons.exporter.Exporter.export_word"><code class="name flex">
-<span>def <span class="ident">export_word</span></span>(<span>obj) ‑> str</span>
+<span>def <span class="ident">export_word</span></span>(<span>obj: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Prepare Word data for exporting to text file</p>
 <h2 id="returns">Returns</h2>
-<p>Formatted basic string</p></div>
+<p>Formatted basic string.</p></div>
 </dd>
 <dt id="loglan_core.addons.exporter.Exporter.export_word_spell"><code class="name flex">
-<span>def <span class="ident">export_word_spell</span></span>(<span>obj) ‑> str</span>
+<span>def <span class="ident">export_word_spell</span></span>(<span>obj: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>) ‑> str</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Prepare WordSpell data for exporting to text file</p>
 <h2 id="returns">Returns</h2>
-<p>Formatted basic string</p></div>
+<p>Formatted basic string.</p></div>
 </dd>
 </dl>
 </dd>
@@ -188,6 +257,7 @@ Returns:</p></div>
 <h4><code><a title="loglan_core.addons.exporter.ExportWordConverter" href="#loglan_core.addons.exporter.ExportWordConverter">ExportWordConverter</a></code></h4>
 <ul class="two-column">
 <li><code><a title="loglan_core.addons.exporter.ExportWordConverter.e_affixes" href="#loglan_core.addons.exporter.ExportWordConverter.e_affixes">e_affixes</a></code></li>
+<li><code><a title="loglan_core.addons.exporter.ExportWordConverter.e_djifoa" href="#loglan_core.addons.exporter.ExportWordConverter.e_djifoa">e_djifoa</a></code></li>
 <li><code><a title="loglan_core.addons.exporter.ExportWordConverter.e_rank" href="#loglan_core.addons.exporter.ExportWordConverter.e_rank">e_rank</a></code></li>
 <li><code><a title="loglan_core.addons.exporter.ExportWordConverter.e_source" href="#loglan_core.addons.exporter.ExportWordConverter.e_source">e_source</a></code></li>
 <li><code><a title="loglan_core.addons.exporter.ExportWordConverter.e_usedin" href="#loglan_core.addons.exporter.ExportWordConverter.e_usedin">e_usedin</a></code></li>

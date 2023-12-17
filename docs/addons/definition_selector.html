@@ -5,8 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, minimum-scale=1" />
 <meta name="generator" content="pdoc 0.10.0" />
 <title>loglan_core.addons.definition_selector API documentation</title>
-<meta name="description" content="This module contains an addon for basic Definition Model,
-which makes it possible to get Definition objects by different criteria such as event and key." />
+<meta name="description" content="This module provides the DefinitionSelector class which is a Selector for the BaseDefinition object …" />
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/sanitize.min.css" integrity="sha256-PK9q560IAAa6WVRRh76LtCaI8pjTJ2z11v0miyNNjrs=" crossorigin>
 <link rel="preload stylesheet" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/10up-sanitize.css/11.0.1/typography.min.css" integrity="sha256-7l/o7C8jubJiy74VsKTidCy1yBkRtiUGbVkYBylBqUg=" crossorigin>
 <link rel="stylesheet preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.1/styles/github.min.css" crossorigin>
@@ -23,8 +22,12 @@ which makes it possible to get Definition objects by different criteria such as 
 <h1 class="title">Module <code>loglan_core.addons.definition_selector</code></h1>
 </header>
 <section id="section-intro">
-<p>This module contains an addon for basic Definition Model,
-which makes it possible to get Definition objects by different criteria such as event and key.</p>
+<p>This module provides the DefinitionSelector class which is a Selector for the BaseDefinition object.</p>
+<p>The DefinitionSelector class allows for querying and filtering of BaseDefinition objects based on
+various parameters such as event, key, and language. It is a subclass of the Select class.</p>
+<h2 id="classes">Classes</h2>
+<p>DefinitionSelector: A selector model for the BaseDefinition object, it allows for querying and
+filtering of BaseDefinition objects.</p>
 </section>
 <section>
 </section>
@@ -40,7 +43,27 @@ which makes it possible to get Definition objects by different criteria such as 
 <span>(</span><span>class_=loglan_core.definition.BaseDefinition, is_sqlite: bool = False)</span>
 </code></dt>
 <dd>
-<div class="desc"><p>DefinitionSelector model</p>
+<div class="desc"><p>This class is a selector model for the BaseDefinition object. It allows for
+querying and filtering of BaseDefinition objects based on various parameters
+such as event, key, and language. It is a subclass of the Select class.</p>
+<h2 id="methods">Methods</h2>
+<p><strong>init</strong>: Initializes the DefinitionSelector object.
+inherit_cache: Property that always returns True.
+by_event: Returns a new DefinitionSelector object filtered by a specific event.
+by_key: Returns a BaseQuery object filtered by a specific key.
+by_language: Returns a new DefinitionSelector object filtered by a specific language.</p>
+<h2 id="raises">Raises</h2>
+<dl>
+<dt><code>ValueError</code></dt>
+<dd>If the provided class_ is not a subclass of BaseDefinition.</dd>
+</dl>
+<h2 id="attributes">Attributes</h2>
+<dl>
+<dt><strong><code>class_</code></strong></dt>
+<dd>The class to be used as the returned object.</dd>
+<dt><strong><code>is_sqlite</code></strong></dt>
+<dd>Boolean specifying if the object is being used with SQLite or not.</dd>
+</dl>
 <p>Initializes the object with the given parameters.</p>
 <h2 id="args">Args</h2>
 <dl>
@@ -50,7 +73,7 @@ which makes it possible to get Definition objects by different criteria such as 
 <dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
 <dd>Whether the object is being used with SQLite or not.</dd>
 </dl>
-<h2 id="raises">Raises</h2>
+<h2 id="raises_1">Raises</h2>
 <dl>
 <dt><code>ValueError</code></dt>
 <dd>If the provided class_ is not a subclass of BaseDefinition.</dd>
@@ -59,6 +82,7 @@ which makes it possible to get Definition objects by different criteria such as 
 <p>None</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></li>
 <li>sqlalchemy.sql.selectable.Select</li>
 <li>sqlalchemy.sql.selectable.HasPrefixes</li>
 <li>sqlalchemy.sql.selectable.HasSuffixes</li>
@@ -112,40 +136,58 @@ which makes it possible to get Definition objects by different criteria such as 
 <span>def <span class="ident">by_event</span></span>(<span>self, event_id: int | None = None) ‑> <a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Select query filtered by specified Event (the latest by default)</p>
-<h2 id="args">Args</h2>
+<div class="desc"><p>This method filters the definitions by the given event id.</p>
+<h2 id="parameters">Parameters</h2>
+<p>event_id (int | None): The id of the event to filter by. If None,
+no event filtering is applied.</p>
+<h2 id="returns">Returns</h2>
 <dl>
-<dt><strong><code>event_id</code></strong></dt>
-<dd>int</dd>
-</dl>
-<p>Returns: self object with filter applied</p></div>
+<dt><code><a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></code></dt>
+<dd>The filtered DefinitionSelector instance.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.definition_selector.DefinitionSelector.by_key"><code class="name flex">
 <span>def <span class="ident">by_key</span></span>(<span>self, key: BaseKey | str, language: str | None = None, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Definition.Query filtered by specified key</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>key</code></strong></dt>
-<dd>BaseKey | str:</dd>
-<dt><strong><code>language</code></strong></dt>
-<dd>str | None:
-(Default value = None)</dd>
-<dt><strong><code>case_sensitive</code></strong></dt>
-<dd>bool:
-(Default value = False)</dd>
-</dl>
+<div class="desc"><p>This method filters the definitions by the provided key, language and case sensitivity.</p>
+<h2 id="parameters">Parameters</h2>
+<p>key (BaseKey | str): The key to filter by. Can be an instance of BaseKey or a string.
+language (str | None): The language to filter by.
+If None, no language filtering is applied.
+case_sensitive (bool): Flag indicating whether filtering should be case sensitive.</p>
 <h2 id="returns">Returns</h2>
-<p>BaseQuery</p></div>
+<dl>
+<dt><code><a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></code></dt>
+<dd>The filtered DefinitionSelector instance with distinct keys.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.definition_selector.DefinitionSelector.by_language"><code class="name flex">
 <span>def <span class="ident">by_language</span></span>(<span>self, language: str | None = None) ‑> <a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></span>
 </code></dt>
 <dd>
-<div class="desc"><p>Definition.Query filtered by specified language</p></div>
+<div class="desc"><p>This method filters the definitions by the given language.</p>
+<h2 id="parameters">Parameters</h2>
+<p>language (str | None): The language to filter by. If None,
+no language filtering is applied.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></code></dt>
+<dd>The filtered DefinitionSelector instance.</dd>
+</dl></div>
 </dd>
 </dl>
+<h3>Inherited members</h3>
+<ul class="hlist">
+<li><code><b><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></b></code>:
+<ul class="hlist">
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.all" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.all">all</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.execute">execute</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.fetchmany">fetchmany</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.scalar">scalar</a></code></li>
+</ul>
+</li>
+</ul>
 </dd>
 </dl>
 </section>
