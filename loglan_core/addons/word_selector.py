@@ -12,12 +12,12 @@ from functools import wraps
 from sqlalchemy import and_, select
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
-from sqlalchemy.sql.selectable import Select
 
+from loglan_core.addons.base_selector import BaseSelector
+from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.key import BaseKey
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
-from loglan_core.addons.definition_selector import DefinitionSelector
 
 
 def order_by_name(function):
@@ -51,11 +51,11 @@ def order_by_name(function):
     return wrapper
 
 
-class WordSelector(Select):  # pylint: disable=R0901
+class WordSelector(BaseSelector):  # pylint: disable=R0901
     """
     Class to extract words from a database based on various criteria.
 
-    Extends the SQLalchemy Select class to provide additional functionality.
+    Extends the SQLAlchemy Select class to provide additional functionality.
     """
 
     def __init__(self, class_=BaseWord, is_sqlite: bool = False):
@@ -66,7 +66,7 @@ class WordSelector(Select):  # pylint: disable=R0901
             class_ (BaseWord): The class to select from. Defaults to BaseWord.
             is_sqlite (bool): If SQLite is being used. Defaults to False.
         """
-        if not issubclass(class_, BaseWord):
+        if not issubclass(type(class_), BaseWord):
             raise ValueError(
                 f"Provided attribute class_={class_} is not a {BaseWord} or its child"
             )

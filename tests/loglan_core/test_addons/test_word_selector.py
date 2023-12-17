@@ -20,7 +20,7 @@ class TestWordGetter:
         result = WordSelector().by_event()
         assert isinstance(result, WordSelector)
 
-        result_from_db = db_session.execute(result).scalars().all()
+        result_from_db = result.all(db_session)
         sorted_names = [w.name for w in result_from_db]
         assert sorted_names == [
             "cii",
@@ -150,7 +150,7 @@ class TestWordGetter:
 
     def test_by_type_with_type_object(self, db_session):
         result = WordSelector().by_name("pruci")
-        result_from_db = db_session.execute(result).scalars().first()
+        result_from_db = result.scalar(db_session)
         type_ = result_from_db.type
 
         result = WordSelector().by_type(type_)
@@ -163,3 +163,10 @@ class TestWordGetter:
         result_from_db = db_session.execute(result).scalars().all()
         sorted_names = [w.name for w in result_from_db]
         assert sorted_names == ["kak", "kao"]
+
+    def test_fetch_many(self, db_session):
+        all_words = WordSelector().all(db_session)
+        assert len(all_words) == 13
+
+        fetch_5 = WordSelector().fetchmany(db_session, 5)
+        assert len(fetch_5) == 5

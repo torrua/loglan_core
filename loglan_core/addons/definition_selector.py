@@ -13,15 +13,15 @@ Classes:
 from __future__ import annotations
 
 from sqlalchemy import select
-from sqlalchemy.sql.selectable import Select
 
+from loglan_core.addons.base_selector import BaseSelector
 from loglan_core.connect_tables import t_connect_keys
+from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
 from loglan_core.word import BaseWord
-from loglan_core.definition import BaseDefinition
 
 
-class DefinitionSelector(Select):  # pylint: disable=too-many-ancestors
+class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
     """
     This class is a selector model for the BaseDefinition object. It allows for
     querying and filtering of BaseDefinition objects based on various parameters

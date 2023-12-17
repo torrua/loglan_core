@@ -25,15 +25,15 @@ This allows for flexible and powerful querying of keys in a codebase.
 from __future__ import annotations
 
 from sqlalchemy import select
-from sqlalchemy.sql.selectable import Select
 
+from loglan_core.addons.base_selector import BaseSelector
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
 from loglan_core.word import BaseWord
 
 
-class KeySelector(Select):  # pylint: disable=too-many-ancestors
+class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
     """
     A class used to select keys meeting certain criteria.
 
