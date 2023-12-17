@@ -130,7 +130,7 @@ class BaseModel(DeclarativeBase):
                 [
                     f"{k}={v!r}"
                     for k, v in self.__dict__.items()
-                    if not k.startswith("_") and k not in ["created", "updated"]
+                    if not k.startswith("_") and k not in ["created", "updated"] and v
                 ]
             )
         )
