@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This module contains an addon for basic Word Model,
 which makes it possible to work with word's sources

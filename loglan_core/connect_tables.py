@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This module defines the relational mapping between various elements in the database.
 

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 Main point for export DB models
 """

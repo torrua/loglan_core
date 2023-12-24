@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This module provides the DefinitionSelector class which is a Selector for the BaseDefinition object.
 

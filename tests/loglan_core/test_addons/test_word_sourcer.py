@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Base Model unit tests."""
 import pytest
 

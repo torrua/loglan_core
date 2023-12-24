@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This module provides the `KeySelector` class, which inherits from `Select`
 and provides methods for filtering keys based on certain criteria.

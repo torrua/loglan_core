@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This module contains ExportWordConverter for Word model of LOD.
 """

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """
 This module provides a mechanism to extract words
 from a database based on various criteria such as

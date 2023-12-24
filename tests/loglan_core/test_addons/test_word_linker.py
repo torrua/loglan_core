@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Base Addon Word Linker unit tests."""
 
 import pytest

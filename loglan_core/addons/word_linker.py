@@ -1,5 +1,3 @@
-# -*- coding: utf-8 -*-
-
 """
 This module offers the ability to establish relationships
 between BaseWord instances and BaseAuthor instances.

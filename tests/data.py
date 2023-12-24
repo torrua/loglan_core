@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 """Data for test_models"""
 
 import datetime

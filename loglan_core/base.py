@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=C0103
 """
 Initial common functions for LOD Model Classes

@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 # pylint: disable=R0201, R0903
 
 """Export Model unit tests."""
