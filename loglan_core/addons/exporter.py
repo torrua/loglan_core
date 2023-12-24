@@ -3,6 +3,7 @@
 This module contains an "Export extensions" for LOD dictionary SQL model.
 Add export() function to db object for returning its text string presentation.
 """
+from typing import Iterable
 
 from loglan_core.author import BaseAuthor
 from loglan_core.definition import BaseDefinition
@@ -12,6 +13,8 @@ from loglan_core.syllable import BaseSyllable
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
 from loglan_core.word_spell import BaseWordSpell
+
+DEFAULT_SEPARATOR = "@"
 
 
 class Exporter:
@@ -39,11 +42,12 @@ class Exporter:
     """
 
     @classmethod
-    def export(cls, obj):
+    def export(cls, obj, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Export the given object using the appropriate exporter function.
         Args:
             obj: The object to be exported.
+            separator: The separator to be used in the exported string.
         Returns:
             The exported object.
         Raises:
@@ -52,23 +56,43 @@ class Exporter:
 
         exporters = {
             BaseAuthor: cls.export_author,
-            BaseDefinition: cls.export_definition,
             BaseEvent: cls.export_event,
-            BaseSetting: cls.export_setting,
-            BaseSyllable: cls.export_syllable,
             BaseType: cls.export_type,
             BaseWord: cls.export_word,
             BaseWordSpell: cls.export_word_spell,
+            BaseDefinition: cls.export_definition,
+            BaseSetting: cls.export_setting,
+            BaseSyllable: cls.export_syllable,
         }
 
-        exporter_func = exporters.get(obj.__class__)
-        if exporter_func:
-            return exporter_func(obj)
+        if obj.__class__ not in exporters.keys():
+            raise ValueError(f"Unsupported object type: {obj.__class__}")
 
-        raise ValueError(f"Unsupported object type: {obj.__class__}")
+        exporter_func = exporters.get(obj.__class__)
+        return exporter_func(obj, separator)
 
     @staticmethod
-    def export_author(obj: BaseAuthor) -> str:
+    def value_or_empty_string(value):
+        return value if value else ''
+
+    ves = value_or_empty_string
+
+    @staticmethod
+    def merge_by(items: Iterable, separator: str = DEFAULT_SEPARATOR) -> str:
+        """
+        Merges a list of items into a single string, separated by the
+        specified separator.
+        Parameters:
+            items (list): The list of items to merge.
+            separator (str): The string to use as a separator, with a default
+                         value.
+        Returns:
+        str: The resulting string after joining the items.
+        """
+        return separator.join([str(i) for i in items])
+
+    @classmethod
+    def export_author(cls, obj: BaseAuthor, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Prepare Author data for exporting to text file
 
@@ -76,59 +100,85 @@ class Exporter:
             Formatted basic string.
 
         """
-        return f"{obj.abbreviation}@{obj.full_name}@{obj.notes}"
+        return cls.merge_by(
+            [
+                obj.abbreviation,
+                obj.full_name,
+                obj.notes,
+            ], separator,
+        )
 
-    @staticmethod
-    def export_event(obj: BaseEvent) -> str:
+    @classmethod
+    def export_event(cls, obj: BaseEvent, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Prepare Event data for exporting to text file
 
         Returns:
             Formatted basic string.
         """
-        return (
-            f"{obj.id}@{obj.name}"
-            f"@{obj.date.strftime('%m/%d/%Y')}@{obj.definition}"
-            f"@{obj.annotation}@{obj.suffix}"
+        return cls.merge_by(
+            [
+                obj.id,
+                obj.name,
+                obj.date.strftime('%m/%d/%Y'),
+                obj.definition,
+                obj.annotation,
+                obj.suffix,
+            ], separator,
         )
 
-    @staticmethod
-    def export_syllable(obj: BaseSyllable) -> str:
+    @classmethod
+    def export_syllable(cls, obj: BaseSyllable, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Prepare Syllable data for exporting to text file
 
         Returns:
             Formatted basic string.
         """
-        return f"{obj.name}@{obj.type}@{obj.allowed}"
+        return cls.merge_by(
+            [
+                obj.name,
+                obj.type,
+                obj.allowed,
+            ], separator,
+        )
 
-    @staticmethod
-    def export_setting(obj: BaseSetting) -> str:
+    @classmethod
+    def export_setting(cls, obj: BaseSetting, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Prepare Setting data for exporting to text file
 
         Returns:
             Formatted basic string.
         """
-        return (
-            f"{obj.date.strftime('%d.%m.%Y %H:%M:%S')}"
-            f"@{obj.db_version}"
-            f"@{obj.last_word_id}"
-            f"@{obj.db_release}"
-        )
+        items = [
+            obj.date.strftime('%d.%m.%Y %H:%M:%S'),
+            obj.db_version,
+            obj.last_word_id,
+            obj.db_release,
+        ]
+        return cls.merge_by(items, separator)
 
-    @staticmethod
-    def export_type(obj: BaseType) -> str:
+    @classmethod
+    def export_type(cls, obj: BaseType, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Prepare Type data for exporting to text file
 
         Returns:
             Formatted basic string.
         """
-        return f"{obj.type}@{obj.type_x}@{obj.group}@{obj.parentable}@{obj.description or ''}"
+        return cls.merge_by(
+            [
+                obj.type,
+                obj.type_x,
+                obj.group,
+                obj.parentable,
+                cls.ves(obj.description),
+            ], separator,
+        )
 
-    @staticmethod
-    def export_word(obj: BaseWord) -> str:
+    @classmethod
+    def export_word(cls, obj: BaseWord, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Prepare Word data for exporting to text file
 
@@ -140,15 +190,25 @@ class Exporter:
         tid_old = ewc.stringer(obj.tid_old)
         origin_x = ewc.stringer(obj.origin_x)
         origin = ewc.stringer(obj.origin)
-
-        return (
-            f"{obj.id_old}@{obj.type.type}@{obj.type.type_x}@{ewc.e_affixes}"
-            f"@{match}@{ewc.e_source}@{ewc.e_year}@{ewc.e_rank}"
-            f"@{origin}@{origin_x}@{ewc.e_usedin}@{tid_old}"
+        return cls.merge_by(
+            [
+                obj.id_old,
+                obj.type.type,
+                obj.type.type_x,
+                ewc.e_affixes,
+                match,
+                ewc.e_source,
+                ewc.e_year,
+                ewc.e_rank,
+                origin,
+                origin_x,
+                ewc.e_usedin,
+                tid_old,
+            ], separator,
         )
 
-    @staticmethod
-    def export_definition(obj: BaseDefinition) -> str:
+    @classmethod
+    def export_definition(cls, obj: BaseDefinition, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Prepare Definition data for exporting to text file
 
@@ -156,14 +216,20 @@ class Exporter:
             Formatted basic string.
         """
         e_grammar = f"{obj.slots or ''}{obj.grammar_code or ''}"
-
-        return (
-            f"{obj.source_word.id_old}@{obj.position}@{obj.usage or ''}"
-            f"@{e_grammar}@{obj.body}@@{obj.case_tags or ''}"
+        return cls.merge_by(
+            [
+                obj.source_word.id_old,
+                obj.position,
+                cls.ves(obj.usage),
+                e_grammar,
+                obj.body,
+                '',
+                cls.ves(obj.case_tags),
+            ], separator,
         )
 
-    @staticmethod
-    def export_word_spell(obj: BaseWord) -> str:
+    @classmethod
+    def export_word_spell(cls, obj: BaseWordSpell, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Prepare WordSpell data for exporting to text file
 
@@ -173,10 +239,16 @@ class Exporter:
         code_name = "".join(
             "0" if symbol.isupper() else "5" for symbol in str(obj.name)
         )
-
-        return (
-            f"{obj.id_old}@{obj.name}@{obj.name.lower()}@{code_name}"
-            f"@{obj.event_start_id}@{obj.event_end_id if obj.event_end else 9999}@"
+        return cls.merge_by(
+            [
+                obj.id_old,
+                obj.name,
+                obj.name.lower(),
+                code_name,
+                obj.event_start_id,
+                obj.event_end_id if obj.event_end else 9999,
+                '',
+            ], separator,
         )
 
 
