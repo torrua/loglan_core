@@ -69,7 +69,7 @@ class Exporter:
             BaseSyllable: cls.export_syllable,
         }
 
-        if obj.__class__ not in exporters.keys():
+        if obj.__class__ not in exporters:
             raise ValueError(f"Unsupported object type: {obj.__class__}")
 
         exporter_func = exporters.get(obj.__class__)
@@ -77,6 +77,13 @@ class Exporter:
 
     @staticmethod
     def value_or_empty_string(value):
+        """
+        Returns the given value if it's truthy, otherwise returns an empty string.
+        Parameters:
+            value (any): The value to check for truthiness.
+        Returns:
+            any | str: The original value if truthy, or an empty string if not.
+        """
         return value if value else ""
 
     ves = value_or_empty_string
