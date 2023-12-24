@@ -5,6 +5,7 @@ Add export() function to db object for returning its text string presentation.
 """
 from typing import Iterable
 
+from loglan_core.addons.export_word_converter import ExportWordConverter
 from loglan_core.author import BaseAuthor
 from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
@@ -118,14 +119,8 @@ class Exporter:
             Formatted basic string.
 
         """
-        return cls.merge_by(
-            [
-                obj.abbreviation,
-                obj.full_name,
-                obj.notes,
-            ],
-            separator,
-        )
+        items = [obj.abbreviation, obj.full_name, obj.notes]
+        return cls.merge_by(items, separator)
 
     @classmethod
     def export_event(
@@ -139,17 +134,15 @@ class Exporter:
         Returns:
             Formatted basic string.
         """
-        return cls.merge_by(
-            [
-                obj.id,
-                obj.name,
-                obj.date.strftime("%m/%d/%Y"),
-                obj.definition,
-                obj.annotation,
-                obj.suffix,
-            ],
-            separator,
-        )
+        items = [
+            obj.id,
+            obj.name,
+            obj.date.strftime("%m/%d/%Y"),
+            obj.definition,
+            obj.annotation,
+            obj.suffix,
+        ]
+        return cls.merge_by(items, separator)
 
     @classmethod
     def export_syllable(
@@ -163,14 +156,8 @@ class Exporter:
         Returns:
             Formatted basic string.
         """
-        return cls.merge_by(
-            [
-                obj.name,
-                obj.type,
-                obj.allowed,
-            ],
-            separator,
-        )
+        items = [obj.name, obj.type, obj.allowed]
+        return cls.merge_by(items, separator)
 
     @classmethod
     def export_setting(
@@ -204,16 +191,14 @@ class Exporter:
         Returns:
             Formatted basic string.
         """
-        return cls.merge_by(
-            [
-                obj.type,
-                obj.type_x,
-                obj.group,
-                obj.parentable,
-                cls.ves(obj.description),
-            ],
-            separator,
-        )
+        items = [
+            obj.type,
+            obj.type_x,
+            obj.group,
+            obj.parentable,
+            cls.ves(obj.description),
+        ]
+        return cls.merge_by(items, separator)
 
     @classmethod
     def export_word(
@@ -232,23 +217,21 @@ class Exporter:
         tid_old = ewc.stringer(obj.tid_old)
         origin_x = ewc.stringer(obj.origin_x)
         origin = ewc.stringer(obj.origin)
-        return cls.merge_by(
-            [
-                obj.id_old,
-                obj.type.type,
-                obj.type.type_x,
-                ewc.e_affixes,
-                match,
-                ewc.e_source,
-                ewc.e_year,
-                ewc.e_rank,
-                origin,
-                origin_x,
-                ewc.e_usedin,
-                tid_old,
-            ],
-            separator,
-        )
+        items = [
+            obj.id_old,
+            obj.type.type,
+            obj.type.type_x,
+            ewc.e_affixes,
+            match,
+            ewc.e_source,
+            ewc.e_year,
+            ewc.e_rank,
+            origin,
+            origin_x,
+            ewc.e_usedin,
+            tid_old,
+        ]
+        return cls.merge_by(items, separator)
 
     @classmethod
     def export_definition(
@@ -263,18 +246,16 @@ class Exporter:
             Formatted basic string.
         """
         e_grammar = f"{obj.slots or ''}{obj.grammar_code or ''}"
-        return cls.merge_by(
-            [
-                obj.source_word.id_old,
-                obj.position,
-                cls.ves(obj.usage),
-                e_grammar,
-                obj.body,
-                "",
-                cls.ves(obj.case_tags),
-            ],
-            separator,
-        )
+        items = [
+            obj.source_word.id_old,
+            obj.position,
+            cls.ves(obj.usage),
+            e_grammar,
+            obj.body,
+            "",
+            cls.ves(obj.case_tags),
+        ]
+        return cls.merge_by(items, separator)
 
     @classmethod
     def export_word_spell(
@@ -291,116 +272,13 @@ class Exporter:
         code_name = "".join(
             "0" if symbol.isupper() else "5" for symbol in str(obj.name)
         )
-        return cls.merge_by(
-            [
-                obj.id_old,
-                obj.name,
-                obj.name.lower(),
-                code_name,
-                obj.event_start_id,
-                obj.event_end_id if obj.event_end else 9999,
-                "",
-            ],
-            separator,
-        )
-
-
-class ExportWordConverter:
-    """
-    A class that provides conversion methods for exporting Word data.
-
-    Args:
-        word (BaseWord): The word to be converted.
-
-    Properties:
-        - e_source (str): Returns the source of the word.
-        - e_year (str): Returns the year of the word, along with any additional notes.
-        - e_usedin (str): Returns the names of the complexes in which the word is used.
-        - e_affixes (str): Returns the affixes (djifoa) created from the word.
-        - e_djifoa (str): Alias for the property `e_affixes`.
-        - e_rank (str): Returns the rank of the word and any additional notes.
-
-    Methods:
-        - stringer(value) -> str: Convert a variable to a string.
-
-    """
-
-    def __init__(self, word: BaseWord):
-        self.word = word
-
-    @property
-    def e_source(self) -> str:
-        """
-        Returns:
-        """
-        source = "/".join(sorted([author.abbreviation for author in self.word.authors]))
-        notes: dict[str, str] = self.word.notes or {}
-
-        return f"{source} {notes.get('author', str())}".strip()
-
-    @property
-    def e_year(self) -> str:
-        """
-        Returns the year of the word, along with any additional notes related to the year.
-
-        Returns:
-            str: The year of the word, along with any additional notes.
-            If no year is available, an empty string is returned.
-        """
-        notes: dict[str, str] = self.word.notes or {}
-        if self.word.year:
-            return f"{self.word.year.year}{notes.get('year', str())}".strip()
-        return ""
-
-    @property
-    def e_usedin(self) -> str:
-        """
-        Returns a string that represents the names of the complexes in which the word is used.
-
-        Returns:
-            str: A string with the names of the complexes separated by a vertical bar.
-        """
-        return " | ".join(cpx.name for cpx in self.word.complexes)
-
-    @property
-    def e_affixes(self) -> str:
-        """
-        Returns a string representation of the affixes (djifoa) created from the word.
-
-        Returns:
-            str: A string containing all affixes of the word with hyphens removed.
-        """
-        return " ".join(afx.name.replace("-", "") for afx in self.word.affixes).strip()
-
-    @property
-    def e_djifoa(self) -> str:
-        """
-        Alias for the property `e_affixes`.
-
-        Returns:
-            str: The value of the property `e_affixes`.
-        """
-        return self.e_affixes
-
-    @property
-    def e_rank(self) -> str:
-        """
-        Return the rank of the word and any additional notes about the rank.
-
-        Returns:
-            str: The rank of the word and any additional notes about the rank.
-        """
-        notes: dict[str, str] = self.word.notes or {}
-        return f"{self.word.rank} {notes.get('rank', str())}".strip()
-
-    @staticmethod
-    def stringer(value) -> str:
-        """
-        Convert variable to string
-        Args:
-            value (any):
-
-        Returns:
-            str:
-        """
-        return str(value) if value else str()
+        items = [
+            obj.id_old,
+            obj.name,
+            obj.name.lower(),
+            code_name,
+            obj.event_start_id,
+            obj.event_end_id if obj.event_end else 9999,
+            "",
+        ]
+        return cls.merge_by(items, separator)

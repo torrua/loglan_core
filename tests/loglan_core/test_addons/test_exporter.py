@@ -5,7 +5,8 @@
 
 import pytest
 
-from loglan_core.addons.exporter import Exporter, ExportWordConverter
+from loglan_core.addons.exporter import Exporter
+from loglan_core.addons.export_word_converter import ExportWordConverter
 from loglan_core import Author, Word, Event, Syllable, Setting, Type, Definition
 
 
