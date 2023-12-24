@@ -29,6 +29,7 @@ class WordSourcer:
         "suksi",
         "surna",
     ]
+
     @classmethod
     def get_sources_prim(cls, word: BaseWord):
         """

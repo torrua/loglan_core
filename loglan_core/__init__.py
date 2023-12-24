@@ -7,7 +7,6 @@ __author__ = "torrua"
 __copyright__ = "Copyright 2023, loglan_core project"
 __email__ = "torrua@gmail.com"
 
-
 from loglan_core.author import BaseAuthor as Author
 from loglan_core.connect_tables import (
     t_connect_authors,

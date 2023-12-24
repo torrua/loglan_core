@@ -42,7 +42,11 @@ class Exporter:
     """
 
     @classmethod
-    def export(cls, obj, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export(
+        cls,
+        obj,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Export the given object using the appropriate exporter function.
         Args:
@@ -73,12 +77,15 @@ class Exporter:
 
     @staticmethod
     def value_or_empty_string(value):
-        return value if value else ''
+        return value if value else ""
 
     ves = value_or_empty_string
 
     @staticmethod
-    def merge_by(items: Iterable, separator: str = DEFAULT_SEPARATOR) -> str:
+    def merge_by(
+        items: Iterable,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Merges a list of items into a single string, separated by the
         specified separator.
@@ -92,7 +99,11 @@ class Exporter:
         return separator.join([str(i) for i in items])
 
     @classmethod
-    def export_author(cls, obj: BaseAuthor, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export_author(
+        cls,
+        obj: BaseAuthor,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Prepare Author data for exporting to text file
 
@@ -105,11 +116,16 @@ class Exporter:
                 obj.abbreviation,
                 obj.full_name,
                 obj.notes,
-            ], separator,
+            ],
+            separator,
         )
 
     @classmethod
-    def export_event(cls, obj: BaseEvent, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export_event(
+        cls,
+        obj: BaseEvent,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Prepare Event data for exporting to text file
 
@@ -120,15 +136,20 @@ class Exporter:
             [
                 obj.id,
                 obj.name,
-                obj.date.strftime('%m/%d/%Y'),
+                obj.date.strftime("%m/%d/%Y"),
                 obj.definition,
                 obj.annotation,
                 obj.suffix,
-            ], separator,
+            ],
+            separator,
         )
 
     @classmethod
-    def export_syllable(cls, obj: BaseSyllable, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export_syllable(
+        cls,
+        obj: BaseSyllable,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Prepare Syllable data for exporting to text file
 
@@ -140,11 +161,16 @@ class Exporter:
                 obj.name,
                 obj.type,
                 obj.allowed,
-            ], separator,
+            ],
+            separator,
         )
 
     @classmethod
-    def export_setting(cls, obj: BaseSetting, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export_setting(
+        cls,
+        obj: BaseSetting,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Prepare Setting data for exporting to text file
 
@@ -152,7 +178,7 @@ class Exporter:
             Formatted basic string.
         """
         items = [
-            obj.date.strftime('%d.%m.%Y %H:%M:%S'),
+            obj.date.strftime("%d.%m.%Y %H:%M:%S"),
             obj.db_version,
             obj.last_word_id,
             obj.db_release,
@@ -160,7 +186,11 @@ class Exporter:
         return cls.merge_by(items, separator)
 
     @classmethod
-    def export_type(cls, obj: BaseType, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export_type(
+        cls,
+        obj: BaseType,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Prepare Type data for exporting to text file
 
@@ -174,11 +204,16 @@ class Exporter:
                 obj.group,
                 obj.parentable,
                 cls.ves(obj.description),
-            ], separator,
+            ],
+            separator,
         )
 
     @classmethod
-    def export_word(cls, obj: BaseWord, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export_word(
+        cls,
+        obj: BaseWord,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Prepare Word data for exporting to text file
 
@@ -204,11 +239,16 @@ class Exporter:
                 origin_x,
                 ewc.e_usedin,
                 tid_old,
-            ], separator,
+            ],
+            separator,
         )
 
     @classmethod
-    def export_definition(cls, obj: BaseDefinition, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export_definition(
+        cls,
+        obj: BaseDefinition,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Prepare Definition data for exporting to text file
 
@@ -223,13 +263,18 @@ class Exporter:
                 cls.ves(obj.usage),
                 e_grammar,
                 obj.body,
-                '',
+                "",
                 cls.ves(obj.case_tags),
-            ], separator,
+            ],
+            separator,
         )
 
     @classmethod
-    def export_word_spell(cls, obj: BaseWordSpell, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export_word_spell(
+        cls,
+        obj: BaseWordSpell,
+        separator: str = DEFAULT_SEPARATOR,
+    ) -> str:
         """
         Prepare WordSpell data for exporting to text file
 
@@ -247,8 +292,9 @@ class Exporter:
                 code_name,
                 obj.event_start_id,
                 obj.event_end_id if obj.event_end else 9999,
-                '',
-            ], separator,
+                "",
+            ],
+            separator,
         )
 
 
