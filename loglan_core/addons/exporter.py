@@ -29,14 +29,14 @@ class Exporter:
     Methods:
         export: The main method that uses a dictionary to map the type of the input object
                 to the respective export method.
-        export_author: Converts a BaseAuthor object to a formatted string.
-        export_definition: Converts a BaseDefinition object to a formatted string.
-        export_event: Converts a BaseEvent object to a formatted string.
-        export_setting: Converts a BaseSetting object to a formatted string.
-        export_syllable: Converts a BaseSyllable object to a formatted string.
-        export_type: Converts a BaseType object to a formatted string.
-        export_word: Converts a BaseWord object to a formatted string.
-        export_word_spell: Converts a BaseWordSpell object to a formatted string.
+        export_author: Converts a BaseAuthor object to a tuple of items.
+        export_definition: Converts a BaseDefinition object to a tuple of items.
+        export_event: Converts a BaseEvent object to a tuple of items.
+        export_setting: Converts a BaseSetting object to a tuple of items.
+        export_syllable: Converts a BaseSyllable object to a tuple of items.
+        export_type: Converts a BaseType object to a tuple of items.
+        export_word: Converts a BaseWord object to a tuple of items.
+        export_word_spell: Converts a BaseWordSpell object to a tuple of items.
 
     Raises:
         ValueError: If the object type is not supported for export.
