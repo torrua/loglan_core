@@ -7,7 +7,7 @@ import pytest
 
 from loglan_core.addons.exporter import Exporter
 from loglan_core.addons.export_word_converter import ExportWordConverter
-from loglan_core import Author, Word, Event, Syllable, Setting, Type, Definition
+from loglan_core import Author, Word, Event, Syllable, Setting, Type, Definition, WordSpell
 
 
 @pytest.mark.usefixtures("db_session")
@@ -90,6 +90,6 @@ class TestExporter:
 
     def test_export_word_spell(self, db_session):
         """Test WordSpell.export() method"""
-        obj = db_session.query(Word).filter(Word.name == "prukao").scalar()
-        result = self.e.export_word_spell(obj)
+        obj = db_session.query(WordSpell).filter(Word.name == "prukao").scalar()
+        result = self.e.export(obj)
         assert result == "7191@prukao@prukao@555555@3@9999@"
