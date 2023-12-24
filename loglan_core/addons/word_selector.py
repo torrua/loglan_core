@@ -8,6 +8,7 @@ event, key, type, and name through the WordSelector class.
 from __future__ import annotations
 
 from functools import wraps
+from typing import Type
 
 from sqlalchemy import and_, select
 from sqlalchemy.orm.attributes import InstrumentedAttribute
@@ -58,7 +59,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
     Extends the SQLAlchemy Select class to provide additional functionality.
     """
 
-    def __init__(self, class_=BaseWord, is_sqlite: bool = False):
+    def __init__(self, class_: Type[BaseWord] = BaseWord, is_sqlite: bool = False):
         """
         Initialize a WordSelector instance.
 
@@ -102,7 +103,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
 
         Args:
             name (str): The name to filter by.
-            case_sensitive (bool): Whether the search should be case sensitive.
+            case_sensitive (bool): Whether the search should be case-sensitive.
             Defaults to False.
 
         Returns:
@@ -130,7 +131,8 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
             key (BaseKey | str): The key to filter by.
             It can either be an instance of BaseKey or a string.
             language (str | None): The language of the key. Defaults to None.
-            case_sensitive (bool): Whether the search should be case sensitive. Defaults to False.
+            case_sensitive (bool): Whether the search should be case-sensitive.
+                Defaults to False.
 
         Returns:
             WordSelector: A query with the filter applied.
