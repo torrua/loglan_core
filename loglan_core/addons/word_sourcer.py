@@ -29,8 +29,8 @@ class WordSourcer:
         "suksi",
         "surna",
     ]
-
-    def get_sources_prim(self, word: BaseWord):
+    @classmethod
+    def get_sources_prim(cls, word: BaseWord):
         """
 
         Returns:
@@ -42,7 +42,7 @@ class WordSourcer:
             return None
 
         if word.type.type == "C-Prim":
-            return self._get_sources_c_prim(word)
+            return cls._get_sources_c_prim(word)
 
         # TODO сделать вывод унифицированным
         return f"{word.name}: {word.origin}{' < ' + word.origin_x if word.origin_x else ''}"
