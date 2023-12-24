@@ -35,7 +35,7 @@
 <dl>
 <dt id="loglan_core.setting.BaseSetting"><code class="flex name class">
 <span>class <span class="ident">BaseSetting</span></span>
-<span>(</span><span>db_version, db_release, last_word_id, date=None)</span>
+<span>(</span><span>db_version, db_release, last_word_id, date)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Base Setting's DB Model</p>
@@ -58,7 +58,7 @@
 <dt id="loglan_core.setting.BaseSetting.date"><code class="name">var <span class="ident">date</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Last modified date</em><br>
-<strong>dateime.datetime</strong> : nullable=True, unique=False</p></div>
+<strong>dateime.datetime</strong> : nullable=False, unique=True</p></div>
 </dd>
 <dt id="loglan_core.setting.BaseSetting.db_release"><code class="name">var <span class="ident">db_release</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>

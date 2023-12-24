@@ -28,7 +28,7 @@ class BaseType(BaseModel):
         type: Mapped[str_016],  # pylint: disable=W0622
         type_x: Mapped[str_016],
         parentable: Mapped[bool],
-        group: Mapped[str_016] | None = None,
+        group: Mapped[str_016],
         description: Mapped[str_255] | None = None,
     ):
         """
@@ -53,7 +53,7 @@ class BaseType(BaseModel):
 
     type: Mapped[str_016] = mapped_column(nullable=False)  # E.g. 2-Cpx, C-Prim
     type_x: Mapped[str_016] = mapped_column(nullable=False)  # E.g. Predicate, Predicate
-    group: Mapped[str_016 | None]  # E.g. Cpx, Prim
+    group: Mapped[str_016] = mapped_column(nullable=False)  # E.g. Cpx, Prim
     parentable: Mapped[bool] = mapped_column(nullable=False)  # E.g. True, False
     description: Mapped[str_255 | None]  # E.g. Two-term Complex, ...
 

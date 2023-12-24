@@ -36,7 +36,7 @@ class BaseSetting(BaseModel):
         db_version: Mapped[int],
         db_release: Mapped[str_016],
         last_word_id: Mapped[int],
-        date: Mapped[datetime] | None = None,
+        date: Mapped[datetime],
     ):
         super().__init__()
         self.db_version = db_version
@@ -54,9 +54,9 @@ class BaseSetting(BaseModel):
             f"db version {self.db_version} (release {self.db_release})>"
         )
 
-    date: Mapped[datetime | None]
+    date: Mapped[datetime] = mapped_column(nullable=False, unique=True)
     """*Last modified date*  
-        **dateime.datetime** : nullable=True, unique=False"""
+        **dateime.datetime** : nullable=False, unique=True"""
     db_version: Mapped[int] = mapped_column(nullable=False)
     """*Database version (for old application)*  
         **int** : nullable=False, unique=False"""

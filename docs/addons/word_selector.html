@@ -59,7 +59,7 @@ the resulting class instances.</p>
 <dl>
 <dt id="loglan_core.addons.word_selector.WordSelector"><code class="flex name class">
 <span>class <span class="ident">WordSelector</span></span>
-<span>(</span><span>class_=loglan_core.word.BaseWord, is_sqlite: bool = False)</span>
+<span>(</span><span>class_: Type[BaseWord] = loglan_core.word.BaseWord, is_sqlite: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Class to extract words from a database based on various criteria.</p>
@@ -168,7 +168,8 @@ the resulting class instances.</p>
 <dt>It can either be an instance of BaseKey or a string.</dt>
 <dt>language (str | None): The language of the key. Defaults to None.</dt>
 <dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Whether the search should be case sensitive. Defaults to False.</dd>
+<dd>Whether the search should be case-sensitive.
+Defaults to False.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
@@ -186,7 +187,7 @@ the resulting class instances.</p>
 <dt><strong><code>name</code></strong> :&ensp;<code>str</code></dt>
 <dd>The name to filter by.</dd>
 <dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Whether the search should be case sensitive.</dd>
+<dd>Whether the search should be case-sensitive.</dd>
 </dl>
 <p>Defaults to False.</p>
 <h2 id="returns">Returns</h2>
