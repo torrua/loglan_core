@@ -3,7 +3,7 @@ from io import open
 
 from setuptools import setup
 
-current_version = "0.1.7"
+current_version = "0.1.8"
 
 def read(filename):
     with open(filename, encoding='utf-8') as file:
