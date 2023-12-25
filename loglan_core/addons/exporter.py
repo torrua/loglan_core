@@ -121,7 +121,7 @@ class Exporter:
         Returns:
             tuple: elements for export
         """
-        return obj.name, obj.type, obj.allowed
+        return obj.name, obj.type, str(obj.allowed)
 
     @staticmethod
     def export_setting(obj: BaseSetting) -> tuple:
@@ -150,7 +150,7 @@ class Exporter:
             obj.type,
             obj.type_x,
             obj.group,
-            obj.parentable,
+            str(obj.parentable),
             obj.description,
         )
 

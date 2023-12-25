@@ -48,7 +48,7 @@ class ExportWordConverter:
         """
         notes: dict[str, str] = self.word.notes or {}
         if self.word.year:
-            return f"{self.word.year.year}{notes.get('year', str())}".strip()
+            return f"{self.word.year.year} {notes.get('year', str())}".strip()
         return ""
 
     @property
