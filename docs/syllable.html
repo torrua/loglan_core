@@ -35,7 +35,7 @@
 <dl>
 <dt id="loglan_core.syllable.BaseSyllable"><code class="flex name class">
 <span>class <span class="ident">BaseSyllable</span></span>
-<span>(</span><span>name, type, allowed=None)</span>
+<span>(</span><span>name, type, allowed)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Base Syllable's DB Model</p>
@@ -58,7 +58,7 @@
 <dt id="loglan_core.syllable.BaseSyllable.allowed"><code class="name">var <span class="ident">allowed</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
 <div class="desc"><p><em>Is this syllable acceptable in grammar</em><br>
-<strong>bool</strong> : nullable=True, unique=False</p></div>
+<strong>bool</strong> : nullable=False, unique=False</p></div>
 </dd>
 <dt id="loglan_core.syllable.BaseSyllable.name"><code class="name">var <span class="ident">name</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
