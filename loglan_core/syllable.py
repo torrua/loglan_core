@@ -33,7 +33,7 @@ class BaseSyllable(BaseModel):
         self,
         name: Mapped[str_008],
         type: Mapped[str_032],  # pylint: disable=W0622
-        allowed: Mapped[bool] | None = None,
+        allowed: Mapped[bool],
     ):
         super().__init__()
         self.name = name
@@ -56,6 +56,6 @@ class BaseSyllable(BaseModel):
     type: Mapped[str_032] = mapped_column(nullable=False)
     """*Syllable's type*  
             **str** : max_length=8, nullable=False, unique=False"""
-    allowed: Mapped[bool | None] = mapped_column(nullable=True)
+    allowed: Mapped[bool] = mapped_column(nullable=False)
     """*Is this syllable acceptable in grammar*  
-            **bool** : nullable=True, unique=False"""
+            **bool** : nullable=False, unique=False"""
