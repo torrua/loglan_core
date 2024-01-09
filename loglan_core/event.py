@@ -42,15 +42,15 @@ class BaseEvent(BaseModel):
 
     def __init__(
         self,
-        date: Mapped[datetime.date],
         name: Mapped[str_064],
+        date: Mapped[datetime.date],
         definition: Mapped[str],
         annotation: Mapped[str_016],
         suffix: Mapped[str_016],
     ):
         super().__init__()
-        self.date = date
         self.name = name
+        self.date = date
         self.definition = definition
         self.annotation = annotation
         self.suffix = suffix
@@ -62,12 +62,12 @@ class BaseEvent(BaseModel):
             f"{self.name} ({self.date})>"
         )
 
-    date: Mapped[datetime.date] = mapped_column(nullable=False)
-    """*Event's starting day*  
-        **dateime.date** : nullable=False, unique=False"""
     name: Mapped[str_064] = mapped_column(nullable=False)
     """*Event's short name*  
         **str** : max_length=64, nullable=False, unique=False"""
+    date: Mapped[datetime.date] = mapped_column(nullable=False)
+    """*Event's starting day*  
+        **dateime.date** : nullable=False, unique=False"""
     definition: Mapped[str] = mapped_column(Text, nullable=False)
     """*Event's definition*
         **str** : nullable=False, unique=False"""
