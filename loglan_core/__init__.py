@@ -3,7 +3,7 @@ Main point for export DB models
 """
 
 __author__ = "torrua"
-__copyright__ = "Copyright 2023, loglan_core project"
+__copyright__ = "Copyright 2024, loglan_core project"
 __email__ = "torrua@gmail.com"
 
 from loglan_core.author import BaseAuthor as Author
@@ -21,3 +21,5 @@ from loglan_core.type import BaseType as Type
 from loglan_core.word import BaseWord as Word
 from loglan_core.word_source import BaseWordSource as WordSource
 from loglan_core.word_spell import BaseWordSpell as WordSpell
+from loglan_core.base import BaseModel as Base
+from loglan_core.addons.word_selector import WordSelector
