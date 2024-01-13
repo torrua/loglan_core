@@ -12,4 +12,4 @@ jobs:
       - uses: jpetrucciani/mypy-check@master
         with:
             path: './loglan_core'
-            mypy_flags: '--config-file pyproject.toml'
+            mypy_flags: '--config-file ./pyproject.toml'
