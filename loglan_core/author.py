@@ -3,6 +3,8 @@ This module contains a basic Author Model
 """
 from __future__ import annotations
 
+from typing import TYPE_CHECKING
+
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
@@ -10,6 +12,9 @@ from sqlalchemy.orm import relationship
 from loglan_core.base import BaseModel, str_064, str_128
 from loglan_core.connect_tables import t_connect_authors
 from loglan_core.table_names import T_NAME_AUTHORS
+
+if TYPE_CHECKING:
+    from loglan_core.word import BaseWord
 
 __pdoc__ = {
     "BaseAuthor.created": False,
@@ -95,7 +100,7 @@ class BaseAuthor(BaseModel):
     :type: :class:`~loglan_core.base.str_128` with max_length=128, nullable=True, unique=False
     """
 
-    relationship_contribution: Mapped[list["BaseWord"]] = relationship(  # type: ignore
+    relationship_contribution: Mapped[list[BaseWord]] = relationship(  # type: ignore
         back_populates="relationship_authors",
         secondary=t_connect_authors,
         enable_typechecks=False,
@@ -111,7 +116,7 @@ class BaseAuthor(BaseModel):
     """
 
     @property
-    def contribution(self) -> list["BaseWord"]:
+    def contribution(self) -> list[BaseWord]:
         """Get a list of words coined by this author.
 
         Returns:

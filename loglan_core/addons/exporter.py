@@ -2,7 +2,8 @@
 This module contains an "Export extensions" for LOD dictionary SQL model.
 Add export() function to db object for returning its text string presentation.
 """
-from typing import Iterable
+from typing import Iterable, Callable, Type
+
 
 from loglan_core.addons.export_word_converter import ExportWordConverter
 from loglan_core.author import BaseAuthor
@@ -54,7 +55,7 @@ class Exporter:
             ValueError: If the object type is not supported.
         """
 
-        exporters = {
+        exporters: dict[Type, Callable] = {
             BaseAuthor: cls.export_author,
             BaseEvent: cls.export_event,
             BaseType: cls.export_type,
@@ -69,6 +70,9 @@ class Exporter:
             raise ValueError(f"Unsupported object type: {obj.__class__}")
 
         exporter_func = exporters.get(obj.__class__)
+        if not exporter_func:
+            raise ValueError(f"Unsupported object type: {obj.__class__}")
+
         items = exporter_func(obj)
         return cls.merge_by(items, separator)
 
@@ -105,7 +109,7 @@ class Exporter:
             tuple: elements for export
         """
         return (
-            obj.id,
+            obj.event_id,
             obj.name,
             obj.date.strftime("%m/%d/%Y"),
             obj.definition,
@@ -150,7 +154,7 @@ class Exporter:
             obj.type,
             obj.type_x,
             obj.group,
-            str(obj.parentable),
+            obj.parentable,
             obj.description,
         )
 

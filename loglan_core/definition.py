@@ -1,16 +1,25 @@
 """
 This module contains a basic Definition Model
 """
+
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from sqlalchemy import ForeignKey, Text
-from sqlalchemy import true, BinaryExpression
+from sqlalchemy import true
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
+from sqlalchemy.sql.expression import ColumnElement
 
 from loglan_core.base import BaseModel, str_008, str_016, str_064, str_255
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.key import BaseKey
 from loglan_core.table_names import T_NAME_WORDS, T_NAME_DEFINITIONS
+
+if TYPE_CHECKING:
+    from loglan_core.word import BaseWord
 
 __pdoc__ = {
     "BaseDefinition.created": False,
@@ -98,7 +107,7 @@ class BaseDefinition(BaseModel):
         lazy="dynamic",
     )
 
-    relationship_source_word: Mapped["BaseWord"] = relationship(  # type: ignore
+    relationship_source_word: Mapped[BaseWord] = relationship(  # type: ignore
         "BaseWord",
         back_populates="relationship_definitions",
     )
@@ -144,7 +153,7 @@ class BaseDefinition(BaseModel):
         )
 
     @classmethod
-    def filter_language(cls, language: str | None = None) -> BinaryExpression:
+    def filter_language(cls, language: str | None = None) -> ColumnElement[bool]:
         """
         Filter by specified language.
 
@@ -152,6 +161,6 @@ class BaseDefinition(BaseModel):
             language (str, optional): The language to filter by. Defaults to None.
 
         Returns:
-            BinaryExpression: The filtered query.
+            ColumnElement[bool]: The filtered query.
         """
         return cls.language == language if language else true()

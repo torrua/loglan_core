@@ -63,9 +63,10 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self.is_sqlite = is_sqlite
 
     @property
-    def inherit_cache(self) -> bool:
+    def inherit_cache(self):  # pylint: disable=C0116
         """
-        :return: bool
+        Returns:
+             bool
         """
         return True
 

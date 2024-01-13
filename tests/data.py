@@ -90,12 +90,12 @@ words_deprecated = [word_1_deprecated_event_5, word_2_deprecated_event_5, word_3
 changed_words = words_appeared + words_deprecated
 
 # ===== ALL EVENTS =================================================================
-event_1 = {'annotation': 'Initial', 'name': 'Start', 'suffix': 'INIT', 'definition': 'The initial vocabulary before updates.', 'date': datetime.date(1975, 1, 1), }
-event_2 = {'annotation': 'Syllables', 'name': '94/2', 'suffix': 'SC', 'definition': "Any 3+ syllable Complex that is CVC initial AND the C/C is a permissible initial must be 'y' hyphenated. The Slinkui test is vacated, and Tosmabru is replaced by this. Eg: 'paslinkui' -> 'pasylinkui' while the currently prohibitted '*tosmabru' -> 'tosymabru'.", 'date': datetime.date(1994, 1, 2), }
-event_3 = {'annotation': 'Doubled Vowels', 'name': 'No double vowels in borrowings', 'suffix': 'DV', 'definition': "Doubled vowels (which require one to be stressed) are prohibited from Borrowings so they can be attached to Complexes without problems. Only 'alkooli' -> 'alkoholi' is affected.", 'date': datetime.date(2013, 1, 1), }
-event_4 = {'annotation': 'Randall Trial', 'name': 'Randall Trial Words 1', 'suffix': 'RH1', 'definition': 'Randall Holmes trial words plus grammar vocab', 'date': datetime.date(2013, 12, 18), }
-event_5 = {'annotation': 'Randall Cleanup', 'name': 'Randall Dictionary Cleanup', 'suffix': 'RDC', 'definition': 'parsed all the words in the dictionary, identified ones that the parser did not recognize as words', 'date': datetime.date(2016, 1, 15), }
-event_6 = {'annotation': 'Torrua Repair', 'name': 'Torrua Dictionary Repair', 'suffix': 'TDR', 'definition': 'Repair of the dictionary by Torrua and Peter Hill', 'date': datetime.date(2019, 5, 25), }
+event_1 = {"event_id": 1, 'annotation': 'Initial', 'name': 'Start', 'suffix': 'INIT', 'definition': 'The initial vocabulary before updates.', 'date': datetime.date(1975, 1, 1), }
+event_2 = {"event_id": 2, 'annotation': 'Syllables', 'name': '94/2', 'suffix': 'SC', 'definition': "Any 3+ syllable Complex that is CVC initial AND the C/C is a permissible initial must be 'y' hyphenated. The Slinkui test is vacated, and Tosmabru is replaced by this. Eg: 'paslinkui' -> 'pasylinkui' while the currently prohibitted '*tosmabru' -> 'tosymabru'.", 'date': datetime.date(1994, 1, 2), }
+event_3 = {"event_id": 3, 'annotation': 'Doubled Vowels', 'name': 'No double vowels in borrowings', 'suffix': 'DV', 'definition': "Doubled vowels (which require one to be stressed) are prohibited from Borrowings so they can be attached to Complexes without problems. Only 'alkooli' -> 'alkoholi' is affected.", 'date': datetime.date(2013, 1, 1), }
+event_4 = {"event_id": 4, 'annotation': 'Randall Trial', 'name': 'Randall Trial Words 1', 'suffix': 'RH1', 'definition': 'Randall Holmes trial words plus grammar vocab', 'date': datetime.date(2013, 12, 18), }
+event_5 = {"event_id": 5, 'annotation': 'Randall Cleanup', 'name': 'Randall Dictionary Cleanup', 'suffix': 'RDC', 'definition': 'parsed all the words in the dictionary, identified ones that the parser did not recognize as words', 'date': datetime.date(2016, 1, 15), }
+event_6 = {"event_id": 6, 'annotation': 'Torrua Repair', 'name': 'Torrua Dictionary Repair', 'suffix': 'TDR', 'definition': 'Repair of the dictionary by Torrua and Peter Hill', 'date': datetime.date(2019, 5, 25), }
 events = [event_1, event_2, event_3, event_4, event_5, event_6]
 
 # ===== SETTINGS ===============================================================

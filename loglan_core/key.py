@@ -1,14 +1,22 @@
 """
 This module contains a basic Key Model
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
+
 from sqlalchemy import UniqueConstraint, true
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql.elements import BinaryExpression
+from sqlalchemy.sql.expression import ColumnElement
 
 from loglan_core.base import BaseModel, str_016, str_064
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.table_names import T_NAME_KEYS
+
+if TYPE_CHECKING:
+    from loglan_core.definition import BaseDefinition
 
 __pdoc__ = {
     "BaseKey.definitions": """
@@ -63,7 +71,7 @@ class BaseKey(BaseModel):
     """*Key's language*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    relationship_definitions: Mapped[list["BaseDefinition"]] = relationship(  # type: ignore
+    relationship_definitions: Mapped[list[BaseDefinition]] = relationship(  # type: ignore
         secondary=t_connect_keys,
         back_populates="relationship_keys",
         lazy="dynamic",
@@ -99,7 +107,7 @@ class BaseKey(BaseModel):
         )
 
     @classmethod
-    def filter_by_language(cls, language: str | None = None) -> BinaryExpression:
+    def filter_by_language(cls, language: str | None = None) -> ColumnElement[bool]:
         """
         Filter the language of the base key.
 
@@ -108,6 +116,6 @@ class BaseKey(BaseModel):
             If None, no language filter will be applied.
 
         Returns:
-            BinaryExpression: A filter condition for the base key's language.
+            ColumnElement[bool]: A filter condition for the base key's language.
         """
         return (cls.language == language) if language else true()

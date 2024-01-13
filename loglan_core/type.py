@@ -1,6 +1,9 @@
 """
 This module contains a basic Type Model
 """
+from __future__ import annotations
+
+from typing import TYPE_CHECKING
 
 from sqlalchemy import or_, select
 from sqlalchemy.orm import relationship, mapped_column, Mapped
@@ -9,6 +12,9 @@ from sqlalchemy.sql.selectable import Select
 from loglan_core.base import BaseModel
 from loglan_core.base import str_016, str_255
 from loglan_core.table_names import T_NAME_TYPES
+
+if TYPE_CHECKING:
+    from loglan_core.word import BaseWord
 
 __pdoc__ = {
     "BaseType.words": "words",
@@ -23,12 +29,12 @@ class BaseType(BaseModel):
     __tablename__ = T_NAME_TYPES
 
     def __init__(
-        self,
-        type: Mapped[str_016],  # pylint: disable=W0622
-        type_x: Mapped[str_016],
-        parentable: Mapped[bool],
-        group: Mapped[str_016],
-        description: Mapped[str_255] | None = None,
+            self,
+            type: Mapped[str_016],  # pylint: disable=W0622
+            type_x: Mapped[str_016],
+            parentable: Mapped[bool],
+            group: Mapped[str_016],
+            description: Mapped[str_255] | None = None,
     ):
         """
         Returns:
@@ -56,7 +62,7 @@ class BaseType(BaseModel):
     parentable: Mapped[bool] = mapped_column(nullable=False)  # E.g. True, False
     description: Mapped[str_255 | None]  # E.g. Two-term Complex, ...
 
-    relationship_words: Mapped[list["BaseWord"]] = relationship(  # type: ignore
+    relationship_words: Mapped[list[BaseWord]] = relationship(  # type: ignore
         back_populates="relationship_type",
         foreign_keys="BaseWord.type_id",
         lazy="dynamic",
@@ -70,7 +76,7 @@ class BaseType(BaseModel):
         return self.relationship_words
 
     @property
-    def words(self):
+    def words(self) -> list[BaseWord]:
         """
         Returns:
         """
@@ -92,8 +98,8 @@ class BaseType(BaseModel):
             if isinstance(type_filter, str)
             else type_filter
         )
-        item = cls.id if id_only else cls
-        type_request = select(item).filter(
+
+        type_request = select(cls.id if id_only else cls).filter(
             or_(
                 cls.type.in_(type_filter),
                 cls.type_x.in_(type_filter),

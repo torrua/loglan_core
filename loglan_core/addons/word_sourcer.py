@@ -62,7 +62,7 @@ class WordSourcer:
     @classmethod
     def get_sources_cpx(
         cls, word: BaseWord, as_str: bool = False
-    ) -> Select[tuple[BaseWord]]:  # TODO fix return type
+    ) -> Select[tuple[BaseWord]] | list[str]:  # TODO fix return type
         """Extract source words from self.origin field accordingly
         Args:
             word (BaseWord):
@@ -105,11 +105,14 @@ class WordSourcer:
         """
         Returns:
         """
-        sources = word.origin.replace("(", "").replace(")", "").replace("/", "")
-        sources = sources.split("+")
+        if not word.origin:
+            return []
+
+        sources_str = word.origin.replace("(", "").replace(")", "").replace("/", "")
+        sources_list = sources_str.split("+")
         sources = [
             s if not s.endswith(("r", "h")) else s[:-1]
-            for s in sources
+            for s in sources_list
             if s not in ["y", "r", "n"]
         ]
         return sources
@@ -117,7 +120,7 @@ class WordSourcer:
     @classmethod
     def get_sources_cpd(
         cls, word: BaseWord, as_str: bool = False
-    ) -> list[None | str | BaseWord]:
+    ) -> Select[tuple[BaseWord]] | list[str]:
         """Extract source words from self.origin field accordingly
 
         Args:
@@ -140,13 +143,16 @@ class WordSourcer:
         """
         Returns:
         """
-        sources = (
+        if not word.origin:
+            return []
+
+        sources_str = (
             word.origin.replace("(", "")
             .replace(")", "")
             .replace("/", "")
             .replace("-", "")
         )
-        sources = [s.strip() for s in sources.split("+") if s]
+        sources = [s.strip() for s in sources_str.split("+") if s]
         return sources
 
     @staticmethod
