@@ -50,7 +50,7 @@ which makes it possible to work with word's sources</p>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.addons.word_sourcer.WordSourcer.get_sources_cpd"><code class="name flex">
-<span>def <span class="ident">get_sources_cpd</span></span>(<span>word: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>, as_str: bool = False) ‑> list[None | str | <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>]</span>
+<span>def <span class="ident">get_sources_cpd</span></span>(<span>word: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>, as_str: bool = False) ‑> sqlalchemy.sql.selectable.Select | list[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract source words from self.origin field accordingly</p>
@@ -66,7 +66,7 @@ which makes it possible to work with word's sources</p>
 <p>List of words from which the self.name was created</p></div>
 </dd>
 <dt id="loglan_core.addons.word_sourcer.WordSourcer.get_sources_cpx"><code class="name flex">
-<span>def <span class="ident">get_sources_cpx</span></span>(<span>word: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>, as_str: bool = False) ‑> sqlalchemy.sql.selectable.Select</span>
+<span>def <span class="ident">get_sources_cpx</span></span>(<span>word: <a title="loglan_core.word.BaseWord" href="../word.html#loglan_core.word.BaseWord">BaseWord</a>, as_str: bool = False) ‑> sqlalchemy.sql.selectable.Select | list[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract source words from self.origin field accordingly</p>

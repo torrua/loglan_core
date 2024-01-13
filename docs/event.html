@@ -35,7 +35,7 @@
 <dl>
 <dt id="loglan_core.event.BaseEvent"><code class="flex name class">
 <span>class <span class="ident">BaseEvent</span></span>
-<span>(</span><span>name, date, definition, annotation, suffix)</span>
+<span>(</span><span>event_id, name, date, definition, annotation, suffix)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Base Event's DB Model</p>
@@ -79,7 +79,7 @@ identified ones that the parser did not recognize as words',
 <div class="desc"><p><em>Event's annotation (displayed in old format dictionary HTML file)</em><br>
 <strong>str</strong> : max_length=16, nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.appeared_words"><code class="name">var <span class="ident">appeared_words</span> : list['BaseWord']</code></dt>
+<dt id="loglan_core.event.BaseEvent.appeared_words"><code class="name">var <span class="ident">appeared_words</span> : list[BaseWord]</code></dt>
 <dd>
 <div class="desc"><p><em>Relationship query for getting a list of words appeared during this event</em></p>
 <p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
@@ -99,7 +99,7 @@ identified ones that the parser did not recognize as words',
 <div class="desc"><p><em>Event's definition</em>
 <strong>str</strong> : nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.event.BaseEvent.deprecated_words"><code class="name">var <span class="ident">deprecated_words</span> : list['BaseWord']</code></dt>
+<dt id="loglan_core.event.BaseEvent.deprecated_words"><code class="name">var <span class="ident">deprecated_words</span> : list[BaseWord]</code></dt>
 <dd>
 <div class="desc"><p><em>Relationship query for getting a list of words deprecated during this event</em></p>
 <p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
@@ -108,6 +108,11 @@ identified ones that the parser did not recognize as words',
 <dd>
 <div class="desc"><p><em>Relationship query for getting a list of words deprecated during this event</em></p>
 <p><strong>query</strong> : Optional[List[BaseWord]]</p></div>
+</dd>
+<dt id="loglan_core.event.BaseEvent.event_id"><code class="name">var <span class="ident">event_id</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
+<dd>
+<div class="desc"><p><em>Event's id</em>
+<strong>int</strong> : nullable=False, unique=True</p></div>
 </dd>
 <dt id="loglan_core.event.BaseEvent.name"><code class="name">var <span class="ident">name</span> : Union[sqlalchemy.orm.attributes.InstrumentedAttribute[~_T], ~_T]</code></dt>
 <dd>
@@ -173,6 +178,7 @@ identified ones that the parser did not recognize as words',
 <li><code><a title="loglan_core.event.BaseEvent.definition" href="#loglan_core.event.BaseEvent.definition">definition</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.deprecated_words" href="#loglan_core.event.BaseEvent.deprecated_words">deprecated_words</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.deprecated_words_query" href="#loglan_core.event.BaseEvent.deprecated_words_query">deprecated_words_query</a></code></li>
+<li><code><a title="loglan_core.event.BaseEvent.event_id" href="#loglan_core.event.BaseEvent.event_id">event_id</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.latest" href="#loglan_core.event.BaseEvent.latest">latest</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.latest_id" href="#loglan_core.event.BaseEvent.latest_id">latest_id</a></code></li>
 <li><code><a title="loglan_core.event.BaseEvent.name" href="#loglan_core.event.BaseEvent.name">name</a></code></li>

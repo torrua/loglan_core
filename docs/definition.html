@@ -82,7 +82,7 @@
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.definition.BaseDefinition.filter_language"><code class="name flex">
-<span>def <span class="ident">filter_language</span></span>(<span>language: str | None = None) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
+<span>def <span class="ident">filter_language</span></span>(<span>language: str | None = None) ‑> sqlalchemy.sql.elements.ColumnElement[bool]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Filter by specified language.</p>
@@ -93,7 +93,7 @@
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>BinaryExpression</code></dt>
+<dt><code>ColumnElement[bool]</code></dt>
 <dd>The filtered query.</dd>
 </dl></div>
 </dd>

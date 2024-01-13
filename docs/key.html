@@ -68,7 +68,7 @@ and Definition should be many-to-many. See <code>t_connect_keys</code>.</p>
 <div class="desc"><p>case sensitive name filter</p></div>
 </dd>
 <dt id="loglan_core.key.BaseKey.filter_by_language"><code class="name flex">
-<span>def <span class="ident">filter_by_language</span></span>(<span>language: str | None = None) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
+<span>def <span class="ident">filter_by_language</span></span>(<span>language: str | None = None) ‑> sqlalchemy.sql.elements.ColumnElement[bool]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Filter the language of the base key.</p>
@@ -80,7 +80,7 @@ and Definition should be many-to-many. See <code>t_connect_keys</code>.</p>
 <p>If None, no language filter will be applied.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code>BinaryExpression</code></dt>
+<dt><code>ColumnElement[bool]</code></dt>
 <dd>A filter condition for the base key's language.</dd>
 </dl></div>
 </dd>
