@@ -90,5 +90,3 @@ class TestWord:
 
         test: Key = db_session.query(Key).filter(Key.word == "act").first()
         assert test in kakto.keys
-
-

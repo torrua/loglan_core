@@ -317,7 +317,7 @@ class BaseWord(BaseModel):
         Returns: BooleanClauseList
         """
         event_id_filter = event_id or BaseEvent.latest_id()
-        start_id_condition = (cls.event_start_id <= event_id_filter)
+        start_id_condition = cls.event_start_id <= event_id_filter
         end_id_condition = (cls.event_end_id > event_id_filter) | cls.event_end_id.is_(None)
         return start_id_condition & end_id_condition
 

@@ -77,3 +77,12 @@ class TestWord:
         result = self.aws.get_sources_cpd(prim, as_str=True)
         assert len(result) == 0
         assert isinstance(result, list)
+
+    def test_prepare_sources_cpx(self, db_session):
+        prim = db_session.execute(self.ws.by_name("cii")).scalar()
+        assert self.aws._prepare_sources_cpx(prim) == []
+
+    def test_prepare_sources_cpd(self, db_session):
+        prim = db_session.execute(self.ws.by_name("cii")).scalar()
+        assert self.aws._prepare_sources_cpd(prim) == []
+

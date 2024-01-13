@@ -66,9 +66,6 @@ class Exporter:
             BaseSyllable: cls.export_syllable,
         }
 
-        if obj.__class__ not in exporters:
-            raise ValueError(f"Unsupported object type: {obj.__class__}")
-
         exporter_func = exporters.get(obj.__class__)
         if not exporter_func:
             raise ValueError(f"Unsupported object type: {obj.__class__}")

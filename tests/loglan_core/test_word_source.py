@@ -30,5 +30,3 @@ class TestWordSource:
 
         ws_2: WordSource = WordSource(word_sources[2])  # "2/4C"
         assert ws_2.as_string == ""
-
-

@@ -1,5 +1,7 @@
 import pytest
+
 from loglan_core import Author
+
 
 @pytest.mark.usefixtures("db_session")
 class TestAuthor:

@@ -62,7 +62,7 @@ class WordSourcer:
     @classmethod
     def get_sources_cpx(
         cls, word: BaseWord, as_str: bool = False
-    ) -> Select[tuple[BaseWord]] | list[str]:  # TODO fix return type
+    ) -> Select[tuple[BaseWord]] | list[str]:
         """Extract source words from self.origin field accordingly
         Args:
             word (BaseWord):
