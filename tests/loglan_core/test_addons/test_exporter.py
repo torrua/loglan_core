@@ -77,6 +77,15 @@ class TestExporter:
         assert result == "2-Cpx@Predicate@Cpx@True@Two-term Complex " \
                          "E.g. flicea, from fli(du)+ce(nj)a=liquid-become."
 
+        obj = db_session.query(Type).filter(Type.type == "D-Prim").scalar()
+        result = self.e.export(obj)
+        assert result == ("D-Prim@Predicate@Prim@False@Derived Primitive, "
+                          "one of the primitives that follows the cultural "
+                          "(language, nationality, culture) or animal (male, "
+                          "female, infant, resembling, unspecified) declension."
+                          )
+
+
 
     def test_export_definition(self, db_session):
         """Test Definition.export() method"""
