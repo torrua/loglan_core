@@ -5,7 +5,7 @@ from io import open
 
 from setuptools import setup
 
-CURRENT_VERSION = "0.2.2"
+CURRENT_VERSION = "0.2.3"
 
 
 def read(filename):  # pylint: disable=C0116
