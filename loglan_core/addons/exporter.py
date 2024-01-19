@@ -59,14 +59,19 @@ class Exporter:
             BaseAuthor: cls.export_author,
             BaseEvent: cls.export_event,
             BaseType: cls.export_type,
-            BaseWord: cls.export_word,
             BaseWordSpell: cls.export_word_spell,
+            BaseWord: cls.export_word,
             BaseDefinition: cls.export_definition,
             BaseSetting: cls.export_setting,
             BaseSyllable: cls.export_syllable,
         }
 
-        exporter_func = exporters.get(obj.__class__)
+        exporter_func = None
+        for base_class, func in exporters.items():
+            if isinstance(obj, base_class):
+                exporter_func = func
+                break
+
         if not exporter_func:
             raise ValueError(f"Unsupported object type: {obj.__class__}")
 
@@ -108,7 +113,7 @@ class Exporter:
         return (
             obj.event_id,
             obj.name,
-            obj.date.strftime("%m/%d/%Y"),
+            obj.date.strftime("%m/%d/%Y"),  # TODO Add format as class constant
             obj.definition,
             obj.annotation,
             obj.suffix,
@@ -133,7 +138,7 @@ class Exporter:
             tuple: elements for export
         """
         return (
-            obj.date.strftime("%d.%m.%Y %H:%M:%S"),
+            obj.date.strftime("%d.%m.%Y %H:%M:%S"),  # TODO Add format as class constant
             obj.db_version,
             obj.last_word_id,
             obj.db_release,
