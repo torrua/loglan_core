@@ -32,8 +32,8 @@ class BaseType(BaseModel):
             self,
             type: Mapped[str_016],  # pylint: disable=W0622
             type_x: Mapped[str_016],
-            parentable: Mapped[bool],
             group: Mapped[str_016],
+            parentable: Mapped[bool],
             description: Mapped[str_255] | None = None,
     ):
         """
@@ -42,8 +42,8 @@ class BaseType(BaseModel):
         super().__init__()
         self.type = type
         self.type_x = type_x
-        self.parentable = parentable
         self.group = group
+        self.parentable = parentable
         self.description = description
 
     def __str__(self):
