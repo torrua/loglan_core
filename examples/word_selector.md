@@ -28,18 +28,18 @@ ws = WordSelector()
 ```
 
 We can then use the methods provided by the class to apply filters to our query.
-For example, to select words associated with a specific event, we use the by_event method:
+For example, to select words associated with a specific event, we use the `by_event` method:
 ```python
 ws_event = ws.by_event(event_id=1)
 ```
 
-The by_event method returns a new instance of WordSelector with the filter applied.
-We can also filter words by a specific name. We use the by_name method:
+The `by_event` method returns a new instance of WordSelector with the filter applied.
+We can also filter words by a specific name. We use the `by_name` method:
 ```python
 ws_name = ws.by_name(name='proga')
 ```
-The by_name method, like by_event, also returns a new instance of WordSelector with the filter applied.
-Similarly, we can filter words by a specific key using the by_key method:
+The `by_name` method, like `by_event`, also returns a new instance of WordSelector with the filter applied.
+Similarly, we can filter words by a specific key using the `by_key` method:
 ```python
 ws_key = ws.by_key(key='program')
 ```
