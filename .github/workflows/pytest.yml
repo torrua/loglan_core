@@ -27,7 +27,7 @@ jobs:
           pytest --cov loglan_core
           bash <(curl -s https://codecov.io/bash)
           ocular --data-file ".coverage" --config-file ".coveragerc"
-      - name: install codeclimate test-reporter
+      - name: Install CodeClimate Test-Reporter
         run: |
           # download test reporter as a static binary
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
