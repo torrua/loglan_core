@@ -5,7 +5,7 @@ from io import open
 
 from setuptools import setup
 
-CURRENT_VERSION = "0.2.5"
+CURRENT_VERSION = "0.2.6"
 
 
 def read(filename):  # pylint: disable=C0116
@@ -34,7 +34,7 @@ setup(
         "sqlalchemy>=2.0.21",
     ],
     classifiers=[
-        "Development Status :: 4 - Beta",  # "3 - Alpha", "4 - Beta" or "5 - Production/Stable"
+        "Development Status :: 5 - Production/Stable",  # "3 - Alpha", "4 - Beta" or "5 - Production/Stable"
         "Intended Audience :: Developers",
         "Intended Audience :: Science/Research",
         "Topic :: Database",
