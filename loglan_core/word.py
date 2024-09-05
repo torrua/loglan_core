@@ -6,8 +6,7 @@ from __future__ import annotations
 
 import datetime
 
-from sqlalchemy import ForeignKey, JSON, Select
-from sqlalchemy import select
+from sqlalchemy import ForeignKey, JSON
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship, backref
 
@@ -17,7 +16,6 @@ from loglan_core.base import str_008, str_064, str_128
 from loglan_core.connect_tables import (
     t_connect_authors,
     t_connect_words,
-    t_connect_keys,
 )
 from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
@@ -146,9 +144,7 @@ class BaseWord(BaseModel):
         secondary=t_connect_words,
         primaryjoin=(t_connect_words.c.parent_id == id),
         secondaryjoin=(t_connect_words.c.child_id == id),
-        backref=backref(
-            "relationship_parents", lazy="dynamic", enable_typechecks=False
-        ),
+        backref=backref("parents"),
         lazy="dynamic",
         enable_typechecks=False,
     )
@@ -228,24 +224,8 @@ class BaseWord(BaseModel):
         return self.derivatives_query_by(word_group="Cpx").all()
 
     @property
-    def parents_query(self):
-        """Query to get all parents for Complexes, Little words or Affixes
-
-        Returns:
-            BaseQuery
-        """
-        return self.relationship_parents  # pylint: disable=E1101
-
-    @property
-    def parents(self):
-        """
-        Returns:
-        """
-        return self.parents_query.all()
-
-    @property
     def keys(self) -> list[BaseKey]:
         """
         Returns:
         """
-        return sorted(set(key for d in self.definitions for key in d.keys_query.all()))
+        return sorted(set(key for d in self.definitions for key in d.keys))

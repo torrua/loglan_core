@@ -71,22 +71,7 @@ class BaseKey(BaseModel):
     """*Key's language*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    relationship_definitions: Mapped[list[BaseDefinition]] = relationship(  # type: ignore
+    definitions: Mapped[list[BaseDefinition]] = relationship(  # type: ignore
         secondary=t_connect_keys,
-        back_populates="relationship_keys",
-        lazy="dynamic",
+        back_populates="keys",
     )
-
-    @property
-    def definitions_query(self):
-        """
-        Returns:
-        """
-        return self.relationship_definitions
-
-    @property
-    def definitions(self):
-        """
-        Returns:
-        """
-        return self.definitions_query.all()

@@ -8,11 +8,6 @@ class TestKey:
         key: Key = db_session.query(Key).filter(Key.id == 1).first()
         assert str(key) == "<BaseKey 1 'examine' (en)>"
 
-    def test_definitions_query(self, db_session):
-
-        key_act: Key = db_session.query(Key).filter(Key.word == "act").first()
-        assert key_act.definitions_query.count() == 4
-
     def test_definitions(self, db_session):
         key_examine: Key = db_session.query(Key).filter(Key.word == "examine").first()
         assert len(key_examine.definitions) == 1

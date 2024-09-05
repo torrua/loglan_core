@@ -43,8 +43,8 @@ class BaseDefinition(BaseModel):
         notes (Mapped[str_255] | None): The notes of the word.
         APPROVED_CASE_TAGS (tuple): A tuple of approved case tags.
         KEY_PATTERN (str): The pattern for the key.
-        relationship_keys (Mapped[list[BaseKey]]): The relationship of keys.
-        relationship_source_word (Mapped["BaseWord"]): The relationship of source word.
+        keys (Mapped[list[BaseKey]]): The relationship of keys.
+        source_word (Mapped["BaseWord"]): The relationship of source word.
 
     """
 
@@ -100,34 +100,16 @@ class BaseDefinition(BaseModel):
     APPROVED_CASE_TAGS = ("B", "C", "D", "F", "G", "J", "K", "N", "P", "S", "V")
     KEY_PATTERN = r"(?<=\«)(.+?)(?=\»)"
 
-    relationship_keys: Mapped[list[BaseKey]] = relationship(
-        BaseKey.__name__,
+    keys: Mapped[list[BaseKey]] = relationship(
+        BaseKey,
         secondary=t_connect_keys,
-        back_populates="relationship_definitions",
-        lazy="dynamic",
+        back_populates="definitions",
     )
 
     source_word: Mapped[BaseWord] = relationship(  # type: ignore
         "BaseWord",
         back_populates="definitions",
     )
-
-    @property
-    def keys_query(self):
-        """
-        Returns:
-        """
-        return self.relationship_keys
-
-    @property
-    def keys(self):
-        """
-        Get all keys related to the BaseDefinition.
-
-        Returns:
-            list[BaseKey]: All keys related to the BaseDefinition.
-        """
-        return self.keys_query.all()
 
     @property
     def grammar(self) -> str:

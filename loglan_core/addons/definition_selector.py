@@ -115,7 +115,7 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         filter_key = filter_key_by_word_cs(search_key, case_sensitive, self.is_sqlite)
         filter_language = filter_key_by_language(key.language if isinstance(key, BaseKey) else language)
 
-        statement = self.join(self.class_.relationship_keys).filter(
+        statement = self.join(self.class_.keys).filter(
             filter_key, filter_language
         )
         return statement.distinct()

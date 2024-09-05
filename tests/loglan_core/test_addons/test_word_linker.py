@@ -34,7 +34,7 @@ class TestWordLinker:
     def test_removed_links(self, db_session):
         self.delete_links(db_session)
         cmp = self.get_word_by_name(name="prukao", session=db_session)
-        assert cmp.parents_query.count() == 0
+        assert len(cmp.parents) == 0
 
     def test_add_child_correct(self, db_session):
         self.delete_links(db_session)
@@ -43,14 +43,14 @@ class TestWordLinker:
         pruci = self.get_word_by_name(name="pruci", session=db_session)
 
         WordLinker.add_child(kakto, prukao)
-        assert prukao.parents_query.count() == 1
+        assert len(prukao.parents) == 1
 
         WordLinker.add_child(pruci, prukao)
-        assert prukao.parents_query.count() == 2
+        assert len(prukao.parents) == 2
 
         # adding already existed child
         WordLinker.add_child(pruci, prukao)
-        assert prukao.parents_query.count() == 2
+        assert len(prukao.parents) == 2
 
 
     def test_add_child_exception(self, db_session):
@@ -66,17 +66,17 @@ class TestWordLinker:
         kak = self.get_word_by_name(name="kak", session=db_session)
         kao = self.get_word_by_name(name="kao", session=db_session)
 
-        assert kak.parents_query.count() == 0
-        assert kao.parents_query.count() == 0
+        assert len(kak.parents) == 0
+        assert len(kao.parents) == 0
 
         WordLinker.add_children(kakto, [kak, kao])
-        assert kak.parents_query.count() == 1
-        assert kao.parents_query.count() == 1
+        assert len(kak.parents) == 1
+        assert len(kao.parents) == 1
 
         # adding already existed children
         WordLinker.add_children(kakto, [kak, kao])
-        assert kak.parents_query.count() == 1
-        assert kao.parents_query.count() == 1
+        assert len(kak.parents) == 1
+        assert len(kao.parents) == 1
 
 
     def test_add_children_exception(self, db_session):
