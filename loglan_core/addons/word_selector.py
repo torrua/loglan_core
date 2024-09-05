@@ -10,6 +10,7 @@ from functools import wraps
 from typing import Type
 
 from sqlalchemy import and_, select
+from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
 
@@ -73,6 +74,21 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
         super().__init__(class_)
         self.class_ = class_
         self.is_sqlite = is_sqlite
+
+    @order_by_name
+    def _add_relationships(self):
+        """
+        Add relationships to the query.
+        """
+        return self.options(
+            selectinload(self.class_.authors),
+            selectinload(self.class_.definitions),
+            selectinload(self.class_.relationship_derivatives),
+            selectinload(self.class_.event_end),
+            selectinload(self.class_.event_start),
+            selectinload(self.class_.parents),
+            selectinload(self.class_.type),
+        )
 
     @property
     def inherit_cache(self):  # pylint: disable=C0116
