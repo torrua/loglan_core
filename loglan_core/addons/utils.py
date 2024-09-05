@@ -10,7 +10,7 @@ from loglan_core.key import BaseKey
 from loglan_core.word import BaseWord
 
 
-def filter_by_event_id(event_id: int | None) -> BooleanClauseList:
+def filter_word_by_event_id(event_id: int | None) -> BooleanClauseList:
     """
     Returns a filter condition to select words associated with a specific event.
 

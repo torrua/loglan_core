@@ -16,7 +16,7 @@ from sqlalchemy.sql.elements import BinaryExpression
 
 from loglan_core.addons.base_selector import BaseSelector
 from loglan_core.addons.definition_selector import DefinitionSelector
-from loglan_core.addons.utils import filter_by_event_id
+from loglan_core.addons.utils import filter_word_by_event_id
 from loglan_core.key import BaseKey
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
@@ -106,7 +106,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
         Returns:
             WordSelector: A query with the filter applied.
         """
-        return self.where(filter_by_event_id(event_id))
+        return self.where(filter_word_by_event_id(event_id))
 
     @order_by_name
     def by_name(

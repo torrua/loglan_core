@@ -26,7 +26,7 @@ from __future__ import annotations
 from sqlalchemy import select
 
 from loglan_core.addons.base_selector import BaseSelector
-from loglan_core.addons.utils import filter_by_event_id
+from loglan_core.addons.utils import filter_word_by_event_id
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
@@ -88,7 +88,7 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
             .join(t_connect_keys)
             .join(BaseDefinition)
             .join(BaseWord)
-            .where(filter_by_event_id(event_id))
+            .where(filter_word_by_event_id(event_id))
             .scalar_subquery()
         )
         return self.where(self.class_.id.in_(subquery))
