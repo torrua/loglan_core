@@ -36,10 +36,6 @@ class TestWord:
         prukao: Word = db_session.query(Word).filter(Word.name == 'prukao').first()
         assert len(prukao.authors) == 2
 
-    def test_definitions_query(self, db_session):
-        kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
-        assert kakto.definitions_query.count() == 5
-
     def test_definitions(self, db_session):
         kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
         assert len(kakto.definitions) == 5

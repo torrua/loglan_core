@@ -107,9 +107,9 @@ class BaseDefinition(BaseModel):
         lazy="dynamic",
     )
 
-    relationship_source_word: Mapped[BaseWord] = relationship(  # type: ignore
+    source_word: Mapped[BaseWord] = relationship(  # type: ignore
         "BaseWord",
-        back_populates="relationship_definitions",
+        back_populates="definitions",
     )
 
     @property
@@ -128,16 +128,6 @@ class BaseDefinition(BaseModel):
             list[BaseKey]: All keys related to the BaseDefinition.
         """
         return self.keys_query.all()
-
-    @property
-    def source_word(self):
-        """
-        Get source word related to the BaseDefinition.
-
-        Returns:
-            BaseWord: Source word of the BaseDefinition.
-        """
-        return self.relationship_source_word
 
     @property
     def grammar(self) -> str:

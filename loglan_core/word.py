@@ -135,24 +135,9 @@ class BaseWord(BaseModel):
         back_populates="contribution",
     )
 
-    relationship_definitions: Mapped[list[BaseDefinition]] = relationship(
-        back_populates="relationship_source_word",
-        lazy="dynamic",
+    definitions: Mapped[list[BaseDefinition]] = relationship(
+        back_populates="source_word",
     )
-
-    @property
-    def definitions_query(self):
-        """
-        Returns:
-        """
-        return self.relationship_definitions
-
-    @property
-    def definitions(self) -> list[BaseDefinition]:
-        """
-        Returns:
-        """
-        return self.definitions_query.order_by(BaseDefinition.position.asc()).all()
 
     # word's derivatives
     relationship_derivatives: Mapped[list[BaseWord]] = relationship(
