@@ -150,6 +150,7 @@ class BaseModel(DeclarativeBase):
             the given id, or None if no such instance exists.
         """
         return session.query(cls).filter(cls.id == cid).first()
+        # TODO return session.get_one(cls, cid)
 
     @classmethod
     def get_all(cls, session: Session):
@@ -163,7 +164,7 @@ class BaseModel(DeclarativeBase):
         Returns:
             list: A list of all instances of the class.
         """
-        return session.query(cls).all()
+        return session.query(cls).all()  # TODO
 
     def export(self):
         """

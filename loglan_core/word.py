@@ -144,26 +144,10 @@ class BaseWord(BaseModel):
         """
         return self.relationship_event_end
 
-    relationship_authors: Mapped[list[BaseAuthor]] = relationship(
+    authors: Mapped[list[BaseAuthor]] = relationship(
         secondary=t_connect_authors,
-        back_populates="relationship_contribution",
-        lazy="dynamic",
-        enable_typechecks=False,
+        back_populates="contribution",
     )
-
-    @property
-    def authors_query(self):
-        """
-        Returns:
-        """
-        return self.relationship_authors
-
-    @property
-    def authors(self) -> list[BaseAuthor]:
-        """
-        Returns:
-        """
-        return self.authors_query.all()
 
     relationship_definitions: Mapped[list[BaseDefinition]] = relationship(
         back_populates="relationship_source_word",

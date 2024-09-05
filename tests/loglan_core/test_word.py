@@ -32,10 +32,6 @@ class TestWord:
         event_end: Event = db_session.query(Event).filter(Event.id == kakto.event_end_id).first()
         assert kakto.event_end == event_end is None
 
-    def test_authors_query(self, db_session):
-        prukao: Word = db_session.query(Word).filter(Word.name == 'prukao').first()
-        assert prukao.authors_query.count() == 2
-
     def test_authors(self, db_session):
         prukao: Word = db_session.query(Word).filter(Word.name == 'prukao').first()
         assert len(prukao.authors) == 2

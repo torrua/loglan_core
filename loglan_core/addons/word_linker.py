@@ -88,13 +88,8 @@ class WordLinker:
         Returns:
             str: The abbreviation of the author's name.
         """
-        if (
-            not word.authors_query.filter(
-                BaseAuthor.abbreviation == author.abbreviation
-            ).count()
-            > 0
-        ):
-            word.authors_query.append(author)
+        if author not in word.authors:
+            word.authors.append(author)
         return author.abbreviation
 
     @staticmethod
@@ -109,4 +104,4 @@ class WordLinker:
         """
         new_authors = list(set(authors) - set(word.authors))
         if new_authors:
-            word.authors_query.extend(new_authors)
+            word.authors.extend(new_authors)

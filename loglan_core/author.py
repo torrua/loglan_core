@@ -100,10 +100,9 @@ class BaseAuthor(BaseModel):
     :type: :class:`~loglan_core.base.str_128` with max_length=128, nullable=True, unique=False
     """
 
-    relationship_contribution: Mapped[list[BaseWord]] = relationship(  # type: ignore
-        back_populates="relationship_authors",
+    contribution: Mapped[list[BaseWord]] = relationship(  # type: ignore
+        back_populates="authors",
         secondary=t_connect_authors,
-        enable_typechecks=False,
     )
     """
     This is a relationship that establishes a 'many-to-many' 
@@ -114,12 +113,3 @@ class BaseAuthor(BaseModel):
     Returns:
         Mapped[list[BaseWord]]: A list of BaseWord instances associated with the current instance.
     """
-
-    @property
-    def contribution(self) -> list[BaseWord]:
-        """Get a list of words coined by this author.
-
-        Returns:
-            list[BaseWord]: List of words coined by this author.
-        """
-        return self.relationship_contribution

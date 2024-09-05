@@ -26,7 +26,7 @@ class TestBase:
 
     def test_attributes_all(self):
         assert Word.attributes_all() == {
-            'relationship_authors', 'relationship_definitions', 'relationship_derivatives',
+            'authors', 'relationship_definitions', 'relationship_derivatives',
             'relationship_event_end', 'relationship_event_start', 'relationship_parents',
             'relationship_type', 'created', 'event_end_id', 'event_start_id',
             'id', 'id_old', 'match', 'name', 'notes', 'origin',
@@ -41,7 +41,7 @@ class TestBase:
 
     def test_attributes_extended(self):
         assert Word.attributes_extended() == {
-            'relationship_authors', 'relationship_definitions', 'relationship_derivatives',
+            'authors', 'relationship_definitions', 'relationship_derivatives',
             'relationship_event_end', 'relationship_event_start',
             'relationship_parents', 'relationship_type', 'created', 'id', 'id_old',
             'match', 'name', 'notes', 'origin',
@@ -49,7 +49,7 @@ class TestBase:
 
     def test_relationships(self):
         assert Word.relationships() == {
-            'relationship_authors', 'relationship_definitions', 'relationship_derivatives',
+            'authors', 'relationship_definitions', 'relationship_derivatives',
             'relationship_event_end', 'relationship_event_start', 'relationship_parents', 'relationship_type'}
 
     def test_foreign_keys(self):
