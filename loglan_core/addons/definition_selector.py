@@ -14,7 +14,7 @@ from __future__ import annotations
 from sqlalchemy import select
 
 from loglan_core.addons.base_selector import BaseSelector
-from loglan_core.addons.utils import filter_word_by_event_id
+from loglan_core.addons.utils import filter_word_by_event_id, filter_key_by_word_cs, filter_key_by_language
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
@@ -112,12 +112,8 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         """
 
         search_key = key.word if isinstance(key, BaseKey) else str(key)
-        filter_key = BaseKey.filter_by_key_cs(
-            search_key, case_sensitive, self.is_sqlite
-        )
-        filter_language = BaseKey.filter_by_language(
-            key.language if isinstance(key, BaseKey) else language
-        )
+        filter_key = filter_key_by_word_cs(search_key, case_sensitive, self.is_sqlite)
+        filter_language = filter_key_by_language(key.language if isinstance(key, BaseKey) else language)
 
         statement = self.join(self.class_.relationship_keys).filter(
             filter_key, filter_language
