@@ -1,3 +1,7 @@
+"""
+This module provides utility functions for the loglan_core package.
+"""
+
 from __future__ import annotations
 
 from sqlalchemy import select, Select, true
