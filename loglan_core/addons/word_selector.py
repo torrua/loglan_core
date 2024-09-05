@@ -179,11 +179,15 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
         Applies a filter to select words by a specific type.
 
         Args:
-            type_ (BaseType | str | None): The type to filter by. E.g. "2-Cpx", "C-Prim", "LW"
+            type_ (BaseType | str | None): The type to filter by.
             It can either be an instance of BaseType, a string, or None.
-            type_x (str | None): The extended type to filter by. Defaults to None. E.g. "Predicate", "Name", "Affix"
-            group (str | None): The group to filter by. Defaults to None. E.g. "Cpx", "Prim", "Little"
+                E.g. "2-Cpx", "C-Prim", "LW"
 
+            type_x (str | None): The extended type to filter by. Defaults to None.
+                E.g. "Predicate", "Name", "Affix"
+
+            group (str | None): The group to filter by. Defaults to None.
+                E.g. "Cpx", "Prim", "Little"
 
         Returns:
             WordSelector: A query with the filter applied.
