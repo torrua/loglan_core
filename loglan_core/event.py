@@ -87,55 +87,17 @@ class BaseEvent(BaseModel):
     """*Event's suffix (used to create filename when exporting HTML file)*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    relationship_deprecated_words: Mapped[list[BaseWord]] = relationship(  # type: ignore
+    deprecated_words: Mapped[list[BaseWord]] = relationship(  # type: ignore
         "BaseWord",
-        back_populates="relationship_event_end",
+        back_populates="event_end",
         foreign_keys="BaseWord.event_end_id",
-        lazy="dynamic",
     )
 
-    relationship_appeared_words: Mapped[list[BaseWord]] = relationship(  # type: ignore
+    appeared_words: Mapped[list[BaseWord]] = relationship(  # type: ignore
         "BaseWord",
-        back_populates="relationship_event_start",
+        back_populates="event_start",
         foreign_keys="BaseWord.event_start_id",
-        lazy="dynamic",
     )
-
-    @property
-    def deprecated_words_query(self):
-        """
-        *Relationship query for getting a list of words deprecated during this event*
-
-        **query** : Optional[List[BaseWord]]"""
-
-        return self.relationship_deprecated_words
-
-    @property
-    def appeared_words_query(self):
-        """
-        *Relationship query for getting a list of words appeared during this event*
-
-        **query** : Optional[List[BaseWord]]"""
-
-        return self.relationship_appeared_words
-
-    @property
-    def deprecated_words(self) -> list[BaseWord]:  # type: ignore
-        """
-        *Relationship query for getting a list of words deprecated during this event*
-
-        **query** : Optional[List[BaseWord]]"""
-
-        return self.deprecated_words_query.all()
-
-    @property
-    def appeared_words(self) -> list[BaseWord]:  # type: ignore
-        """
-        *Relationship query for getting a list of words appeared during this event*
-
-        **query** : Optional[List[BaseWord]]"""
-
-        return self.appeared_words_query.all()
 
     @classmethod
     def latest(cls) -> Select:

@@ -118,31 +118,17 @@ class BaseWord(BaseModel):
         "event_start", ForeignKey(f"{T_NAME_EVENTS}.event_id"), nullable=False
     )
 
-    relationship_event_start: Mapped[BaseEvent] = relationship(
-        foreign_keys=[event_start_id], back_populates="relationship_appeared_words"
+    event_start: Mapped[BaseEvent] = relationship(
+        foreign_keys=[event_start_id], back_populates="appeared_words"
     )
-
-    @property
-    def event_start(self) -> BaseEvent:
-        """
-        Returns:
-        """
-        return self.relationship_event_start
 
     event_end_id: Mapped[int | None] = mapped_column(
         "event_end", ForeignKey(f"{T_NAME_EVENTS}.event_id")
     )
 
-    relationship_event_end: Mapped[BaseEvent | None] = relationship(
-        foreign_keys=[event_end_id], back_populates="relationship_deprecated_words"
+    event_end: Mapped[BaseEvent | None] = relationship(
+        foreign_keys=[event_end_id], back_populates="deprecated_words"
     )
-
-    @property
-    def event_end(self) -> BaseEvent | None:
-        """
-        Returns:
-        """
-        return self.relationship_event_end
 
     authors: Mapped[list[BaseAuthor]] = relationship(
         secondary=t_connect_authors,
