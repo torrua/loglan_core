@@ -4,7 +4,7 @@ Initial common functions for LOD Model Classes
 """
 from datetime import datetime
 
-from sqlalchemy import String, inspect, func
+from sqlalchemy import String, inspect, func, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session, registry as rg
 from typing_extensions import Annotated
@@ -149,8 +149,7 @@ class BaseModel(DeclarativeBase):
             Object of class type or None: The instance of the class with
             the given id, or None if no such instance exists.
         """
-        return session.query(cls).filter(cls.id == cid).first()
-        # TODO return session.get_one(cls, cid)
+        return session.get(cls, cid)
 
     @classmethod
     def get_all(cls, session: Session):
@@ -164,7 +163,7 @@ class BaseModel(DeclarativeBase):
         Returns:
             list: A list of all instances of the class.
         """
-        return session.query(cls).all()  # TODO
+        return session.scalars(select(cls)).all()
 
     def export(self):
         """
