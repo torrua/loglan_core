@@ -278,21 +278,3 @@ class BaseWord(BaseModel):
         start_id_condition = cls.event_start_id <= event_id_filter
         end_id_condition = (cls.event_end_id > event_id_filter) | cls.event_end_id.is_(None)
         return start_id_condition & end_id_condition
-
-    @classmethod
-    def filter_by_name_cs(
-        cls,
-        name: str,
-        case_sensitive: bool = False,
-        is_sqlite: bool = False,
-    ) -> BinaryExpression:
-        """
-        case-sensitive name filter
-        Returns: BinaryExpression
-        """
-        name = str(name).replace("*", "%")
-        return (
-            (cls.name.op("GLOB")(name) if is_sqlite else cls.name.like(name))
-            if case_sensitive
-            else cls.name.ilike(name)
-        )
