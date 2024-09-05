@@ -40,10 +40,6 @@ class TestWord:
         kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
         assert len(kakto.definitions) == 5
 
-    def test_derivatives_query(self, db_session):
-        kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
-        assert kakto.derivatives_query.count() == 3
-
     def test_derivatives(self, db_session):
         kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
         assert len(kakto.derivatives) == 3
@@ -61,10 +57,6 @@ class TestWord:
         kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
         pruci: Word = db_session.query(Word).filter(Word.name == 'pruci').first()
         assert kakto.complexes[0] == pruci.complexes[0]
-
-    def test_parents_query(self, db_session):
-        prukao: Word = db_session.query(Word).filter(Word.name == 'prukao').first()
-        assert prukao.parents_query.count() == 2
 
     def test_parents(self, db_session):
         prukao: Word = db_session.query(Word).filter(Word.name == 'prukao').first()

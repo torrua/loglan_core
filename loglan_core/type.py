@@ -61,26 +61,7 @@ class BaseType(BaseModel):
     group: Mapped[str_016] = mapped_column(nullable=False)  # E.g. Cpx, Prim
     parentable: Mapped[bool] = mapped_column(nullable=False)  # E.g. True, False
     description: Mapped[str_255 | None]  # E.g. Two-term Complex, ...
-
-    relationship_words: Mapped[list[BaseWord]] = relationship(  # type: ignore
-        back_populates="relationship_type",
-        foreign_keys="BaseWord.type_id",
-        lazy="dynamic",
-    )
-
-    @property
-    def words_query(self):
-        """
-        Returns:
-        """
-        return self.relationship_words
-
-    @property
-    def words(self) -> list[BaseWord]:
-        """
-        Returns:
-        """
-        return self.words_query.all()
+    words: Mapped[list[BaseWord]] = relationship(back_populates="type")
 
     @classmethod
     def by_property(cls, type_filter: str | list[str], id_only: bool = False) -> Select:

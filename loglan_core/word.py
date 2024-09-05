@@ -103,16 +103,9 @@ class BaseWord(BaseModel):
         "type", ForeignKey(f"{T_NAME_TYPES}.id"), nullable=False
     )
 
-    relationship_type: Mapped[BaseType] = relationship(
-        back_populates="relationship_words"
-    )
-
-    @property
-    def type(self) -> BaseType:
-        """
-        Returns:
-        """
-        return self.relationship_type
+    type: Mapped[BaseType] = relationship(
+        foreign_keys=[type_id],
+        back_populates="words")
 
     event_start_id: Mapped[int] = mapped_column(
         "event_start", ForeignKey(f"{T_NAME_EVENTS}.event_id"), nullable=False
