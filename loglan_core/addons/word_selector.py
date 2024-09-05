@@ -126,8 +126,12 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
             WordSelector: A query with the filter applied.
         """
         name = str(name).replace("*", "%")
-        statement =  (
-            (self.class_.name.op("GLOB")(name) if self.is_sqlite else self.class_.name.like(name))
+        statement = (
+            (
+                self.class_.name.op("GLOB")(name)
+                if self.is_sqlite
+                else self.class_.name.like(name)
+            )
             if case_sensitive
             else self.class_.name.ilike(name)
         )

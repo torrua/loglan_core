@@ -26,7 +26,11 @@ from __future__ import annotations
 from sqlalchemy import select
 
 from loglan_core.addons.base_selector import BaseSelector
-from loglan_core.addons.utils import filter_word_by_event_id, filter_key_by_word_cs, filter_key_by_language
+from loglan_core.addons.utils import (
+    filter_word_by_event_id,
+    filter_key_by_word_cs,
+    filter_key_by_language,
+)
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey

@@ -1,6 +1,7 @@
 """
 ## This module contains a basic WordSource Model
 """
+
 from __future__ import annotations
 
 import re

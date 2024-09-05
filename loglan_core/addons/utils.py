@@ -24,7 +24,9 @@ def filter_word_by_event_id(event_id: int | None) -> BooleanClauseList:
     """
     event_id_filter = event_id or BaseEvent.latest_id()
     start_id_condition = BaseWord.event_start_id <= event_id_filter
-    end_id_condition = (BaseWord.event_end_id > event_id_filter) | BaseWord.event_end_id.is_(None)
+    end_id_condition = (
+        BaseWord.event_end_id > event_id_filter
+    ) | BaseWord.event_end_id.is_(None)
     return start_id_condition & end_id_condition
 
 
@@ -57,18 +59,18 @@ def filter_key_by_language(language: str | None = None) -> ColumnElement[bool]:
 
 
 def select_keys_query(word: BaseWord) -> Select:
-        """Get all BaseKey object related to BaseWord.
+    """Get all BaseKey object related to BaseWord.
 
-        Keep in mind that duplicated keys from related definitions
-        will be counted with ```.count()``` but excluded from ```.all()``` request
+    Keep in mind that duplicated keys from related definitions
+    will be counted with ```.count()``` but excluded from ```.all()``` request
 
-        Returns:
-        """
-        return (
-            select(BaseKey)
-            .join(t_connect_keys)
-            .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
-            .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
-            .filter(BaseWord.id == word.id)
-            .order_by(BaseKey.word.asc())
-        )
+    Returns:
+    """
+    return (
+        select(BaseKey)
+        .join(t_connect_keys)
+        .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
+        .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
+        .filter(BaseWord.id == word.id)
+        .order_by(BaseKey.word.asc())
+    )
