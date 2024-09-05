@@ -6,7 +6,7 @@ from __future__ import annotations
 
 import datetime
 
-from sqlalchemy import ForeignKey, JSON
+from sqlalchemy import ForeignKey, JSON, Select
 from sqlalchemy import select
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship, backref
@@ -100,27 +100,37 @@ class BaseWord(BaseModel):
 
     # Relationships
     type_id: Mapped[int] = mapped_column(
-        "type", ForeignKey(f"{T_NAME_TYPES}.id"), nullable=False
+        "type",
+        ForeignKey(f"{T_NAME_TYPES}.id"),
+        nullable=False,
     )
 
     type: Mapped[BaseType] = relationship(
         foreign_keys=[type_id],
-        back_populates="words")
+        back_populates="words",
+    )
 
     event_start_id: Mapped[int] = mapped_column(
-        "event_start", ForeignKey(f"{T_NAME_EVENTS}.event_id"), nullable=False
+        "event_start",
+        ForeignKey(f"{T_NAME_EVENTS}.event_id"),
+        nullable=False,
     )
 
     event_start: Mapped[BaseEvent] = relationship(
-        foreign_keys=[event_start_id], back_populates="appeared_words"
+        foreign_keys=[event_start_id],
+        back_populates="appeared_words",
     )
 
     event_end_id: Mapped[int | None] = mapped_column(
-        "event_end", ForeignKey(f"{T_NAME_EVENTS}.event_id")
+        "event_end",
+        ForeignKey(
+            f"{T_NAME_EVENTS}.event_id",
+        ),
     )
 
     event_end: Mapped[BaseEvent | None] = relationship(
-        foreign_keys=[event_end_id], back_populates="deprecated_words"
+        foreign_keys=[event_end_id],
+        back_populates="deprecated_words",
     )
 
     authors: Mapped[list[BaseAuthor]] = relationship(
@@ -235,7 +245,7 @@ class BaseWord(BaseModel):
         return self.parents_query.all()
 
     @property
-    def keys_query(self):
+    def keys_query(self) -> Select:
         """Get all BaseKey object related to this BaseWord.
 
         Keep in mind that duplicated keys from related definitions
