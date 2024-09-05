@@ -1,6 +1,7 @@
 """
 This module contains ExportWordConverter for Word model of LOD.
 """
+
 from loglan_core.word import BaseWord
 
 

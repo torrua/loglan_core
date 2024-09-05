@@ -1,6 +1,7 @@
 """
 This module contains a basic Syllable Model
 """
+
 from sqlalchemy.orm import mapped_column, Mapped
 
 from loglan_core.base import BaseModel

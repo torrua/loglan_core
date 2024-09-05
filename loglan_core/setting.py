@@ -1,6 +1,7 @@
 """
 This module contains a basic Setting Model
 """
+
 from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column

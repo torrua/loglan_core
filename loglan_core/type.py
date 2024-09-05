@@ -1,6 +1,7 @@
 """
 This module contains a basic Type Model
 """
+
 from __future__ import annotations
 
 from typing import TYPE_CHECKING
@@ -29,12 +30,12 @@ class BaseType(BaseModel):
     __tablename__ = T_NAME_TYPES
 
     def __init__(
-            self,
-            type: Mapped[str_016],  # pylint: disable=W0622
-            type_x: Mapped[str_016],
-            group: Mapped[str_016],
-            parentable: Mapped[bool],
-            description: Mapped[str_255] | None = None,
+        self,
+        type: Mapped[str_016],  # pylint: disable=W0622
+        type_x: Mapped[str_016],
+        group: Mapped[str_016],
+        parentable: Mapped[bool],
+        description: Mapped[str_255] | None = None,
     ):
         """
         Returns:

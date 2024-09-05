@@ -2,6 +2,7 @@
 This module contains an "Export extensions" for LOD dictionary SQL model.
 Add export() function to db object for returning its text string presentation.
 """
+
 from typing import Iterable, Callable, Type
 
 

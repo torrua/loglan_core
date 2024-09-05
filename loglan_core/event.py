@@ -1,6 +1,7 @@
 """
 This module contains a basic Event Model
 """
+
 from __future__ import annotations
 
 import datetime

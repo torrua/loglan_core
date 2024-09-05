@@ -1,6 +1,8 @@
 """
 ## This module contains a basic WordSource Model
 """
+from __future__ import annotations
+
 import re
 
 from loglan_core.table_names import T_NAME_WORD_SOURCES
