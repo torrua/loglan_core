@@ -244,24 +244,6 @@ class BaseWord(BaseModel):
         return self.parents_query.all()
 
     @property
-    def keys_query(self) -> Select:
-        """Get all BaseKey object related to this BaseWord.
-
-        Keep in mind that duplicated keys from related definitions
-        will be counted with ```.count()``` but excluded from ```.all()``` request
-
-        Returns:
-        """
-        return (
-            select(BaseKey)
-            .join(t_connect_keys)
-            .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
-            .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
-            .filter(BaseWord.id == self.id)
-            .order_by(BaseKey.word.asc())
-        )
-
-    @property
     def keys(self) -> list[BaseKey]:
         """
         Returns:
