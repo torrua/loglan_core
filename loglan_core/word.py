@@ -10,7 +10,6 @@ from sqlalchemy import ForeignKey, JSON, Select
 from sqlalchemy import select
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship, backref
-from sqlalchemy.sql.elements import BinaryExpression, BooleanClauseList
 
 from loglan_core.author import BaseAuthor
 from loglan_core.base import BaseModel
@@ -268,13 +267,3 @@ class BaseWord(BaseModel):
         Returns:
         """
         return sorted(set(key for d in self.definitions for key in d.keys_query.all()))
-
-    @classmethod
-    def filter_by_event_id(cls, event_id: int | None) -> BooleanClauseList:
-        """
-        Returns: BooleanClauseList
-        """
-        event_id_filter = event_id or BaseEvent.latest_id()
-        start_id_condition = cls.event_start_id <= event_id_filter
-        end_id_condition = (cls.event_end_id > event_id_filter) | cls.event_end_id.is_(None)
-        return start_id_condition & end_id_condition
