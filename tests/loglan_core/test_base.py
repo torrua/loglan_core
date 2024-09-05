@@ -13,6 +13,7 @@ class TestBase:
     def test_get_all(self, db_session):
         words = Word.get_all(db_session)
         assert len(words) == 13
+        assert isinstance(words[0], Word)
 
     def test_export(self, db_session):
             kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
