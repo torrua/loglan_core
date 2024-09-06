@@ -7,7 +7,7 @@ event, key, type, and name through the WordSelector class.
 from __future__ import annotations
 
 from functools import wraps
-from typing import Type, cast
+from typing import Type, cast, Iterable
 
 from sqlalchemy import and_, select, join, Select
 from sqlalchemy.orm import selectinload
@@ -77,20 +77,26 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self.class_ = class_
         self.is_sqlite = is_sqlite
 
-    @order_by_name
-    def _add_relationships(self):
+    def add_relationships(self, selected: Iterable[str] | None = None) -> WordSelector:
         """
-        Add relationships to the query.
+        Adds relationships to the query.
+
+        Args:
+            selected (set[str]): A set of relationship names to include.
+            Defaults to None if all relationships should be included.
+
+        Returns:
+            WordSelector: A query with the relationships added.
         """
-        return self.options(
-            selectinload(self.class_.authors),
-            selectinload(self.class_.definitions),
-            selectinload(self.class_.derivatives),
-            selectinload(self.class_.event_end),
-            selectinload(self.class_.event_start),
-            selectinload(self.class_.parents),
-            selectinload(self.class_.type),
-        )
+        available_relationships = {
+            attr: getattr(self.class_, attr) for attr in self.class_.relationships()
+        }
+        relationships = {
+            selectinload(v)
+            for k, v in available_relationships.items()
+            if not selected or k in selected
+        }
+        return cast(WordSelector, self.options(*relationships))
 
     @order_by_name
     def by_event(self, event_id: int | None = None) -> WordSelector:
