@@ -7,7 +7,7 @@ event, key, type, and name through the WordSelector class.
 from __future__ import annotations
 
 from functools import wraps
-from typing import Type
+from typing import Type, cast
 
 from sqlalchemy import and_, select
 from sqlalchemy.orm import selectinload
@@ -53,7 +53,7 @@ def order_by_name(function):
     return wrapper
 
 
-class WordSelector(BaseSelector):  # pylint: disable=R0901
+class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
     """
     Class to extract words from a database based on various criteria.
 
@@ -92,7 +92,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
         )
 
     @property
-    def inherit_cache(self):  # pylint: disable=C0116
+    def inherit_cache(self):  # pylint: disable=missing-function-docstring
         return True
 
     @order_by_name
@@ -106,7 +106,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
         Returns:
             WordSelector: A query with the filter applied.
         """
-        return self.where(filter_word_by_event_id(event_id))
+        return cast(WordSelector, self.where(filter_word_by_event_id(event_id)))
 
     @order_by_name
     def by_name(
@@ -135,8 +135,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
             if case_sensitive
             else self.class_.name.ilike(name)
         )
-        query = self.where(statement)
-        return query
+        return cast(WordSelector, self.where(statement))
 
     @order_by_name
     def by_key(
@@ -165,8 +164,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
             case_sensitive=case_sensitive,
         )
         subquery = select(definition_query.subquery().c.word_id)
-        query = self.where(self.class_.id.in_(subquery))
-        return query
+        return cast(WordSelector, self.where(self.class_.id.in_(subquery)))
 
     @order_by_name
     def by_type(
@@ -193,7 +191,7 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
             WordSelector: A query with the filter applied.
         """
         if isinstance(type_, BaseType):
-            return self.join(BaseType).where(BaseType.id == type_.id)
+            return cast(WordSelector, self.join(BaseType).where(BaseType.id == type_.id))
 
         type_values: tuple[tuple[InstrumentedAttribute, str | None | BaseType], ...] = (
             (BaseType.type, type_),
@@ -203,9 +201,9 @@ class WordSelector(BaseSelector):  # pylint: disable=R0901
 
         type_filters = self.type_filters(type_values)
 
-        return (
+        return cast(WordSelector, (
             self if not type_filters else self.join(BaseType).where(and_(*type_filters))
-        )
+        ))
 
     @staticmethod
     def type_filters(type_values: tuple) -> list[BinaryExpression]:
