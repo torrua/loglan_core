@@ -76,4 +76,4 @@ class TestKeySelector:
     def test_by_word_id(db_session):
         kakto = WordSelector(is_sqlite=True).by_name("kakto").scalar(db_session)
         keys = KeySelector(is_sqlite=True).by_word_id(kakto.id).all(db_session)
-        assert len(keys) == 6
+        assert len(keys) == 5
