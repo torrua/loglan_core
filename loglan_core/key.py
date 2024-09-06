@@ -59,9 +59,6 @@ class BaseKey(BaseModel):
     def __str__(self):
         return f"<{self.__class__.__name__} {self.id} '{self.word}' ({self.language})>"
 
-    def __lt__(self, other):
-        return (self.word, self.id) < (other.word, other.id)
-
     word: Mapped[str_064] = mapped_column(nullable=False)
     """*Key's vernacular word*  
         **str** : max_length=64, nullable=False, unique=False  
