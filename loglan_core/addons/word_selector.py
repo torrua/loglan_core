@@ -217,6 +217,15 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
     @order_by_name
     def derivatives(self, word_id: int) -> WordSelector:
+        """
+        Selects all words that are derived from the given word.
+
+        Args:
+            word_id (int): The id of the word to filter by.
+
+        Returns:
+            WordSelector: A query with the filter applied.
+        """
         return cast(
             WordSelector,
             self.where(
@@ -226,10 +235,28 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
     @order_by_name
     def affixes(self, word_id: int) -> WordSelector:
+        """
+        Selects all affixes that are derived from the given word.
+
+        Args:
+            word_id (int): The id of the word to filter by.
+
+        Returns:
+            WordSelector: A query with the filter applied.
+        """
         return cast(WordSelector, self.derivatives(word_id).by_type(type_x="Affix"))
 
     @order_by_name
     def complexes(self, word_id: int) -> WordSelector:
+        """
+        Selects all complexes that are derived from the given word.
+
+        Args:
+            word_id (int): The id of the word to filter by.
+
+        Returns:
+            WordSelector: A query with the filter applied.
+        """
         return cast(WordSelector, self.derivatives(word_id).by_type(group="Cpx"))
 
     @property
@@ -237,6 +264,17 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         return True
 
     def _select_derivative_ids_subquery(self, word_id: int) -> Select:
+        # TODO Move to derivatives
+        """
+        Selects the ids of all words that are derived from the given word.
+
+        Args:
+            word_id (int): The id of the word to filter by.
+
+        Returns:
+            Select: A subquery that selects the ids of all words that are
+            derived from the given word.
+        """
         return (
             select(self.class_.id)
             .select_from(
