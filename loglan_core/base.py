@@ -178,7 +178,7 @@ class BaseModel(DeclarativeBase):
         return {
             k: v
             for k, v in sorted(self.__dict__.items())
-            if not str(k).startswith("_") and k not in ["created", "updated"]
+            if not str(k).startswith("_") and k not in ["created", "updated", *self.relationships()]
         }
 
     @classmethod

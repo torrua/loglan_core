@@ -105,6 +105,7 @@ class BaseWord(BaseModel):
     type: Mapped[BaseType] = relationship(
         foreign_keys=[type_id],
         back_populates="words",
+        lazy="joined",
     )
 
     event_start_id: Mapped[int] = mapped_column(
@@ -116,6 +117,7 @@ class BaseWord(BaseModel):
     event_start: Mapped[BaseEvent] = relationship(
         foreign_keys=[event_start_id],
         back_populates="appeared_words",
+        lazy="joined",
     )
 
     event_end_id: Mapped[int | None] = mapped_column(
@@ -128,6 +130,7 @@ class BaseWord(BaseModel):
     event_end: Mapped[BaseEvent | None] = relationship(
         foreign_keys=[event_end_id],
         back_populates="deprecated_words",
+        lazy="joined",
     )
 
     authors: Mapped[list[BaseAuthor]] = relationship(
