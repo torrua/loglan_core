@@ -80,7 +80,10 @@ def select_keys_query(word: BaseWord) -> Select:
         .order_by(BaseKey.word.asc())
     )
 
-def select_type_by_property(type_filter: str | list[str], id_only: bool = False) -> Select:
+
+def select_type_by_property(
+    type_filter: str | list[str], id_only: bool = False
+) -> Select:
     """
     Args:
       type_filter: Union[str, List[str]]:

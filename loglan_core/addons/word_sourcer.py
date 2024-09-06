@@ -2,6 +2,7 @@
 This module contains an addon for basic Word Model,
 which makes it possible to work with word's sources
 """
+
 from __future__ import annotations
 
 from sqlalchemy import select
@@ -167,7 +168,9 @@ class WordSourcer:
 
         """
 
-        type_ids = select_type_by_property(["LW", "Cpd"], id_only=True).scalar_subquery()
+        type_ids = select_type_by_property(
+            ["LW", "Cpd"], id_only=True
+        ).scalar_subquery()
         return (
             select(BaseWord)
             .filter(BaseWord.name.in_(sources))
