@@ -9,8 +9,6 @@ from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.elements import BooleanClauseList
 from sqlalchemy.sql.expression import ColumnElement
 
-from loglan_core import t_connect_keys
-from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
 from loglan_core.key import BaseKey
 from loglan_core.type import BaseType
@@ -63,24 +61,7 @@ def filter_key_by_language(language: str | None = None) -> ColumnElement[bool]:
     return (BaseKey.language == language) if language else true()
 
 
-def select_keys_query(word: BaseWord) -> Select:
-    """Get all BaseKey object related to BaseWord.
-
-    Keep in mind that duplicated keys from related definitions
-    will be counted with ```.count()``` but excluded from ```.all()``` request
-
-    Returns:
-    """
-    return (
-        select(BaseKey)
-        .join(t_connect_keys)
-        .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
-        .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
-        .filter(BaseWord.id == word.id)
-        .order_by(BaseKey.word.asc())
-    )
-
-
+# TODO Move to WordSelector
 def select_type_by_property(
     type_filter: str | list[str], id_only: bool = False
 ) -> Select:

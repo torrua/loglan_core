@@ -51,10 +51,3 @@ class TestWord:
         prukao: Word = db_session.query(Word).filter(Word.name == 'prukao').first()
         kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
         assert kakto in prukao.parents
-
-    def test_keys(self, db_session):
-        kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
-        assert len(kakto.keys) == 5
-
-        test: Key = db_session.query(Key).filter(Key.word == "act").first()
-        assert test in kakto.keys

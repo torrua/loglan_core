@@ -8,7 +8,7 @@ import datetime
 
 from sqlalchemy import ForeignKey, JSON
 from sqlalchemy.orm import mapped_column, Mapped
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 
 from loglan_core.author import BaseAuthor
 from loglan_core.base import BaseModel
@@ -19,7 +19,6 @@ from loglan_core.connect_tables import (
 )
 from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
-from loglan_core.key import BaseKey
 from loglan_core.table_names import T_NAME_EVENTS, T_NAME_TYPES, T_NAME_WORDS
 from loglan_core.type import BaseType
 
