@@ -3,6 +3,7 @@
 import pytest
 
 from loglan_core.addons.key_selector import KeySelector
+from loglan_core.addons.word_selector import WordSelector
 
 
 @pytest.mark.usefixtures("db_session")
@@ -70,3 +71,9 @@ class TestKeySelector:
 
         result = sorted(key.id for key in keys)
         assert result == [7, 9, 11, 12, ]
+
+    @staticmethod
+    def test_by_word_id(db_session):
+        kakto = WordSelector(is_sqlite=True).by_name("kakto").scalar(db_session)
+        keys = KeySelector(is_sqlite=True).by_word_id(kakto.id).all(db_session)
+        assert len(keys) == 6
