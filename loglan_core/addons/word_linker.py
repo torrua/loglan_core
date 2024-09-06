@@ -15,20 +15,6 @@ class WordLinker:
     relationships between words and to associate authors with words.
     """
 
-    @staticmethod
-    def _is_parented(parent: BaseWord, child: BaseWord) -> bool:
-        """
-        Determines if a given 'child' word is a derivative of a specified 'parent' word.
-
-        Args:
-            parent (BaseWord): A word which may be the parent.
-            child (BaseWord): A word which may be the child or derivative of the parent.
-
-        Returns:
-            bool: True if child is a derivative of parent, False otherwise.
-        """
-        return child in parent.derivatives
-
     @classmethod
     def add_child(cls, parent: BaseWord, child: BaseWord) -> str:
         """

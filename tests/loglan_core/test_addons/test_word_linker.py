@@ -20,17 +20,6 @@ class TestWordLinker:
         delete_query = delete(t_connect_words)
         db_session.execute(delete_query)
 
-    """Word tests."""
-    def test_is_parented(self, db_session):
-        parent: Word = Word.get_by_id(db_session, 2)
-        child: Word = Word.get_by_id(db_session, 1)
-        result = WordLinker._is_parented(parent, child)
-        assert result is True
-
-        parent: Word = Word.get_by_id(db_session, 3)
-        result = WordLinker._is_parented(parent, child)
-        assert result is False
-
     def test_removed_links(self, db_session):
         self.delete_links(db_session)
         cmp = self.get_word_by_name(name="prukao", session=db_session)
