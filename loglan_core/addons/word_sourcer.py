@@ -2,11 +2,12 @@
 This module contains an addon for basic Word Model,
 which makes it possible to work with word's sources
 """
+from __future__ import annotations
 
 from sqlalchemy import select
 from sqlalchemy.sql.selectable import Select
 
-from loglan_core.type import BaseType
+from loglan_core.addons.utils import select_type_by_property
 from loglan_core.word import BaseWord
 from loglan_core.word_source import BaseWordSource
 
@@ -91,7 +92,7 @@ class WordSourcer:
         Returns:
 
         """
-        exclude_type_ids = BaseType.by_property(
+        exclude_type_ids = select_type_by_property(
             ["LW", "Cpd"], id_only=True
         ).scalar_subquery()
         return (
@@ -166,7 +167,7 @@ class WordSourcer:
 
         """
 
-        type_ids = BaseType.by_property(["LW", "Cpd"], id_only=True).scalar_subquery()
+        type_ids = select_type_by_property(["LW", "Cpd"], id_only=True).scalar_subquery()
         return (
             select(BaseWord)
             .filter(BaseWord.name.in_(sources))

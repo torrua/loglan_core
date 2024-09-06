@@ -4,7 +4,7 @@ This module provides utility functions for the loglan_core package.
 
 from __future__ import annotations
 
-from sqlalchemy import select, Select, true
+from sqlalchemy import select, Select, true, or_
 from sqlalchemy.sql.elements import BooleanClauseList
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.expression import ColumnElement
@@ -14,6 +14,7 @@ from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
 from loglan_core.key import BaseKey
 from loglan_core.word import BaseWord
+from loglan_core.type import BaseType
 
 
 def filter_word_by_event_id(event_id: int | None) -> BooleanClauseList:
@@ -78,3 +79,28 @@ def select_keys_query(word: BaseWord) -> Select:
         .filter(BaseWord.id == word.id)
         .order_by(BaseKey.word.asc())
     )
+
+def select_type_by_property(type_filter: str | list[str], id_only: bool = False) -> Select:
+    """
+    Args:
+      type_filter: Union[str, List[str]]:
+      id_only: bool:
+    Returns:
+    """
+
+    type_filter = (
+        [
+            type_filter,
+        ]
+        if isinstance(type_filter, str)
+        else type_filter
+    )
+
+    type_request = select(BaseType.id if id_only else BaseType).filter(
+        or_(
+            BaseType.type.in_(type_filter),
+            BaseType.type_x.in_(type_filter),
+            BaseType.group.in_(type_filter),
+        )
+    )
+    return type_request
