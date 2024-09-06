@@ -145,7 +145,8 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         """
         return cast(
             KeySelector,
-            self.distinct().join(t_connect_keys)
+            self.distinct()
+            .join(t_connect_keys)
             .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
             .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
             .filter(BaseWord.id == word_id)
