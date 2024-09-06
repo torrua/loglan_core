@@ -191,7 +191,9 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             WordSelector: A query with the filter applied.
         """
         if isinstance(type_, BaseType):
-            return cast(WordSelector, self.join(BaseType).where(BaseType.id == type_.id))
+            return cast(
+                WordSelector, self.join(BaseType).where(BaseType.id == type_.id)
+            )
 
         type_values: tuple[tuple[InstrumentedAttribute, str | None | BaseType], ...] = (
             (BaseType.type, type_),
@@ -201,9 +203,14 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
         type_filters = self.type_filters(type_values)
 
-        return cast(WordSelector, (
-            self if not type_filters else self.join(BaseType).where(and_(*type_filters))
-        ))
+        return cast(
+            WordSelector,
+            (
+                self
+                if not type_filters
+                else self.join(BaseType).where(and_(*type_filters))
+            ),
+        )
 
     @staticmethod
     def type_filters(type_values: tuple) -> list[BinaryExpression]:
