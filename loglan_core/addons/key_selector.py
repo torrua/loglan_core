@@ -23,6 +23,8 @@ This allows for flexible and powerful querying of keys in a codebase.
 
 from __future__ import annotations
 
+from typing import cast
+
 from sqlalchemy import select
 
 from loglan_core.addons.base_selector import BaseSelector
@@ -95,7 +97,7 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
             .where(filter_word_by_event_id(event_id))
             .scalar_subquery()
         )
-        return self.where(self.class_.id.in_(subquery))
+        return cast(KeySelector, self.where(self.class_.id.in_(subquery)))
 
     def by_key(self, key: str, case_sensitive: bool = False) -> KeySelector:
         """
@@ -109,7 +111,10 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             KeySelector: The filtered KeySelector instance.
         """
-        return self.where(filter_key_by_word_cs(key, case_sensitive, self.is_sqlite))
+        return cast(
+            KeySelector,
+            self.where(filter_key_by_word_cs(key, case_sensitive, self.is_sqlite)),
+        )
 
     def by_language(self, language: str | None = None) -> KeySelector:
         """
@@ -122,4 +127,4 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             KeySelector: The filtered KeySelector instance.
         """
-        return self.where(filter_key_by_language(language))
+        return cast(KeySelector, self.where(filter_key_by_language(language)))
