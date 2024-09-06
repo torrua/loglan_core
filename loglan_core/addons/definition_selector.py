@@ -10,7 +10,9 @@ Classes:
 """
 
 from __future__ import annotations
+
 from typing import cast
+
 from sqlalchemy import select, true
 
 from loglan_core.addons.base_selector import BaseSelector

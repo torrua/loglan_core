@@ -5,7 +5,6 @@ Add export() function to db object for returning its text string presentation.
 
 from typing import Iterable, Callable, Type
 
-
 from loglan_core.addons.export_word_converter import ExportWordConverter
 from loglan_core.author import BaseAuthor
 from loglan_core.definition import BaseDefinition

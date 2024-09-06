@@ -104,7 +104,7 @@ class BaseDefinition(BaseModel):
         back_populates="definitions",
     )
 
-    source_word: Mapped[BaseWord] = relationship(  # type: ignore
+    source_word: Mapped[BaseWord] = relationship(
         "BaseWord",
         back_populates="definitions",
     )

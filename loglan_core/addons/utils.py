@@ -5,16 +5,16 @@ This module provides utility functions for the loglan_core package.
 from __future__ import annotations
 
 from sqlalchemy import select, Select, true, or_
-from sqlalchemy.sql.elements import BooleanClauseList
 from sqlalchemy.sql.elements import BinaryExpression
+from sqlalchemy.sql.elements import BooleanClauseList
 from sqlalchemy.sql.expression import ColumnElement
 
 from loglan_core import t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.event import BaseEvent
 from loglan_core.key import BaseKey
-from loglan_core.word import BaseWord
 from loglan_core.type import BaseType
+from loglan_core.word import BaseWord
 
 
 def filter_word_by_event_id(event_id: int | None) -> BooleanClauseList:

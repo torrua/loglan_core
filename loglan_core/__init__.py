@@ -2,6 +2,8 @@
 Main point for export DB models
 """
 
+# fmt: off
+
 __author__ = "torrua"
 __copyright__ = "Copyright 2024, loglan_core project"
 __email__ = "torrua@gmail.com"
