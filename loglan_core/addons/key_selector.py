@@ -128,3 +128,26 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
             KeySelector: The filtered KeySelector instance.
         """
         return cast(KeySelector, self.where(filter_key_by_language(language)))
+
+    def by_word_id(self, word_id: int) -> KeySelector:
+        """
+        Filters the keys by the given word ID.
+
+        Args:
+            word_id (int): The identifier of the word to filter by.
+
+        Returns:
+            KeySelector: The filtered KeySelector instance.
+
+        Keep in mind that duplicated keys from related definitions
+        will be counted with ```.count()``` but excluded from ```.all()``` request
+
+        """
+        return cast(
+            KeySelector,
+            self.join(t_connect_keys)
+            .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
+            .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
+            .filter(BaseWord.id == word_id)
+            .order_by(BaseKey.word.asc()),
+        )
