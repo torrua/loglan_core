@@ -36,7 +36,7 @@ class WordLinker:
             raise TypeError(f"{child} is not parentable")
 
         if child not in parent.derivatives:
-            parent.derivatives_query.append(child)
+            parent.derivatives.append(child)
         return child.name
 
     # mark_as_parent_for
@@ -53,13 +53,13 @@ class WordLinker:
         Raises:
             TypeError: If any of the children words are not parentable.
         """
-        new_children = list(set(children) - set(parent.derivatives_query))
+        new_children = list(set(children) - set(parent.derivatives))
 
         if not all(child.type.parentable for child in new_children):
             raise TypeError(f"At least some of {new_children} are not parentable")
 
         if new_children:
-            parent.derivatives_query.extend(new_children)
+            parent.derivatives.extend(new_children)
 
     @staticmethod
     def add_author(word: BaseWord, author: BaseAuthor) -> str:

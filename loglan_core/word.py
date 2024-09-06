@@ -143,92 +143,17 @@ class BaseWord(BaseModel):
     )
 
     # word's derivatives
-    relationship_derivatives: Mapped[list[BaseWord]] = relationship(
+    derivatives: Mapped[list[BaseWord]] = relationship(
         secondary=t_connect_words,
         primaryjoin=(t_connect_words.c.parent_id == id),
         secondaryjoin=(t_connect_words.c.child_id == id),
-        backref=backref("parents"),
-        lazy="dynamic",
-        enable_typechecks=False,
+        back_populates="parents",
     )
 
-    @property
-    def derivatives_query(self):
-        """
-        Returns:
-        """
-        return self.relationship_derivatives
-
-    @property
-    def derivatives(self):
-        """
-        Returns:
-        """
-        return self.derivatives_query.all()
-
-    def derivatives_query_by(
-        self,
-        word_type: str | None = None,
-        word_type_x: str | None = None,
-        word_group: str | None = None,
-        type_class=BaseType,
-    ):
-        """Query to get all derivatives of the word, depending on its parameters
-
-        Args:
-          word_type: str:  (Default value = None)
-          E.g. "2-Cpx", "C-Prim", "LW"
-
-          word_type_x: str:  (Default value = None)
-          E.g. "Predicate", "Name", "Affix"
-
-          word_group: str:  (Default value = None)
-          E.g. "Cpx", "Prim", "Little"
-
-          type_class:
-        Returns:
-            List[Word]
-        """
-
-        type_values = [
-            (type_class.type, word_type),
-            (type_class.type_x, word_type_x),
-            (type_class.group, word_group),
-        ]
-
-        type_filters = [i[0] == i[1] for i in type_values if i[1]]
-
-        return (
-            self.derivatives_query.join(type_class)
-            .filter(self.id == t_connect_words.c.parent_id, *type_filters)
-            .order_by(type(self).name.asc())
-        )
-
-    @property
-    def affixes(self):
-        """
-        Get all word's affixes if exist
-        Only primitives have affixes.
-
-        Returns:
-            BaseQuery
-        """
-        return self.derivatives_query_by(word_type="Afx").all()
-
-    @property
-    def complexes(self):
-        """
-        Get all word's complexes if exist
-        Only primitives and Little Words have complexes.
-
-        Returns:
-            BaseQuery
-        """
-        return self.derivatives_query_by(word_group="Cpx").all()
-
-    @property
-    def keys(self) -> list[BaseKey]:
-        """
-        Returns:
-        """
-        return sorted(set(key for d in self.definitions for key in d.keys))
+    # word's parents
+    parents: Mapped[list[BaseWord]] = relationship(
+        secondary=t_connect_words,
+        primaryjoin=(t_connect_words.c.child_id == id),
+        secondaryjoin=(t_connect_words.c.parent_id == id),
+        back_populates="derivatives",
+    )

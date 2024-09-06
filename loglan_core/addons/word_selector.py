@@ -9,11 +9,12 @@ from __future__ import annotations
 from functools import wraps
 from typing import Type, cast
 
-from sqlalchemy import and_, select
+from sqlalchemy import and_, select, join, Select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
 
+from loglan_core import t_connect_words
 from loglan_core.addons.base_selector import BaseSelector
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.utils import filter_word_by_event_id
@@ -84,16 +85,12 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         return self.options(
             selectinload(self.class_.authors),
             selectinload(self.class_.definitions),
-            selectinload(self.class_.relationship_derivatives),
+            selectinload(self.class_.derivatives),
             selectinload(self.class_.event_end),
             selectinload(self.class_.event_start),
             selectinload(self.class_.parents),
             selectinload(self.class_.type),
         )
-
-    @property
-    def inherit_cache(self):  # pylint: disable=missing-function-docstring
-        return True
 
     @order_by_name
     def by_event(self, event_id: int | None = None) -> WordSelector:
@@ -210,6 +207,40 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
                 if not type_filters
                 else self.join(BaseType).where(and_(*type_filters))
             ),
+        )
+
+    @order_by_name
+    def derivatives(self, word_id: int) -> WordSelector:
+        return cast(
+            WordSelector,
+            self.where(
+                self.class_.id.in_(self._select_derivative_ids_subquery(word_id))
+            ),
+        )
+
+    @order_by_name
+    def affixes(self, word_id: int) -> WordSelector:
+        return cast(WordSelector, self.derivatives(word_id).by_type(type_x="Affix"))
+
+    @order_by_name
+    def complexes(self, word_id: int) -> WordSelector:
+        return cast(WordSelector, self.derivatives(word_id).by_type(group="Cpx"))
+
+    @property
+    def inherit_cache(self):  # pylint: disable=missing-function-docstring
+        return True
+
+    def _select_derivative_ids_subquery(self, word_id: int) -> Select:
+        return (
+            select(self.class_.id)
+            .select_from(
+                join(
+                    t_connect_words,
+                    self.class_,
+                    t_connect_words.c.child_id == self.class_.id,
+                )
+            )
+            .where(t_connect_words.c.parent_id == word_id)
         )
 
     @staticmethod

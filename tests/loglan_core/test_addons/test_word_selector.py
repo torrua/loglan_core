@@ -170,3 +170,11 @@ class TestWordGetter:
 
         fetch_5 = WordSelector().fetchmany(db_session, 5)
         assert len(fetch_5) == 5
+
+    def test_affixes(self, db_session):
+        kakto = WordSelector().by_name("kakto").scalar(db_session)
+        assert len(WordSelector().affixes(kakto.id).all(db_session)) == 2
+
+    def test_complexes(self, db_session):
+        kakto = WordSelector().by_name("kakto").scalar(db_session)
+        assert len(WordSelector().complexes(kakto.id).all(db_session)) == 1
