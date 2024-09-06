@@ -7,11 +7,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Text
-from sqlalchemy import true
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.expression import ColumnElement
 
 from loglan_core.base import BaseModel, str_008, str_016, str_064, str_255
 from loglan_core.connect_tables import t_connect_keys
@@ -123,16 +121,3 @@ class BaseDefinition(BaseModel):
             f"({self.slots if self.slots else ''}"
             f"{self.grammar_code if self.grammar_code else ''})"
         )
-
-    @classmethod
-    def filter_language(cls, language: str | None = None) -> ColumnElement[bool]:
-        """
-        Filter by specified language.
-
-        Args:
-            language (str, optional): The language to filter by. Defaults to None.
-
-        Returns:
-            ColumnElement[bool]: The filtered query.
-        """
-        return cls.language == language if language else true()

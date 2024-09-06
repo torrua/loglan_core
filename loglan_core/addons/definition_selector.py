@@ -10,8 +10,8 @@ Classes:
 """
 
 from __future__ import annotations
-
-from sqlalchemy import select
+from typing import cast
+from sqlalchemy import select, true
 
 from loglan_core.addons.base_selector import BaseSelector
 from loglan_core.addons.utils import (
@@ -94,7 +94,7 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             .where(filter_word_by_event_id(event_id))
             .scalar_subquery()
         )
-        return self.where(self.class_.id.in_(subquery))
+        return cast(DefinitionSelector, self.where(self.class_.id.in_(subquery)))
 
     def by_key(
         self,
@@ -122,7 +122,7 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         )
 
         statement = self.join(self.class_.keys).filter(filter_key, filter_language)
-        return statement.distinct()
+        return cast(DefinitionSelector, statement.distinct())
 
     def by_language(self, language: str | None = None) -> DefinitionSelector:
         """
@@ -135,4 +135,5 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             DefinitionSelector: The filtered DefinitionSelector instance.
         """
-        return self.filter(self.class_.filter_language(language))
+        filter_language = self.class_.language == language if language else true()
+        return cast(DefinitionSelector, self.filter(filter_language))
