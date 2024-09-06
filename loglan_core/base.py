@@ -2,6 +2,8 @@
 """
 Initial common functions for LOD Model Classes
 """
+from __future__ import annotations
+
 from datetime import datetime
 
 from sqlalchemy import String, inspect, func, select
@@ -129,11 +131,21 @@ class BaseModel(DeclarativeBase):
                 [
                     f"{k}={v!r}"
                     for k, v in self.__dict__.items()
-                    if not k.startswith("_") and k not in ["created", "updated"] and v
+                    if self._filter_add_to_repr(k, v)
                 ]
             )
         )
         return f"{self.__class__.__name__}({obj_str})"
+
+    @staticmethod
+    def _filter_add_to_repr(k, v):
+        """
+        Static method that filters out keys that start with "_" and keys
+        that are "created" or "updated" and keys without values from the
+        object's attributes. The method is used to generate a string
+        representation of the object. It is used internally by the __repr__.
+        """
+        return not k.startswith("_") and k not in ["created", "updated"] and v
 
     @classmethod
     def get_by_id(cls, session: Session, cid: int):
@@ -178,7 +190,8 @@ class BaseModel(DeclarativeBase):
         return {
             k: v
             for k, v in sorted(self.__dict__.items())
-            if not str(k).startswith("_") and k not in ["created", "updated", *self.relationships()]
+            if not str(k).startswith("_")
+            and k not in ["created", "updated", *self.relationships()]
         }
 
     @classmethod
