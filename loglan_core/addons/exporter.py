@@ -42,6 +42,9 @@ class Exporter:
         ValueError: If the object type is not supported for export.
     """
 
+    FORMAT_DATE_EVENT = "%m/%d/%Y"
+    FORMAT_DATE_SETTING = "%d.%m.%Y %H:%M:%S"
+
     @classmethod
     def export(cls, obj, separator: str = DEFAULT_SEPARATOR) -> str:
         """
@@ -102,8 +105,8 @@ class Exporter:
         """
         return obj.abbreviation, obj.full_name, obj.notes
 
-    @staticmethod
-    def export_event(obj: BaseEvent) -> tuple:
+    @classmethod
+    def export_event(cls, obj: BaseEvent) -> tuple:
         """
         Prepare Event data for exporting to text file
 
@@ -113,7 +116,7 @@ class Exporter:
         return (
             obj.event_id,
             obj.name,
-            obj.date.strftime("%m/%d/%Y"),  # TODO Add format as class constant
+            obj.date.strftime(cls.FORMAT_DATE_EVENT),
             obj.definition,
             obj.annotation,
             obj.suffix,
@@ -129,8 +132,8 @@ class Exporter:
         """
         return obj.name, obj.type_, str(obj.allowed)
 
-    @staticmethod
-    def export_setting(obj: BaseSetting) -> tuple:
+    @classmethod
+    def export_setting(cls, obj: BaseSetting) -> tuple:
         """
         Prepare Setting data for exporting to text file
 
@@ -138,7 +141,7 @@ class Exporter:
             tuple: elements for export
         """
         return (
-            obj.date.strftime("%d.%m.%Y %H:%M:%S"),  # TODO Add format as class constant
+            obj.date.strftime(cls.FORMAT_DATE_SETTING),
             obj.db_version,
             obj.last_word_id,
             obj.db_release,
