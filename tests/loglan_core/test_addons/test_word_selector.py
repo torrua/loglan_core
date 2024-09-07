@@ -1,4 +1,5 @@
 import pytest
+
 from loglan_core.addons.word_selector import (
     WordSelector,
 )
@@ -173,8 +174,29 @@ class TestWordGetter:
 
     def test_affixes(self, db_session):
         kakto = WordSelector().by_name("kakto").scalar(db_session)
-        assert len(WordSelector().affixes(kakto.id).all(db_session)) == 2
+        assert len(WordSelector().get_affixes_of(kakto.id).all(db_session)) == 2
 
     def test_complexes(self, db_session):
         kakto = WordSelector().by_name("kakto").scalar(db_session)
-        assert len(WordSelector().complexes(kakto.id).all(db_session)) == 1
+        assert len(WordSelector().get_complexes_of(kakto.id).all(db_session)) == 1
+
+    def test_with_relationships(self, db_session):
+        ws = WordSelector(is_sqlite=True)
+        pruci_without_relationships = ws.by_name("pruci").scalar(db_session)
+        assert pruci_without_relationships.__dict__.get("definitions") is None
+        assert pruci_without_relationships.__dict__.get("type") is None
+
+        kakto_with_relationships = ws.by_name("kakto").with_relationships(
+            selected=["definitions", "type"]).scalar(db_session)
+        assert kakto_with_relationships.__dict__.get("definitions") is not None
+        assert kakto_with_relationships.__dict__.get("type") is not None
+
+        kak_with_all_relationships = ws.by_name("kak").with_relationships().scalar(db_session)
+        assert kak_with_all_relationships.__dict__.get("definitions") is not None
+
+    def test_by_attributes(self, db_session):
+        ws = WordSelector(is_sqlite=True)
+        result = ws.by_attributes(name="kakto")
+        result_from_db = db_session.execute(result).scalars().all()
+        sorted_names = [w.name for w in result_from_db]
+        assert sorted_names == ["kakto"]

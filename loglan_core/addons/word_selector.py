@@ -77,7 +77,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self.class_ = class_
         self.is_sqlite = is_sqlite
 
-    def add_relationships(self, selected: Iterable[str] | None = None) -> WordSelector:
+    def with_relationships(self, selected: Iterable[str] | None = None) -> WordSelector:
         """
         Adds relationships to the query.
 
@@ -216,7 +216,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         )
 
     @order_by_name
-    def derivatives(self, word_id: int) -> WordSelector:
+    def get_derivatives_of(self, word_id: int) -> WordSelector:
         """
         Selects all words that are derived from the given word.
 
@@ -234,7 +234,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         )
 
     @order_by_name
-    def affixes(self, word_id: int) -> WordSelector:
+    def get_affixes_of(self, word_id: int) -> WordSelector:
         """
         Selects all affixes that are derived from the given word.
 
@@ -244,10 +244,12 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             WordSelector: A query with the filter applied.
         """
-        return cast(WordSelector, self.derivatives(word_id).by_type(type_x="Affix"))
+        return cast(
+            WordSelector, self.get_derivatives_of(word_id).by_type(type_x="Affix")
+        )
 
     @order_by_name
-    def complexes(self, word_id: int) -> WordSelector:
+    def get_complexes_of(self, word_id: int) -> WordSelector:
         """
         Selects all complexes that are derived from the given word.
 
@@ -257,7 +259,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             WordSelector: A query with the filter applied.
         """
-        return cast(WordSelector, self.derivatives(word_id).by_type(group="Cpx"))
+        return cast(WordSelector, self.get_derivatives_of(word_id).by_type(group="Cpx"))
 
     @property
     def inherit_cache(self):  # pylint: disable=missing-function-docstring
@@ -304,3 +306,28 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             i[0].ilike(str(i[1]).replace("*", "%")) for i in type_values if i[1]
         ]
         return type_filters
+
+    @order_by_name
+    def by_attributes(self, **kwargs) -> WordSelector:  # TODO Improve and verify
+        """
+        Selects all words by a set of attributes.
+
+        Args:
+            **kwargs: A set of attributes to filter by.
+
+        Returns:
+            WordSelector: A query with the filter applied.
+        """
+        return cast(WordSelector, self.where(self.filter_word_by_attributes(**kwargs)))
+
+    def filter_word_by_attributes(self, **kwargs):
+        """
+        Generate a filter for a set of attributes.
+
+        Args:
+            **kwargs: A set of attributes to filter by.
+
+        Returns:
+            BinaryExpression: A filter expression for the given attributes.
+        """
+        return and_(*[getattr(self.class_, k) == v for k, v in kwargs.items()])
