@@ -14,7 +14,7 @@ from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
 
-from loglan_core import t_connect_words
+from loglan_core.connect_tables import t_connect_words
 from loglan_core.addons.base_selector import BaseSelector
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.utils import filter_word_by_event_id
