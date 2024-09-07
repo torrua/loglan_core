@@ -103,12 +103,12 @@ setting_1 = {'last_word_id': 10141, 'db_version': 2, 'db_release': '4.5.9', 'dat
 settings = [setting_1]
 
 # ===== SYLLABLES ==============================================================
-syllable_35 = {'allowed': True, 'name': 'vr', 'type': 'InitialCC'}
-syllable_36 = {'allowed': True, 'name': 'zb', 'type': 'InitialCC'}
-syllable_37 = {'allowed': True, 'name': 'zv', 'type': 'InitialCC'}
-syllable_38 = {'allowed': False, 'name': 'cdz', 'type': 'UnintelligibleCCC'}
-syllable_39 = {'allowed': False, 'name': 'cvl', 'type': 'UnintelligibleCCC'}
-syllable_40 = {'allowed': False, 'name': 'ndj', 'type': 'UnintelligibleCCC'}
+syllable_35 = {'allowed': True, 'name': 'vr', 'type_': 'InitialCC'}
+syllable_36 = {'allowed': True, 'name': 'zb', 'type_': 'InitialCC'}
+syllable_37 = {'allowed': True, 'name': 'zv', 'type_': 'InitialCC'}
+syllable_38 = {'allowed': False, 'name': 'cdz', 'type_': 'UnintelligibleCCC'}
+syllable_39 = {'allowed': False, 'name': 'cvl', 'type_': 'UnintelligibleCCC'}
+syllable_40 = {'allowed': False, 'name': 'ndj', 'type_': 'UnintelligibleCCC'}
 syllables = [syllable_35, syllable_36, syllable_37, syllable_38, syllable_39, syllable_40, ]
 
 # ===== WORD SOURCES ===========================================================
