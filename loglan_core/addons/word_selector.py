@@ -128,15 +128,12 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             WordSelector: A query with the filter applied.
         """
-        name = str(name).replace("*", "%")
-        statement = (
-            (
-                self.class_.name.op("GLOB")(name)
-                if self.is_sqlite
-                else self.class_.name.like(name)
-            )
-            if case_sensitive
-            else self.class_.name.ilike(name)
+        statement = self.condition_by_attribute(
+            class_=self.class_,
+            attr=self.class_.name,
+            value=name,
+            is_sqlite=self.is_sqlite,
+            case_sensitive=case_sensitive,
         )
         return cast(WordSelector, self.where(statement))
 

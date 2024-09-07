@@ -6,7 +6,7 @@ from loglan_core.addons.word_selector import (
 
 
 @pytest.mark.usefixtures("db_session")
-class TestWordGetter:
+class TestWordSelector:
     def test_init_with_wrong_class(self, db_session):
         class TestClass:
             pass
