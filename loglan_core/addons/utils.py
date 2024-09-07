@@ -4,7 +4,7 @@ This module provides utility functions for the loglan_core package.
 
 from __future__ import annotations
 
-from sqlalchemy import select, Select, true, or_
+from sqlalchemy import select, Select, true, or_, func
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.elements import BooleanClauseList
 from sqlalchemy.sql.expression import ColumnElement
@@ -25,7 +25,8 @@ def filter_word_by_event_id(event_id: int | None) -> BooleanClauseList:
     Returns:
         BooleanClauseList: A filter condition to select words associated with a specific event.
     """
-    event_id_filter = event_id or BaseEvent.latest_id()
+    latest_id = select(func.max(BaseEvent.event_id)).scalar_subquery()
+    event_id_filter = event_id or latest_id
     start_id_condition = BaseWord.event_start_id <= event_id_filter
     end_id_condition = (
         BaseWord.event_end_id > event_id_filter
