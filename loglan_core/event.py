@@ -8,10 +8,8 @@ import datetime
 from typing import TYPE_CHECKING
 
 from sqlalchemy import Text
-from sqlalchemy import select, func
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.selectable import Select
 
 from loglan_core.base import BaseModel, str_016, str_064
 from loglan_core.table_names import T_NAME_EVENTS
@@ -99,17 +97,3 @@ class BaseEvent(BaseModel):
         back_populates="event_start",
         foreign_keys="BaseWord.event_start_id",
     )
-
-    @classmethod
-    def latest(cls) -> Select:
-        """
-        Gets the latest (current) `BaseEvent` from DB
-        """
-        return select(cls).filter(cls.event_id == cls.latest_id())
-
-    @classmethod
-    def latest_id(cls):
-        """
-        Gets the id of the latest (current) `BaseEvent` from DB
-        """
-        return select(func.max(cls.event_id)).scalar_subquery()  # pylint: disable=E1102
