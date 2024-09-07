@@ -30,12 +30,12 @@ author_2 = {'notes': '', 'abbreviation': 'JCB', 'full_name': 'James Cooke Brown'
 authors = [author_1, author_2]
 
 # ===== TYPES ==================================================================
-type_1 = {'description': 'Two-term Complex E.g. flicea, from fli(du)+ce(nj)a=liquid-become.', 'group': 'Cpx', 'type': '2-Cpx', 'parentable': True, 'type_x': 'Predicate', }
-type_2 = {'description': 'Composite Primitives, drawn from several target languages in a way that might make them recognizable in most of them. (See Loglan 1 Section 6.3.)', 'group': 'Prim', 'type': 'C-Prim', 'parentable': False, 'type_x': 'Predicate', }
-type_3 = {'description': 'Affix.', 'group': 'Little', 'type': 'Afx', 'parentable': True, 'type_x': 'Affix', }
-type_4 = {'description': 'Derived Primitive, one of the primitives that follows the cultural (language, nationality, culture) or animal (male, female, infant, resembling, unspecified) declension.', 'group': 'Prim', 'parentable': False, 'type': 'D-Prim', 'type_x': 'Predicate', }
-type_5 = {'description': 'Compound Little Word E.g. enoi from e+no, "and not".', 'group': 'Little', 'parentable': True, 'type': 'Cpd', 'type_x': 'Struct', }
-type_6 = {'description': 'Little Word, a small word used to give Loglan its grammatical structure.', 'group': 'Little', 'parentable': True, 'type': 'LW', 'type_x': 'Struct', }
+type_1 = {'description': 'Two-term Complex E.g. flicea, from fli(du)+ce(nj)a=liquid-become.', 'group': 'Cpx', 'type_': '2-Cpx', 'parentable': True, 'type_x': 'Predicate', }
+type_2 = {'description': 'Composite Primitives, drawn from several target languages in a way that might make them recognizable in most of them. (See Loglan 1 Section 6.3.)', 'group': 'Prim', 'type_': 'C-Prim', 'parentable': False, 'type_x': 'Predicate', }
+type_3 = {'description': 'Affix.', 'group': 'Little', 'type_': 'Afx', 'parentable': True, 'type_x': 'Affix', }
+type_4 = {'description': 'Derived Primitive, one of the primitives that follows the cultural (language, nationality, culture) or animal (male, female, infant, resembling, unspecified) declension.', 'group': 'Prim', 'parentable': False, 'type_': 'D-Prim', 'type_x': 'Predicate', }
+type_5 = {'description': 'Compound Little Word E.g. enoi from e+no, "and not".', 'group': 'Little', 'parentable': True, 'type_': 'Cpd', 'type_x': 'Struct', }
+type_6 = {'description': 'Little Word, a small word used to give Loglan its grammatical structure.', 'group': 'Little', 'parentable': True, 'type_': 'LW', 'type_x': 'Struct', }
 types = [type_1, type_2, type_3, type_4, type_5, type_6]
 
 # ===== WORDS ==================================================================

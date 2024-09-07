@@ -199,7 +199,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             )
 
         type_values: tuple[tuple[InstrumentedAttribute, str | None | BaseType], ...] = (
-            (BaseType.type, type_),
+            (BaseType.type_, type_),
             (BaseType.type_x, type_x),
             (BaseType.group, group),
         )
@@ -295,7 +295,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Builds a collection of type filters based on provided type values.
 
         Args:
-            type_values (tuple): A tuple containing values for type, type_x, and group.
+            type_values (tuple): A tuple containing values for type_, type_x, and group.
 
         Returns:
             list[BinaryExpression]: A list of SQLAlchemy BinaryExpression

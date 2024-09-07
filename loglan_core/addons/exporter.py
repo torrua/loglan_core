@@ -153,7 +153,7 @@ class Exporter:
             tuple: elements for export
         """
         return (
-            obj.type,
+            obj.type_,
             obj.type_x,
             obj.group,
             str(obj.parentable),
@@ -175,7 +175,7 @@ class Exporter:
         origin = ewc.stringer(obj.origin)
         return (
             obj.id_old,
-            obj.type.type,
+            obj.type.type_,
             obj.type.type_x,
             ewc.e_affixes,
             match,

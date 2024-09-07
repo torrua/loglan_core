@@ -82,7 +82,7 @@ def select_type_by_property(
 
     type_request = select(BaseType.id if id_only else BaseType).filter(
         or_(
-            BaseType.type.in_(type_filter),
+            BaseType.type_.in_(type_filter),
             BaseType.type_x.in_(type_filter),
             BaseType.group.in_(type_filter),
         )

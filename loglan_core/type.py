@@ -29,7 +29,7 @@ class BaseType(BaseModel):
 
     def __init__(
         self,
-        type: Mapped[str_016],  # pylint: disable=W0622
+        type_: Mapped[str_016],  # pylint: disable=W0622
         type_x: Mapped[str_016],
         group: Mapped[str_016],
         parentable: Mapped[bool],
@@ -39,7 +39,7 @@ class BaseType(BaseModel):
         Returns:
         """
         super().__init__()
-        self.type = type
+        self.type_ = type_
         self.type_x = type_x
         self.group = group
         self.parentable = parentable
@@ -52,10 +52,10 @@ class BaseType(BaseModel):
         return (
             f"<{self.__class__.__name__}"
             f"{' ID ' + str(self.id) + ' ' if self.id else ' '}"
-            f"{self.type} ({self.type_x})>"
+            f"{self.type_} ({self.type_x})>"
         )
 
-    type: Mapped[str_016] = mapped_column(nullable=False)  # E.g. 2-Cpx, C-Prim
+    type_: Mapped[str_016] = mapped_column("type", nullable=False)  # E.g. 2-Cpx, C-Prim
     type_x: Mapped[str_016] = mapped_column(nullable=False)  # E.g. Predicate, Predicate
     group: Mapped[str_016] = mapped_column(nullable=False)  # E.g. Cpx, Prim
     parentable: Mapped[bool] = mapped_column(nullable=False)  # E.g. True, False

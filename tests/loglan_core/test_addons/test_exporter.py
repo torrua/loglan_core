@@ -72,12 +72,12 @@ class TestExporter:
 
     def test_export_type(self, db_session):
         """Test Type.export() method"""
-        obj = db_session.query(Type).filter(Type.type == "2-Cpx").scalar()
+        obj = db_session.query(Type).filter(Type.type_ == "2-Cpx").scalar()
         result = self.e.export(obj)
         assert result == "2-Cpx@Predicate@Cpx@True@Two-term Complex " \
                          "E.g. flicea, from fli(du)+ce(nj)a=liquid-become."
 
-        obj = db_session.query(Type).filter(Type.type == "D-Prim").scalar()
+        obj = db_session.query(Type).filter(Type.type_ == "D-Prim").scalar()
         result = self.e.export(obj)
         assert result == ("D-Prim@Predicate@Prim@False@Derived Primitive, "
                           "one of the primitives that follows the cultural "

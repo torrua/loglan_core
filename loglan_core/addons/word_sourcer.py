@@ -43,7 +43,7 @@ class WordSourcer:
         if not word.type.group == "Prim":
             return None
 
-        if word.type.type == "C-Prim":
+        if word.type.type_ == "C-Prim":
             return cls._get_sources_c_prim(word)
 
         # TODO сделать вывод унифицированным
@@ -54,7 +54,7 @@ class WordSourcer:
         """
         Returns:
         """
-        if word.type.type != "C-Prim":
+        if word.type.type_ != "C-Prim":
             return None
 
         sources = str(word.origin).split(" | ")
@@ -134,7 +134,7 @@ class WordSourcer:
           List of words from which the self.name was created
         """
 
-        if not word.type.type == "Cpd":
+        if not word.type.type_ == "Cpd":
             return []
 
         sources = cls._prepare_sources_cpd(word)

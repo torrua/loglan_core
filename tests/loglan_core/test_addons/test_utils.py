@@ -12,5 +12,5 @@ class TestUtils:
         result_from_db = db_session.execute(statement).scalars().all()
         assert len(result_from_db) == 3
 
-        cpx: Type = db_session.query(Type).filter(Type.type == 'C-Prim').first()
+        cpx: Type = db_session.query(Type).filter(Type.type_ == 'C-Prim').first()
         assert cpx in result_from_db
