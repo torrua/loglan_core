@@ -122,7 +122,8 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
 
     @staticmethod
     def _get_attr(
-        class_: Type[BaseModel], attr: InstrumentedAttribute | str
+        class_: Type[BaseModel],
+        attr: InstrumentedAttribute | str,
     ) -> InstrumentedAttribute:
         """
         Gets the attribute from the class.
