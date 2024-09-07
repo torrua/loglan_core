@@ -38,15 +38,15 @@ hljs.highlightAll();
 <dl>
 <dt id="loglan_core.syllable.BaseSyllable"><code class="flex name class">
 <span>class <span class="ident">BaseSyllable</span></span>
-<span>(</span><span>name, type, allowed)</span>
+<span>(</span><span>name, type_, allowed)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Base Syllable's DB Model</p>
 <p>Describes a table structure for storing information about loglan syllables.</p>
 <details><summary>Show Examples</summary><p>
-<pre><code class="language-python">{'id': 37, 'name': 'zv', 'type': 'InitialCC', 'allowed': True}
+<pre><code class="language-python">{'id': 37, 'name': 'zv', 'type_': 'InitialCC', 'allowed': True}
 
-{'id': 38, 'name': 'cdz', 'type': 'UnintelligibleCCC', 'allowed': False}
+{'id': 38, 'name': 'cdz', 'type_': 'UnintelligibleCCC', 'allowed': False}
 </code></pre>
 </p></details></div>
 <h3>Ancestors</h3>
@@ -68,7 +68,7 @@ hljs.highlightAll();
 <div class="desc"><p><em>Syllable itself</em><br>
 <strong>str</strong> : max_length=8, nullable=False, unique=False</p></div>
 </dd>
-<dt id="loglan_core.syllable.BaseSyllable.type"><code class="name">var <span class="ident">type</span> : sqlalchemy.orm.base.Mapped[str]</code></dt>
+<dt id="loglan_core.syllable.BaseSyllable.type_"><code class="name">var <span class="ident">type_</span> : sqlalchemy.orm.base.Mapped[str]</code></dt>
 <dd>
 <div class="desc"><p><em>Syllable's type</em><br>
 <strong>str</strong> : max_length=8, nullable=False, unique=False</p></div>
@@ -113,7 +113,7 @@ hljs.highlightAll();
 <ul class="">
 <li><code><a title="loglan_core.syllable.BaseSyllable.allowed" href="#loglan_core.syllable.BaseSyllable.allowed">allowed</a></code></li>
 <li><code><a title="loglan_core.syllable.BaseSyllable.name" href="#loglan_core.syllable.BaseSyllable.name">name</a></code></li>
-<li><code><a title="loglan_core.syllable.BaseSyllable.type" href="#loglan_core.syllable.BaseSyllable.type">type</a></code></li>
+<li><code><a title="loglan_core.syllable.BaseSyllable.type_" href="#loglan_core.syllable.BaseSyllable.type_">type_</a></code></li>
 </ul>
 </li>
 </ul>
