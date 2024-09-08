@@ -14,4 +14,4 @@ build:
     tests:
       dependencies:
         before:
-          - pip install -r requirements-tests.txt
+          - pip install -r requirements-dev.txt
