@@ -12,7 +12,7 @@ build:
     python: 3.12.6
   nodes:
     tests:
-      commands:
+      dependencies:
         before:
-          - pip install sqlalchemy
-          - pip install setuptools
+          sqlalchemy
+          setuptools
