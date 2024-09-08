@@ -31,6 +31,18 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
 
     fetchmany(session: Session, size: int | None = None) -> List[ResultRow]:
         Executes the session and fetches a specified number of results.
+
+    condition_by_attribute(
+        class_: Type[BaseModel],
+        attr: InstrumentedAttribute | str,
+        value: Any,
+        is_sqlite: bool = False,
+        case_sensitive: bool = False,
+        use_wildcard: bool = True,
+        wildcard_symbol: str = "*",
+    ) -> BinaryExpression:
+        Creates a filter to select items by a specific attribute value.
+        Support wildcard and case-sensitive search.
     """
 
     def execute(self, session: Session):
