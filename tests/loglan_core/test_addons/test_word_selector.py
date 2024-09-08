@@ -113,7 +113,7 @@ class TestWordSelector:
         result = WordSelector(is_sqlite=True).by_type()
         assert isinstance(result, WordSelector)
 
-        result_from_db = db_session.execute(result).scalars().all()
+        result_from_db = db_session.scalars(result).all()
         sorted_names = [w.name for w in result_from_db]
         assert sorted_names == [
             "cii",

@@ -7,12 +7,10 @@ event, key, type, and name through the WordSelector class.
 from __future__ import annotations
 
 from functools import wraps
-from typing import Type, cast, Iterable
+from typing import Type, Iterable
 
 from sqlalchemy import and_, select, join, Select
 from sqlalchemy.orm import selectinload
-from sqlalchemy.orm.attributes import InstrumentedAttribute
-from sqlalchemy.sql.elements import BinaryExpression
 from typing_extensions import Self
 
 from loglan_core.connect_tables import t_connect_words
@@ -87,7 +85,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             Defaults to None if all relationships should be included.
 
         Returns:
-            WordSelector: A query with the relationships added.
+            Self: A query with the relationships added.
         """
         available_relationships = {
             attr: getattr(self.class_, attr) for attr in self.class_.relationships()
@@ -100,7 +98,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         return self.options(*relationships)
 
     @order_by_name
-    def by_event(self, event_id: int | None = None) -> WordSelector:
+    def by_event(self, event_id: int | None = None) -> Self:
         """
         Applies a filter to select words associated with a specific event.
 
@@ -110,15 +108,41 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             Self: A query with the filter applied.
         """
-        return cast(WordSelector, self.where(filter_word_by_event_id(event_id)))
+        return self.where(filter_word_by_event_id(event_id))
+
+    @order_by_name
+    def by_attributes(
+        self,
+        case_sensitive: bool = False,
+        **kwargs,
+    ) -> Self:
+        """
+        Selects all words by a set of attributes.
+
+        Args:
+            case_sensitive (bool): Whether the search should be case-sensitive.
+                Defaults to False.
+            **kwargs: A set of attributes to filter by.
+
+        Returns:
+            Self: A query with the filter applied.
+        """
+        return (
+            super()  # type: ignore
+            .__get__(self, type(self))
+            .by_attributes(
+                class_=self.class_,
+                is_sqlite=self.is_sqlite,
+                case_sensitive=case_sensitive,
+                **kwargs,
+            )
+        )
 
     @order_by_name
     def by_name(
         self,
         name: str,
         case_sensitive: bool = False,
-        use_wildcard: bool = True,
-        wildcard_symbol: str = "*",
     ) -> Self:
         """
         Applies a filter to select words by a specific name.
@@ -127,17 +151,12 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             name (str): The name to filter by.
             case_sensitive (bool): Whether the search should be case-sensitive.
             Defaults to False.
-            use_wildcard (bool): Whether to use wildcards. Defaults to True.
-            wildcard_symbol (str): The symbol to use for wildcards. Defaults to "*".
-
         Returns:
             Self: A query with the filter applied.
         """
 
         return self.by_attributes(
             case_sensitive=case_sensitive,
-            use_wildcard=use_wildcard,
-            wildcard_symbol=wildcard_symbol,
             name=name,
         )
 
@@ -197,13 +216,15 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         if isinstance(type_, BaseType):
             return self.join(BaseType).where(BaseType.id == type_.id)
 
-        type_values: tuple[tuple[InstrumentedAttribute, str | None | BaseType], ...] = (
+        type_values = (
             (BaseType.type_, type_),
             (BaseType.type_x, type_x),
             (BaseType.group, group),
         )
 
-        type_filters = self.type_filters(type_values)
+        type_filters = [
+            i[0].ilike(str(i[1]).replace("*", "%")) for i in type_values if i[1]
+        ]
 
         return (
             self if not type_filters else self.join(BaseType).where(and_(*type_filters))
@@ -276,56 +297,4 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
                 )
             )
             .where(t_connect_words.c.parent_id == word_id)
-        )
-
-    @staticmethod
-    def type_filters(type_values: tuple) -> list[BinaryExpression]:
-        """
-        Builds a collection of type filters based on provided type values.
-
-        Args:
-            type_values (tuple): A tuple containing values for type_, type_x, and group.
-
-        Returns:
-            list[BinaryExpression]: A list of SQLAlchemy BinaryExpression
-            instances representing the filters.
-        """
-
-        type_filters = [
-            i[0].ilike(str(i[1]).replace("*", "%")) for i in type_values if i[1]
-        ]
-        return type_filters
-
-    @order_by_name
-    def by_attributes(
-        self,
-        case_sensitive: bool = False,
-        use_wildcard: bool = True,
-        wildcard_symbol: str = "*",
-        **kwargs,
-    ) -> Self:
-        """
-        Selects all words by a set of attributes.
-
-        Args:
-            case_sensitive (bool): Whether the search should be case-sensitive.
-                Defaults to False.
-            use_wildcard (bool): Whether to use wildcards. Defaults to True.
-            wildcard_symbol (str): The symbol to use for wildcards. Defaults to "*".
-            **kwargs: A set of attributes to filter by.
-
-        Returns:
-            Self: A query with the filter applied.
-        """
-        return (
-            super()  # type: ignore
-            .__get__(self, type(self))
-            .by_attributes(
-                class_=self.class_,
-                is_sqlite=self.is_sqlite,
-                wildcard_symbol=wildcard_symbol,
-                use_wildcard=use_wildcard,
-                case_sensitive=case_sensitive,
-                **kwargs,
-            )
         )
