@@ -13,6 +13,7 @@ from sqlalchemy import and_, select, join, Select
 from sqlalchemy.orm import selectinload
 from sqlalchemy.orm.attributes import InstrumentedAttribute
 from sqlalchemy.sql.elements import BinaryExpression
+from typing_extensions import Self
 
 from loglan_core.connect_tables import t_connect_words
 from loglan_core.addons.base_selector import BaseSelector
@@ -77,7 +78,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self.class_ = class_
         self.is_sqlite = is_sqlite
 
-    def with_relationships(self, selected: Iterable[str] | None = None) -> WordSelector:
+    def with_relationships(self, selected: Iterable[str] | None = None) -> Self:
         """
         Adds relationships to the query.
 
@@ -96,7 +97,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             for k, v in available_relationships.items()
             if not selected or k in selected
         }
-        return cast(WordSelector, self.options(*relationships))
+        return self.options(*relationships)
 
     @order_by_name
     def by_event(self, event_id: int | None = None) -> WordSelector:
@@ -107,7 +108,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             event_id (int | None): The id of the event to filter by. Defaults to None.
 
         Returns:
-            WordSelector: A query with the filter applied.
+            Self: A query with the filter applied.
         """
         return cast(WordSelector, self.where(filter_word_by_event_id(event_id)))
 
@@ -116,7 +117,9 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self,
         name: str,
         case_sensitive: bool = False,
-    ) -> WordSelector:
+        use_wildcard: bool = True,
+        wildcard_symbol: str = "*",
+    ) -> Self:
         """
         Applies a filter to select words by a specific name.
 
@@ -124,18 +127,19 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             name (str): The name to filter by.
             case_sensitive (bool): Whether the search should be case-sensitive.
             Defaults to False.
+            use_wildcard (bool): Whether to use wildcards. Defaults to True.
+            wildcard_symbol (str): The symbol to use for wildcards. Defaults to "*".
 
         Returns:
-            WordSelector: A query with the filter applied.
+            Self: A query with the filter applied.
         """
-        statement = self.condition_by_attribute(
-            class_=self.class_,
-            attr=self.class_.name,
-            value=name,
-            is_sqlite=self.is_sqlite,
+
+        return self.by_attributes(
             case_sensitive=case_sensitive,
+            use_wildcard=use_wildcard,
+            wildcard_symbol=wildcard_symbol,
+            name=name,
         )
-        return cast(WordSelector, self.where(statement))
 
     @order_by_name
     def by_key(
@@ -143,7 +147,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         key: BaseKey | str,
         language: str | None = None,
         case_sensitive: bool = False,
-    ) -> WordSelector:
+    ) -> Self:
         """
         Applies a filter to select words by a specific key.
 
@@ -155,7 +159,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
                 Defaults to False.
 
         Returns:
-            WordSelector: A query with the filter applied.
+            Self: A query with the filter applied.
         """
 
         definition_query = DefinitionSelector(is_sqlite=self.is_sqlite).by_key(
@@ -164,7 +168,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             case_sensitive=case_sensitive,
         )
         subquery = select(definition_query.subquery().c.word_id)
-        return cast(WordSelector, self.where(self.class_.id.in_(subquery)))
+        return self.where(self.class_.id.in_(subquery))
 
     @order_by_name
     def by_type(
@@ -172,7 +176,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         type_: BaseType | str | None = None,
         type_x: str | None = None,
         group: str | None = None,
-    ) -> WordSelector:
+    ) -> Self:
         """
         Applies a filter to select words by a specific type.
 
@@ -188,12 +192,10 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
                 E.g. "Cpx", "Prim", "Little"
 
         Returns:
-            WordSelector: A query with the filter applied.
+            Self: A query with the filter applied.
         """
         if isinstance(type_, BaseType):
-            return cast(
-                WordSelector, self.join(BaseType).where(BaseType.id == type_.id)
-            )
+            return self.join(BaseType).where(BaseType.id == type_.id)
 
         type_values: tuple[tuple[InstrumentedAttribute, str | None | BaseType], ...] = (
             (BaseType.type_, type_),
@@ -203,17 +205,12 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
         type_filters = self.type_filters(type_values)
 
-        return cast(
-            WordSelector,
-            (
-                self
-                if not type_filters
-                else self.join(BaseType).where(and_(*type_filters))
-            ),
+        return (
+            self if not type_filters else self.join(BaseType).where(and_(*type_filters))
         )
 
     @order_by_name
-    def get_derivatives_of(self, word_id: int) -> WordSelector:
+    def get_derivatives_of(self, word_id: int) -> Self:
         """
         Selects all words that are derived from the given word.
 
@@ -221,17 +218,14 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             word_id (int): The id of the word to filter by.
 
         Returns:
-            WordSelector: A query with the filter applied.
+            Self: A query with the filter applied.
         """
-        return cast(
-            WordSelector,
-            self.where(
-                self.class_.id.in_(self._select_derivative_ids_subquery(word_id))
-            ),
+        return self.where(
+            self.class_.id.in_(self._select_derivative_ids_subquery(word_id))
         )
 
     @order_by_name
-    def get_affixes_of(self, word_id: int) -> WordSelector:
+    def get_affixes_of(self, word_id: int) -> Self:
         """
         Selects all affixes that are derived from the given word.
 
@@ -239,14 +233,12 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             word_id (int): The id of the word to filter by.
 
         Returns:
-            WordSelector: A query with the filter applied.
+            Self: A query with the filter applied.
         """
-        return cast(
-            WordSelector, self.get_derivatives_of(word_id).by_type(type_x="Affix")
-        )
+        return self.get_derivatives_of(word_id).by_type(type_x="Affix")
 
     @order_by_name
-    def get_complexes_of(self, word_id: int) -> WordSelector:
+    def get_complexes_of(self, word_id: int) -> Self:
         """
         Selects all complexes that are derived from the given word.
 
@@ -254,9 +246,9 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             word_id (int): The id of the word to filter by.
 
         Returns:
-            WordSelector: A query with the filter applied.
+            Self: A query with the filter applied.
         """
-        return cast(WordSelector, self.get_derivatives_of(word_id).by_type(group="Cpx"))
+        return self.get_derivatives_of(word_id).by_type(group="Cpx")
 
     @property
     def inherit_cache(self):  # pylint: disable=missing-function-docstring
@@ -305,26 +297,35 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         return type_filters
 
     @order_by_name
-    def by_attributes(self, **kwargs) -> WordSelector:  # TODO Improve and verify
+    def by_attributes(
+        self,
+        case_sensitive: bool = False,
+        use_wildcard: bool = True,
+        wildcard_symbol: str = "*",
+        **kwargs,
+    ) -> Self:
         """
         Selects all words by a set of attributes.
 
         Args:
+            case_sensitive (bool): Whether the search should be case-sensitive.
+                Defaults to False.
+            use_wildcard (bool): Whether to use wildcards. Defaults to True.
+            wildcard_symbol (str): The symbol to use for wildcards. Defaults to "*".
             **kwargs: A set of attributes to filter by.
 
         Returns:
-            WordSelector: A query with the filter applied.
+            Self: A query with the filter applied.
         """
-        return cast(WordSelector, self.where(self.filter_word_by_attributes(**kwargs)))
-
-    def filter_word_by_attributes(self, **kwargs):
-        """
-        Generate a filter for a set of attributes.
-
-        Args:
-            **kwargs: A set of attributes to filter by.
-
-        Returns:
-            BinaryExpression: A filter expression for the given attributes.
-        """
-        return and_(*[getattr(self.class_, k) == v for k, v in kwargs.items()])
+        return (
+            super()  # type: ignore
+            .__get__(self, type(self))
+            .by_attributes(
+                class_=self.class_,
+                is_sqlite=self.is_sqlite,
+                wildcard_symbol=wildcard_symbol,
+                use_wildcard=use_wildcard,
+                case_sensitive=case_sensitive,
+                **kwargs,
+            )
+        )

@@ -5,6 +5,7 @@ This module provides a base selector for SQLAlchemy
 from __future__ import annotations
 
 from typing import Any, Type
+from typing_extensions import Self
 
 from sqlalchemy import Select, BinaryExpression
 from sqlalchemy.orm import Session, InstrumentedAttribute
@@ -43,7 +44,13 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
     ) -> BinaryExpression:
         Creates a filter to select items by a specific attribute value.
         Support wildcard and case-sensitive search.
+
+    Constants:
+    ----------
+    DEFAULT_WILDCARD_SYMBOL: str
     """
+
+    DEFAULT_WILDCARD_SYMBOL = "*"
 
     def execute(self, session: Session):
         """
@@ -103,7 +110,7 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         is_sqlite: bool = False,
         case_sensitive: bool = False,
         use_wildcard: bool = True,
-        wildcard_symbol: str = "*",
+        wildcard_symbol: str = DEFAULT_WILDCARD_SYMBOL,
     ) -> BinaryExpression:
         """
         Applies a filter to select words by a specific attribute value.
@@ -174,3 +181,42 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
             raise ValueError(
                 f"Provided class_={class_} is not a {BaseModel} or its child"
             )
+
+    def by_attributes(
+        self,
+        class_: Type[BaseModel],
+        is_sqlite: bool = False,
+        case_sensitive: bool = False,
+        use_wildcard: bool = True,
+        wildcard_symbol: str = DEFAULT_WILDCARD_SYMBOL,
+        **kwargs,
+    ) -> Self:
+        """
+        Selects all words by a set of attributes.
+
+        Args:
+            class_ (Type[BaseModel]): The class to select from.
+            is_sqlite (bool): If SQLite is being used. Defaults to False.
+            case_sensitive (bool): Whether the search should be case-sensitive.
+                Defaults to False.
+            use_wildcard (bool): Whether to use wildcards. Defaults to True.
+            wildcard_symbol (str): The symbol to use for wildcards. Defaults to "*".
+            **kwargs: A set of attributes to filter by.
+
+        Returns:
+            BaseSelector: A query with the filter applied.
+        """
+        return self.where(
+            *{
+                self.condition_by_attribute(
+                    class_,
+                    k,
+                    v,
+                    is_sqlite=is_sqlite,
+                    wildcard_symbol=wildcard_symbol,
+                    use_wildcard=use_wildcard,
+                    case_sensitive=case_sensitive,
+                )
+                for k, v in kwargs.items()
+            }
+        )

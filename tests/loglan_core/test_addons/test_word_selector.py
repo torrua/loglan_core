@@ -194,9 +194,8 @@ class TestWordSelector:
         kak_with_all_relationships = ws.by_name("kak").with_relationships().scalar(db_session)
         assert kak_with_all_relationships.__dict__.get("definitions") is not None
 
-    def test_by_attributes(self, db_session):
+    def test_by_attributes_select_scalar(self, db_session):
         ws = WordSelector(is_sqlite=True)
-        result = ws.by_attributes(name="kakto")
-        result_from_db = db_session.execute(result).scalars().all()
-        sorted_names = [w.name for w in result_from_db]
+        result = ws.by_attributes(name="kakto").all(db_session)
+        sorted_names = [w.name for w in result]
         assert sorted_names == ["kakto"]
