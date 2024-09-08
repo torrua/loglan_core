@@ -9,7 +9,7 @@ jobs:
       matrix:
         python-version: ["3.10"]
     steps:
-      - uses: Silleellie/pylint-github-action@v1
+      - uses: Silleellie/pylint-github-action@v2
         with:
-          package-path: loglan_core
+          lint-path: loglan_core
           python-version: ${{ matrix.python-version }}
