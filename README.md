@@ -6,7 +6,7 @@
 [![Pylint](https://github.com/torrua/loglan_core/actions/workflows/pylint.yml/badge.svg)](https://github.com/torrua/loglan_core/actions/workflows/pylint.yml)
 [![BlackLint](https://github.com/torrua/loglan_core/actions/workflows/black.yml/badge.svg)](https://github.com/torrua/loglan_core/actions/workflows/black.yml)
 [![Pytest](https://github.com/torrua/loglan_core/actions/workflows/pytest.yml/badge.svg)](https://github.com/torrua/loglan_core/actions/workflows/pytest.yml)
-![pylint](https://img.shields.io/badge/PyLint-9.94-yellow?logo=python&logoColor=white)
+![pylint](https://img.shields.io/badge/PyLint-10.00-brightgreen?logo=python&logoColor=white)
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/loglan_core?color=yellow)
 ![PyPI - Version](https://img.shields.io/pypi/v/loglan-core?logo=PyPi&logoColor=%23FFFFFF)
 ![GitHub License](https://img.shields.io/github/license/torrua/loglan_core)
