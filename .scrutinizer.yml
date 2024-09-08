@@ -14,5 +14,5 @@ build:
     tests:
       dependencies:
         before:
-          sqlalchemy
-          setuptools
+          python -m pip install setuptools
+          python -m pip install sqlalchemy
