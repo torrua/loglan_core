@@ -28,9 +28,6 @@ T_NAME_DEFINITIONS = "definitions"
 T_NAME_WORD_SPELLS = "word_spells"
 """`str` : `__tablename__` value for `BaseWordSpell` table"""
 
-T_NAME_WORD_SOURCES = "word_sources"
-"""`str` : `__tablename__` value for `BaseWordSource` table"""
-
 T_NAME_CONNECT_AUTHORS = "connect_authors"
 """`str` : `__tablename__` value for `t_connect_authors` table"""
 

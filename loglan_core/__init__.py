@@ -21,7 +21,6 @@ from loglan_core.setting import BaseSetting as Setting
 from loglan_core.syllable import BaseSyllable as Syllable
 from loglan_core.type import BaseType as Type
 from loglan_core.word import BaseWord as Word
-from loglan_core.word_source import BaseWordSource as WordSource
 from loglan_core.word_spell import BaseWordSpell as WordSpell
 
 from loglan_core.base import BaseModel as Base
