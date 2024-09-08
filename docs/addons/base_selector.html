@@ -53,6 +53,15 @@ Executes the session and returns all the results.</p>
 Executes the session and returns a scalar result.</p>
 <p>fetchmany(session: Session, size: int | None = None) -&gt; List[ResultRow]:
 Executes the session and fetches a specified number of results.</p>
+<p>condition_by_attribute(
+class_: Type[BaseModel],
+attr: InstrumentedAttribute | str,
+value: Any,
+is_sqlite: bool = False,
+case_sensitive: bool = False,
+) -&gt; BinaryExpression:
+Creates a filter to select items by a specific attribute value.
+Support wildcard and case-sensitive search.</p>
 <p>Construct a new :class:<code>_expression.Select</code>.</p>
 <p>The public constructor for :class:<code>_expression.Select</code> is the
 :func:<code>_sql.select</code> function.</p></div>
@@ -104,6 +113,34 @@ Executes the session and fetches a specified number of results.</p>
 <li><a title="loglan_core.addons.key_selector.KeySelector" href="key_selector.html#loglan_core.addons.key_selector.KeySelector">KeySelector</a></li>
 <li><a title="loglan_core.addons.word_selector.WordSelector" href="word_selector.html#loglan_core.addons.word_selector.WordSelector">WordSelector</a></li>
 </ul>
+<h3>Static methods</h3>
+<dl>
+<dt id="loglan_core.addons.base_selector.BaseSelector.condition_by_attribute"><code class="name flex">
+<span>def <span class="ident">condition_by_attribute</span></span>(<span>class_: Type[BaseModel], attr: InstrumentedAttribute | str, value: Any, is_sqlite: bool = False, case_sensitive: bool = False) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Applies a filter to select words by a specific attribute value.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>class_</code></strong> :&ensp;<code>BaseModel</code></dt>
+<dd>The class to select from.</dd>
+<dt><strong><code>attr</code></strong> :&ensp;<code>str</code></dt>
+<dd>The attribute to filter by.</dd>
+<dt><strong><code>value</code></strong> :&ensp;<code>Any</code></dt>
+<dd>The value of the attribute to filter by.</dd>
+<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If SQLite is being used. Defaults to False.</dd>
+<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the search should be case-sensitive.
+Defaults to False.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="loglan_core.addons.base_selector.BaseSelector" href="#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></code></dt>
+<dd>A query with the filter applied.</dd>
+</dl></div>
+</dd>
+</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="loglan_core.addons.base_selector.BaseSelector.all"><code class="name flex">
@@ -115,6 +152,29 @@ Executes the session and fetches a specified number of results.</p>
 session (Session): SQLAlchemy Session object.</p>
 <p>Returns:
 List[ResultRow]: All the results of the executed session.</p></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.by_attributes"><code class="name flex">
+<span>def <span class="ident">by_attributes</span></span>(<span>self, class_: Type[BaseModel], is_sqlite: bool = False, case_sensitive: bool = False, **kwargs) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Selects all words by a set of attributes.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>class_</code></strong> :&ensp;<code>Type[BaseModel]</code></dt>
+<dd>The class to select from.</dd>
+<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If SQLite is being used. Defaults to False.</dd>
+<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the search should be case-sensitive.
+Defaults to False.</dd>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>A set of attributes to filter by.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code><a title="loglan_core.addons.base_selector.BaseSelector" href="#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></code></dt>
+<dd>A query with the filter applied.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.base_selector.BaseSelector.execute"><code class="name flex">
 <span>def <span class="ident">execute</span></span>(<span>self, session: Session)</span>
@@ -168,6 +228,8 @@ Any: The scalar result of the executed session.</p></div>
 <h4><code><a title="loglan_core.addons.base_selector.BaseSelector" href="#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></code></h4>
 <ul class="">
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.all" href="#loglan_core.addons.base_selector.BaseSelector.all">all</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.by_attributes" href="#loglan_core.addons.base_selector.BaseSelector.by_attributes">by_attributes</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.condition_by_attribute" href="#loglan_core.addons.base_selector.BaseSelector.condition_by_attribute">condition_by_attribute</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute" href="#loglan_core.addons.base_selector.BaseSelector.execute">execute</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany" href="#loglan_core.addons.base_selector.BaseSelector.fetchmany">fetchmany</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar" href="#loglan_core.addons.base_selector.BaseSelector.scalar">scalar</a></code></li>

@@ -91,6 +91,19 @@ which makes it possible to work with word's sources</p>
 <dd>
 <div class="desc"><p>Returns:</p></div>
 </dd>
+<dt id="loglan_core.addons.word_sourcer.WordSourcer.get_type_ids"><code class="name flex">
+<span>def <span class="ident">get_type_ids</span></span>(<span>types: Iterable[str])</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get ids of specific types from provided list</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>types</code></strong> :&ensp;<code>Iterable[str]</code></dt>
+<dd>List of types to get</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<p>Subquery</p></div>
+</dd>
 <dt id="loglan_core.addons.word_sourcer.WordSourcer.words_from_source_cpd"><code class="name flex">
 <span>def <span class="ident">words_from_source_cpd</span></span>(<span>sources: list[str]) ‑> sqlalchemy.sql.selectable.Select</span>
 </code></dt>
@@ -130,6 +143,7 @@ Returns:</p></div>
 <li><code><a title="loglan_core.addons.word_sourcer.WordSourcer.get_sources_cpd" href="#loglan_core.addons.word_sourcer.WordSourcer.get_sources_cpd">get_sources_cpd</a></code></li>
 <li><code><a title="loglan_core.addons.word_sourcer.WordSourcer.get_sources_cpx" href="#loglan_core.addons.word_sourcer.WordSourcer.get_sources_cpx">get_sources_cpx</a></code></li>
 <li><code><a title="loglan_core.addons.word_sourcer.WordSourcer.get_sources_prim" href="#loglan_core.addons.word_sourcer.WordSourcer.get_sources_prim">get_sources_prim</a></code></li>
+<li><code><a title="loglan_core.addons.word_sourcer.WordSourcer.get_type_ids" href="#loglan_core.addons.word_sourcer.WordSourcer.get_type_ids">get_type_ids</a></code></li>
 <li><code><a title="loglan_core.addons.word_sourcer.WordSourcer.switch_prims" href="#loglan_core.addons.word_sourcer.WordSourcer.switch_prims">switch_prims</a></code></li>
 <li><code><a title="loglan_core.addons.word_sourcer.WordSourcer.words_from_source_cpd" href="#loglan_core.addons.word_sourcer.WordSourcer.words_from_source_cpd">words_from_source_cpd</a></code></li>
 <li><code><a title="loglan_core.addons.word_sourcer.WordSourcer.words_from_source_cpx" href="#loglan_core.addons.word_sourcer.WordSourcer.words_from_source_cpx">words_from_source_cpx</a></code></li>

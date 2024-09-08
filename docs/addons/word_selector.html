@@ -118,26 +118,6 @@ the resulting class instances.</p>
 <li>sqlalchemy.sql.visitors.Visitable</li>
 <li>typing.Generic</li>
 </ul>
-<h3>Static methods</h3>
-<dl>
-<dt id="loglan_core.addons.word_selector.WordSelector.type_filters"><code class="name flex">
-<span>def <span class="ident">type_filters</span></span>(<span>type_values: tuple) ‑> list[sqlalchemy.sql.elements.BinaryExpression]</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Builds a collection of type filters based on provided type values.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>type_values</code></strong> :&ensp;<code>tuple</code></dt>
-<dd>A tuple containing values for type_, type_x, and group.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>list[BinaryExpression]</code></dt>
-<dd>A list of SQLAlchemy BinaryExpression</dd>
-</dl>
-<p>instances representing the filters.</p></div>
-</dd>
-</dl>
 <h3>Instance variables</h3>
 <dl>
 <dt id="loglan_core.addons.word_selector.WordSelector.inherit_cache"><code class="name">prop <span class="ident">inherit_cache</span></code></dt>
@@ -148,23 +128,26 @@ the resulting class instances.</p>
 <h3>Methods</h3>
 <dl>
 <dt id="loglan_core.addons.word_selector.WordSelector.by_attributes"><code class="name flex">
-<span>def <span class="ident">by_attributes</span></span>(<span>self, **kwargs) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">by_attributes</span></span>(<span>self, case_sensitive: bool = False, **kwargs) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Selects all words by a set of attributes.</p>
 <h2 id="args">Args</h2>
 <dl>
+<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Whether the search should be case-sensitive.
+Defaults to False.</dd>
 <dt><strong><code>**kwargs</code></strong></dt>
 <dd>A set of attributes to filter by.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the filter applied.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.by_event"><code class="name flex">
-<span>def <span class="ident">by_event</span></span>(<span>self, event_id: int | None = None) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">by_event</span></span>(<span>self, event_id: int | None = None) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Applies a filter to select words associated with a specific event.</p>
@@ -175,12 +158,12 @@ the resulting class instances.</p>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the filter applied.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.by_key"><code class="name flex">
-<span>def <span class="ident">by_key</span></span>(<span>self, key: BaseKey | str, language: str | None = None, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">by_key</span></span>(<span>self, key: BaseKey | str, language: str | None = None, case_sensitive: bool = False) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Applies a filter to select words by a specific key.</p>
@@ -197,12 +180,12 @@ Defaults to False.</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the filter applied.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.by_name"><code class="name flex">
-<span>def <span class="ident">by_name</span></span>(<span>self, name: str, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">by_name</span></span>(<span>self, name: str, case_sensitive: bool = False) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Applies a filter to select words by a specific name.</p>
@@ -216,12 +199,12 @@ Defaults to False.</dd>
 <p>Defaults to False.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the filter applied.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.by_type"><code class="name flex">
-<span>def <span class="ident">by_type</span></span>(<span>self, type_: BaseType | str | None = None, type_x: str | None = None, group: str | None = None) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">by_type</span></span>(<span>self, type_: BaseType | str | None = None, type_x: str | None = None, group: str | None = None) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Applies a filter to select words by a specific type.</p>
@@ -242,28 +225,12 @@ E.g. "Cpx", "Prim", "Little"</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the filter applied.</dd>
 </dl></div>
 </dd>
-<dt id="loglan_core.addons.word_selector.WordSelector.filter_word_by_attributes"><code class="name flex">
-<span>def <span class="ident">filter_word_by_attributes</span></span>(<span>self, **kwargs)</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Generate a filter for a set of attributes.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>**kwargs</code></strong></dt>
-<dd>A set of attributes to filter by.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code>BinaryExpression</code></dt>
-<dd>A filter expression for the given attributes.</dd>
-</dl></div>
-</dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.get_affixes_of"><code class="name flex">
-<span>def <span class="ident">get_affixes_of</span></span>(<span>self, word_id: int) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">get_affixes_of</span></span>(<span>self, word_id: int) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Selects all affixes that are derived from the given word.</p>
@@ -274,12 +241,12 @@ E.g. "Cpx", "Prim", "Little"</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the filter applied.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.get_complexes_of"><code class="name flex">
-<span>def <span class="ident">get_complexes_of</span></span>(<span>self, word_id: int) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">get_complexes_of</span></span>(<span>self, word_id: int) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Selects all complexes that are derived from the given word.</p>
@@ -290,12 +257,12 @@ E.g. "Cpx", "Prim", "Little"</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the filter applied.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.get_derivatives_of"><code class="name flex">
-<span>def <span class="ident">get_derivatives_of</span></span>(<span>self, word_id: int) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">get_derivatives_of</span></span>(<span>self, word_id: int) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Selects all words that are derived from the given word.</p>
@@ -306,12 +273,12 @@ E.g. "Cpx", "Prim", "Little"</dd>
 </dl>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the filter applied.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.word_selector.WordSelector.with_relationships"><code class="name flex">
-<span>def <span class="ident">with_relationships</span></span>(<span>self, selected: Iterable[str] | None = None) ‑> <a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></span>
+<span>def <span class="ident">with_relationships</span></span>(<span>self, selected: Iterable[str] | None = None) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Adds relationships to the query.</p>
@@ -323,7 +290,7 @@ E.g. "Cpx", "Prim", "Little"</dd>
 <p>Defaults to None if all relationships should be included.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>A query with the relationships added.</dd>
 </dl></div>
 </dd>
@@ -333,6 +300,7 @@ E.g. "Cpx", "Prim", "Little"</dd>
 <li><code><b><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></b></code>:
 <ul class="hlist">
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.all" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.all">all</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.condition_by_attribute" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.condition_by_attribute">condition_by_attribute</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.execute">execute</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.fetchmany">fetchmany</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.scalar">scalar</a></code></li>
@@ -362,18 +330,16 @@ E.g. "Cpx", "Prim", "Little"</dd>
 <ul>
 <li>
 <h4><code><a title="loglan_core.addons.word_selector.WordSelector" href="#loglan_core.addons.word_selector.WordSelector">WordSelector</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.by_attributes" href="#loglan_core.addons.word_selector.WordSelector.by_attributes">by_attributes</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.by_event" href="#loglan_core.addons.word_selector.WordSelector.by_event">by_event</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.by_key" href="#loglan_core.addons.word_selector.WordSelector.by_key">by_key</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.by_name" href="#loglan_core.addons.word_selector.WordSelector.by_name">by_name</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.by_type" href="#loglan_core.addons.word_selector.WordSelector.by_type">by_type</a></code></li>
-<li><code><a title="loglan_core.addons.word_selector.WordSelector.filter_word_by_attributes" href="#loglan_core.addons.word_selector.WordSelector.filter_word_by_attributes">filter_word_by_attributes</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.get_affixes_of" href="#loglan_core.addons.word_selector.WordSelector.get_affixes_of">get_affixes_of</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.get_complexes_of" href="#loglan_core.addons.word_selector.WordSelector.get_complexes_of">get_complexes_of</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.get_derivatives_of" href="#loglan_core.addons.word_selector.WordSelector.get_derivatives_of">get_derivatives_of</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.inherit_cache" href="#loglan_core.addons.word_selector.WordSelector.inherit_cache">inherit_cache</a></code></li>
-<li><code><a title="loglan_core.addons.word_selector.WordSelector.type_filters" href="#loglan_core.addons.word_selector.WordSelector.type_filters">type_filters</a></code></li>
 <li><code><a title="loglan_core.addons.word_selector.WordSelector.with_relationships" href="#loglan_core.addons.word_selector.WordSelector.with_relationships">with_relationships</a></code></li>
 </ul>
 </li>
