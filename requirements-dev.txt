@@ -1,9 +1,9 @@
--r requirements-tests.txt
--r requirements-docs.txt
-
 black
 mypy
 radon
 setuptools
 wheel
 pylint
+
+-r requirements-tests.txt
+-r requirements-docs.txt
