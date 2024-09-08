@@ -4,14 +4,13 @@ This module provides utility functions for the loglan_core package.
 
 from __future__ import annotations
 
-from sqlalchemy import select, Select, true, or_, func
+from sqlalchemy import select, true, func
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.elements import BooleanClauseList
 from sqlalchemy.sql.expression import ColumnElement
 
 from loglan_core.event import BaseEvent
 from loglan_core.key import BaseKey
-from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
 
 
@@ -60,32 +59,3 @@ def filter_key_by_language(language: str | None = None) -> ColumnElement[bool]:
         ColumnElement[bool]: A filter condition for the base key's language.
     """
     return (BaseKey.language == language) if language else true()
-
-
-# TODO Move to WordSelector
-def select_type_by_property(
-    type_filter: str | list[str], id_only: bool = False
-) -> Select:
-    """
-    Args:
-      type_filter: Union[str, List[str]]:
-      id_only: bool:
-    Returns:
-    """
-
-    type_filter = (
-        [
-            type_filter,
-        ]
-        if isinstance(type_filter, str)
-        else type_filter
-    )
-
-    type_request = select(BaseType.id if id_only else BaseType).filter(
-        or_(
-            BaseType.type_.in_(type_filter),
-            BaseType.type_x.in_(type_filter),
-            BaseType.group.in_(type_filter),
-        )
-    )
-    return type_request

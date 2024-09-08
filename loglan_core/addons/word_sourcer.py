@@ -5,10 +5,12 @@ which makes it possible to work with word's sources
 
 from __future__ import annotations
 
-from sqlalchemy import select
+from typing import Iterable
+
+from sqlalchemy import select, or_
 from sqlalchemy.sql.selectable import Select
 
-from loglan_core.addons.utils import select_type_by_property
+from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
 from loglan_core.word_source import BaseWordSource
 
@@ -93,13 +95,35 @@ class WordSourcer:
         Returns:
 
         """
-        exclude_type_ids = select_type_by_property(
-            ["LW", "Cpd"], id_only=True
-        ).scalar_subquery()
+        exclude_ids = cls.get_type_ids(types=("LW", "Cpd"))
+
         return (
             select(BaseWord)
             .filter(BaseWord.name.in_(sources))
-            .filter(BaseWord.type_id.notin_(exclude_type_ids))
+            .filter(BaseWord.type_id.notin_(exclude_ids))
+        )
+
+    @classmethod
+    def get_type_ids(cls, types: Iterable[str]):
+        """
+        Get ids of specific types from provided list
+
+        Args:
+            types (Iterable[str]): List of types to get
+
+        Returns:
+            Subquery
+        """
+        return (
+            select(BaseType.id)
+            .filter(
+                or_(
+                    BaseType.type_.in_(types),
+                    BaseType.type_x.in_(types),
+                    BaseType.group.in_(types),
+                )
+            )
+            .scalar_subquery()
         )
 
     @staticmethod
@@ -157,8 +181,8 @@ class WordSourcer:
         sources = [s.strip() for s in sources_str.split("+") if s]
         return sources
 
-    @staticmethod
-    def words_from_source_cpd(sources: list[str]) -> Select[tuple[BaseWord]]:
+    @classmethod
+    def words_from_source_cpd(cls, sources: list[str]) -> Select[tuple[BaseWord]]:
         """
 
         Args:
@@ -168,11 +192,10 @@ class WordSourcer:
 
         """
 
-        type_ids = select_type_by_property(
-            ["LW", "Cpd"], id_only=True
-        ).scalar_subquery()
+        exclude_ids = cls.get_type_ids(types=("LW", "Cpd"))
+
         return (
             select(BaseWord)
             .filter(BaseWord.name.in_(sources))
-            .filter(BaseWord.type_id.in_(type_ids))
+            .filter(BaseWord.type_id.in_(exclude_ids))
         )
