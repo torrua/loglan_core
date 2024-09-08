@@ -127,8 +127,9 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             Self: A query with the filter applied.
         """
+        # pylint: disable=no-member
         return (
-            super()  # type: ignore
+            super() # type:ignore
             .__get__(self, type(self))
             .by_attributes(
                 class_=self.class_,
