@@ -9,7 +9,7 @@ from __future__ import annotations
 from functools import wraps
 from typing import Type, Iterable
 
-from sqlalchemy import and_, select, join, Select
+from sqlalchemy import and_, select, join
 from sqlalchemy.orm import selectinload
 from typing_extensions import Self
 
@@ -242,9 +242,20 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             Self: A query with the filter applied.
         """
-        return self.where(
-            self.class_.id.in_(self._select_derivative_ids_subquery(word_id))
+
+        derivative_ids_subquery = (
+            select(self.class_.id)
+            .select_from(
+                join(
+                    t_connect_words,
+                    self.class_,
+                    t_connect_words.c.child_id == self.class_.id,
+                )
+            )
+            .where(t_connect_words.c.parent_id == word_id)
         )
+
+        return self.where(self.class_.id.in_(derivative_ids_subquery))
 
     @order_by_name
     def get_affixes_of(self, word_id: int) -> Self:
@@ -275,27 +286,3 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
     @property
     def inherit_cache(self):  # pylint: disable=missing-function-docstring
         return True
-
-    def _select_derivative_ids_subquery(self, word_id: int) -> Select:
-        # TODO Move to derivatives
-        """
-        Selects the ids of all words that are derived from the given word.
-
-        Args:
-            word_id (int): The id of the word to filter by.
-
-        Returns:
-            Select: A subquery that selects the ids of all words that are
-            derived from the given word.
-        """
-        return (
-            select(self.class_.id)
-            .select_from(
-                join(
-                    t_connect_words,
-                    self.class_,
-                    t_connect_words.c.child_id == self.class_.id,
-                )
-            )
-            .where(t_connect_words.c.parent_id == word_id)
-        )
