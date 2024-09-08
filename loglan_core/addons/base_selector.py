@@ -39,18 +39,10 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         value: Any,
         is_sqlite: bool = False,
         case_sensitive: bool = False,
-        use_wildcard: bool = True,
-        wildcard_symbol: str = "*",
     ) -> BinaryExpression:
         Creates a filter to select items by a specific attribute value.
         Support wildcard and case-sensitive search.
-
-    Constants:
-    ----------
-    DEFAULT_WILDCARD_SYMBOL: str
     """
-
-    DEFAULT_WILDCARD_SYMBOL = "*"
 
     def execute(self, session: Session):
         """
@@ -109,8 +101,6 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         value: Any,
         is_sqlite: bool = False,
         case_sensitive: bool = False,
-        use_wildcard: bool = True,
-        wildcard_symbol: str = DEFAULT_WILDCARD_SYMBOL,
     ) -> BinaryExpression:
         """
         Applies a filter to select words by a specific attribute value.
@@ -122,9 +112,6 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
             is_sqlite (bool): If SQLite is being used. Defaults to False.
             case_sensitive (bool): Whether the search should be case-sensitive.
                 Defaults to False.
-            use_wildcard (bool): Whether to use wildcards. Defaults to True.
-            wildcard_symbol (str): The symbol to use for wildcards. Defaults to "*".
-
         Returns:
             BaseSelector: A query with the filter applied.
         """
@@ -132,8 +119,7 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         cls._is_class_acceptable(class_)
         attr = cls._get_attr(class_, attr)
 
-        if use_wildcard:
-            value = str(value).replace(wildcard_symbol, "%")
+        value = str(value).replace("*", "%")
 
         if case_sensitive:
             return attr.op("GLOB")(value) if is_sqlite else attr.like(value)
@@ -187,8 +173,6 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         class_: Type[BaseModel],
         is_sqlite: bool = False,
         case_sensitive: bool = False,
-        use_wildcard: bool = True,
-        wildcard_symbol: str = DEFAULT_WILDCARD_SYMBOL,
         **kwargs,
     ) -> Self:
         """
@@ -199,8 +183,6 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
             is_sqlite (bool): If SQLite is being used. Defaults to False.
             case_sensitive (bool): Whether the search should be case-sensitive.
                 Defaults to False.
-            use_wildcard (bool): Whether to use wildcards. Defaults to True.
-            wildcard_symbol (str): The symbol to use for wildcards. Defaults to "*".
             **kwargs: A set of attributes to filter by.
 
         Returns:
@@ -213,8 +195,6 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
                     k,
                     v,
                     is_sqlite=is_sqlite,
-                    wildcard_symbol=wildcard_symbol,
-                    use_wildcard=use_wildcard,
                     case_sensitive=case_sensitive,
                 )
                 for k, v in kwargs.items()
