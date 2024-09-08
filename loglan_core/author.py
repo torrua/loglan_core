@@ -101,7 +101,7 @@ class BaseAuthor(BaseModel):
     :type: :class:`~loglan_core.base.str_128` with max_length=128, nullable=True, unique=False
     """
 
-    contribution: Mapped[list[BaseWord]] = relationship(  # type: ignore
+    contribution: Mapped[list[BaseWord]] = relationship(
         back_populates="authors",
         secondary=t_connect_authors,
     )

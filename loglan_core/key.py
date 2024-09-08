@@ -67,7 +67,7 @@ class BaseKey(BaseModel):
     """*Key's language*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    definitions: Mapped[list[BaseDefinition]] = relationship(  # type: ignore
+    definitions: Mapped[list[BaseDefinition]] = relationship(
         secondary=t_connect_keys,
         back_populates="keys",
     )

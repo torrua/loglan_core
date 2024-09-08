@@ -1,4 +1,4 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
 Initial common functions for LOD Model Classes
 """

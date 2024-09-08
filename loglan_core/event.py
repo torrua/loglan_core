@@ -86,13 +86,13 @@ class BaseEvent(BaseModel):
     """*Event's suffix (used to create filename when exporting HTML file)*  
         **str** : max_length=16, nullable=False, unique=False"""
 
-    deprecated_words: Mapped[list[BaseWord]] = relationship(  # type: ignore
+    deprecated_words: Mapped[list[BaseWord]] = relationship(
         "BaseWord",
         back_populates="event_end",
         foreign_keys="BaseWord.event_end_id",
     )
 
-    appeared_words: Mapped[list[BaseWord]] = relationship(  # type: ignore
+    appeared_words: Mapped[list[BaseWord]] = relationship(
         "BaseWord",
         back_populates="event_start",
         foreign_keys="BaseWord.event_start_id",
