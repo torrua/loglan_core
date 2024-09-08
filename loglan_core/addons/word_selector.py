@@ -129,9 +129,9 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         """
         # pylint: disable=no-member
         return (
-            super() # type:ignore
+            super()  # type:ignore
             .__get__(self, type(self))
-            .by_attributes(
+            .by_attrs(
                 class_=self.class_,
                 is_sqlite=self.is_sqlite,
                 case_sensitive=case_sensitive,

@@ -16,3 +16,6 @@ class TestBaseSelector:
     def test_condition_by_attribute_wrong_attr(self, db_session):
         with pytest.raises(AttributeError) as _:
             BaseSelector.condition_by_attribute(Word, "test", "test")
+
+    def test__get_attr(self, db_session):
+        assert BaseSelector._get_attr(Word, Word.name) == Word.name

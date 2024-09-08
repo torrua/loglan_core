@@ -168,7 +168,7 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
                 f"Provided class_={class_} is not a {BaseModel} or its child"
             )
 
-    def by_attributes(
+    def by_attrs(
         self,
         class_: Type[BaseModel],
         is_sqlite: bool = False,
