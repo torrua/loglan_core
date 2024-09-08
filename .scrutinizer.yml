@@ -12,7 +12,7 @@ build:
     python: 3.12.6
   nodes:
     tests:
-      dependencies:
+      commands:
         before:
           pip install setuptools
           pip install -r requirements-dev.txt
