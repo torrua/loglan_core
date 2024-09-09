@@ -9,9 +9,4 @@ tools:
 
 build:
   environment:
-    python: 3.12.6
-  nodes:
-    tests:
-      dependencies:
-        before:
-          - python -m pip install -r requirements-dev.txt
+    python: 3.11.5
