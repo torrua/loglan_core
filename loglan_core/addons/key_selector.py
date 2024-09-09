@@ -23,9 +23,16 @@ This allows for flexible and powerful querying of keys in a codebase.
 
 from __future__ import annotations
 
+from typing import cast
+
 from sqlalchemy import select
 
 from loglan_core.addons.base_selector import BaseSelector
+from loglan_core.addons.utils import (
+    filter_word_by_event_id,
+    filter_key_by_word_cs,
+    filter_key_by_language,
+)
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
@@ -87,10 +94,10 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
             .join(t_connect_keys)
             .join(BaseDefinition)
             .join(BaseWord)
-            .where(BaseWord.filter_by_event_id(event_id))
+            .where(filter_word_by_event_id(event_id))
             .scalar_subquery()
         )
-        return self.where(self.class_.id.in_(subquery))
+        return cast(KeySelector, self.where(self.class_.id.in_(subquery)))
 
     def by_key(self, key: str, case_sensitive: bool = False) -> KeySelector:
         """
@@ -104,8 +111,9 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             KeySelector: The filtered KeySelector instance.
         """
-        return self.where(
-            self.class_.filter_by_key_cs(key, case_sensitive, self.is_sqlite)
+        return cast(
+            KeySelector,
+            self.where(filter_key_by_word_cs(key, case_sensitive, self.is_sqlite)),
         )
 
     def by_language(self, language: str | None = None) -> KeySelector:
@@ -119,4 +127,28 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             KeySelector: The filtered KeySelector instance.
         """
-        return self.where(self.class_.filter_by_language(language))
+        return cast(KeySelector, self.where(filter_key_by_language(language)))
+
+    def by_word_id(self, word_id: int) -> KeySelector:
+        """
+        Filters the keys by the given word ID.
+
+        Args:
+            word_id (int): The identifier of the word to filter by.
+
+        Returns:
+            KeySelector: The filtered KeySelector instance.
+
+        Keep in mind that duplicated keys from related definitions
+        will be counted with ```.count()``` but excluded from ```.all()``` request
+
+        """
+        return cast(
+            KeySelector,
+            self.distinct()
+            .join(t_connect_keys)
+            .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
+            .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
+            .filter(BaseWord.id == word_id)
+            .order_by(BaseKey.word.asc()),
+        )

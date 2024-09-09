@@ -53,8 +53,8 @@ This will select words that are associated with the specified event AND have the
 ## Get Results from WordSelector
 The WordSelector object returns a classic SQLAlchemy `Select` Object, so we can use it as normal within a session, like this:
 ```python
-all_words = session.execute(ws_combined).scalars().all()
-first_word = session.execute(ws_combined).scalar()
+all_words = session.scalars(ws_combined).all()
+first_word = session.scalar(ws_combined)
 ```
 Also, we can use the internal `all`, `scalar` or `fetchmany` methods:
 ```python
@@ -62,4 +62,4 @@ all_words = ws_combined.all(session)
 first_word = ws_combined.scalar(session)
 first_five_words = ws_combined.fetchmany(session, size=5)
 ```
-These methods will return a list of Word Objects that match the applied filters.
+These methods will return a list of Word Objects or a single Word Object that match the applied filters.

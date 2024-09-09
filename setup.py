@@ -1,11 +1,10 @@
-# !/usr/bin/env python
 # pylint: disable=C0114
 
 from io import open
 
 from setuptools import setup
 
-CURRENT_VERSION = "0.2.6"
+CURRENT_VERSION = "0.3.0"
 
 
 def read(filename):  # pylint: disable=C0116

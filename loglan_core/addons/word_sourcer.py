@@ -3,12 +3,80 @@ This module contains an addon for basic Word Model,
 which makes it possible to work with word's sources
 """
 
-from sqlalchemy import select
+from __future__ import annotations
+
+import re
+from typing import Iterable
+
+from sqlalchemy import select, or_
 from sqlalchemy.sql.selectable import Select
 
-from loglan_core.type import BaseType
-from loglan_core.word import BaseWord
-from loglan_core.word_source import BaseWordSource
+from loglan_core import Type
+from loglan_core import Word
+
+
+class WordSource:
+    """Word Source from Word.origin for Prims"""
+
+    PATTERN_SOURCE = r"\d+\/\d+\w"
+
+    LANGUAGES = {
+        "E": "English",
+        "C": "Chinese",
+        "H": "Hindi",
+        "R": "Russian",
+        "S": "Spanish",
+        "F": "French",
+        "J": "Japanese",
+        "G": "German",
+    }
+
+    def __init__(self, source):
+        compatibility_search = re.search(self.PATTERN_SOURCE, source)
+        self.coincidence, self.length, self.language = self.parse_source(
+            compatibility_search
+        )
+
+        transcription_search = re.search(rf"(?!{self.PATTERN_SOURCE}) .+", source)
+        self.transcription = (
+            str(transcription_search[0]).strip() if transcription_search else None
+        )
+
+    def __str__(self):
+        """
+        Returns:
+        """
+        return f"<{self.__class__.__name__} {self.as_string}>"
+
+    @staticmethod
+    def parse_source(
+        compatibility_search,
+    ) -> tuple[int, int, str]:
+        """
+
+        Args:
+            compatibility_search:
+
+        Returns:
+
+        """
+        if compatibility_search:
+            coincidence: int = int(compatibility_search[0][:-1].split("/")[0])
+            length: int = int(compatibility_search[0][:-1].split("/")[1])
+            language: str = compatibility_search[0][-1:]
+            return coincidence, length, language
+        raise ValueError("No compatible source found")
+
+    @property
+    def as_string(self) -> str:
+        """
+        Format WordSource as string, for example, '3/5R mesto'
+        Returns:
+            str
+        """
+        if not all([self.coincidence, self.length, self.language, self.transcription]):
+            return str()
+        return f"{self.coincidence}/{self.length}{self.language} {self.transcription}"
 
 
 class WordSourcer:
@@ -30,7 +98,7 @@ class WordSourcer:
     ]
 
     @classmethod
-    def get_sources_prim(cls, word: BaseWord):
+    def get_sources_prim(cls, word: Word):
         """
 
         Returns:
@@ -41,32 +109,31 @@ class WordSourcer:
         if not word.type.group == "Prim":
             return None
 
-        if word.type.type == "C-Prim":
+        if word.type.type_ == "C-Prim":
             return cls._get_sources_c_prim(word)
 
-        # TODO сделать вывод унифицированным
         return f"{word.name}: {word.origin}{' < ' + word.origin_x if word.origin_x else ''}"
 
     @staticmethod
-    def _get_sources_c_prim(word: BaseWord) -> list[BaseWordSource] | None:
+    def _get_sources_c_prim(word: Word) -> list[WordSource] | None:
         """
         Returns:
         """
-        if word.type.type != "C-Prim":
+        if word.type.type_ != "C-Prim":
             return None
 
         sources = str(word.origin).split(" | ")
 
-        return [BaseWordSource(source) for source in sources]
+        return [WordSource(source) for source in sources]
 
     @classmethod
     def get_sources_cpx(
-        cls, word: BaseWord, as_str: bool = False
-    ) -> Select[tuple[BaseWord]] | list[str]:
+        cls, word: Word, as_str: bool = False
+    ) -> Select[tuple[Word]] | list[str]:
         """Extract source words from self.origin field accordingly
         Args:
-            word (BaseWord):
-            as_str (bool): return BaseWord objects if False else as simple str
+            word (Word):
+            as_str (bool): return Word objects if False else as simple str
             (Default value = False)
         Example:
             'foldjacea' > ['forli', 'djano', 'cenja']
@@ -82,7 +149,7 @@ class WordSourcer:
         return sources if as_str else cls.words_from_source_cpx(sources)
 
     @classmethod
-    def words_from_source_cpx(cls, sources: list[str]) -> Select[tuple[BaseWord]]:
+    def words_from_source_cpx(cls, sources: list[str]) -> Select[tuple[Word]]:
         """
 
         Args:
@@ -91,17 +158,39 @@ class WordSourcer:
         Returns:
 
         """
-        exclude_type_ids = BaseType.by_property(
-            ["LW", "Cpd"], id_only=True
-        ).scalar_subquery()
+        exclude_ids = cls.get_type_ids(types=("LW", "Cpd"))
+
         return (
-            select(BaseWord)
-            .filter(BaseWord.name.in_(sources))
-            .filter(BaseWord.type_id.notin_(exclude_type_ids))
+            select(Word)
+            .filter(Word.name.in_(sources))
+            .filter(Word.type_id.notin_(exclude_ids))
+        )
+
+    @classmethod
+    def get_type_ids(cls, types: Iterable[str]):
+        """
+        Get ids of specific types from provided list
+
+        Args:
+            types (Iterable[str]): List of types to get
+
+        Returns:
+            Subquery
+        """
+        return (
+            select(Type.id)
+            .filter(
+                or_(
+                    Type.type_.in_(types),
+                    Type.type_x.in_(types),
+                    Type.group.in_(types),
+                )
+            )
+            .scalar_subquery()
         )
 
     @staticmethod
-    def _prepare_sources_cpx(word: BaseWord) -> list[str]:
+    def _prepare_sources_cpx(word: Word) -> list[str]:
         """
         Returns:
         """
@@ -119,27 +208,27 @@ class WordSourcer:
 
     @classmethod
     def get_sources_cpd(
-        cls, word: BaseWord, as_str: bool = False
-    ) -> Select[tuple[BaseWord]] | list[str]:
+        cls, word: Word, as_str: bool = False
+    ) -> Select[tuple[Word]] | list[str]:
         """Extract source words from self.origin field accordingly
 
         Args:
-          word: BaseWord:
-          as_str: bool: return BaseWord objects if False else as simple str
+          word: Word:
+          as_str: bool: return Word objects if False else as simple str
           (Default value = False)
 
         Returns:
           List of words from which the self.name was created
         """
 
-        if not word.type.type == "Cpd":
+        if not word.type.type_ == "Cpd":
             return []
 
         sources = cls._prepare_sources_cpd(word)
         return sources if as_str else cls.words_from_source_cpd(sources)
 
     @staticmethod
-    def _prepare_sources_cpd(word: BaseWord) -> list[str]:
+    def _prepare_sources_cpd(word: Word) -> list[str]:
         """
         Returns:
         """
@@ -155,8 +244,8 @@ class WordSourcer:
         sources = [s.strip() for s in sources_str.split("+") if s]
         return sources
 
-    @staticmethod
-    def words_from_source_cpd(sources: list[str]) -> Select[tuple[BaseWord]]:
+    @classmethod
+    def words_from_source_cpd(cls, sources: list[str]) -> Select[tuple[Word]]:
         """
 
         Args:
@@ -166,9 +255,10 @@ class WordSourcer:
 
         """
 
-        type_ids = BaseType.by_property(["LW", "Cpd"], id_only=True).scalar_subquery()
+        type_ids = cls.get_type_ids(types=("LW", "Cpd"))
+
         return (
-            select(BaseWord)
-            .filter(BaseWord.name.in_(sources))
-            .filter(BaseWord.type_id.in_(type_ids))
+            select(Word)
+            .filter(Word.name.in_(sources))
+            .filter(Word.type_id.in_(type_ids))
         )

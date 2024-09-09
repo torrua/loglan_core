@@ -1,16 +1,14 @@
 """Base Model unit tests."""
 import pytest
 
-from loglan_core.word import BaseWord as Word
-from loglan_core.type import BaseType as Type
-from loglan_core.addons.word_sourcer import WordSourcer
+from loglan_core import Word
+from loglan_core.addons.word_sourcer import WordSourcer, WordSource
 from loglan_core.addons.word_selector import WordSelector
-from loglan_core.word_source import BaseWordSource as WordSource
 from tests.data import other_words
 
 
 @pytest.mark.usefixtures("db_session")
-class TestWord:
+class TestWordSources:
     """Word tests."""
 
     aws = WordSourcer()

@@ -2,8 +2,8 @@
 This module contains an "Export extensions" for LOD dictionary SQL model.
 Add export() function to db object for returning its text string presentation.
 """
-from typing import Iterable, Callable, Type
 
+from typing import Iterable, Callable, Type
 
 from loglan_core.addons.export_word_converter import ExportWordConverter
 from loglan_core.author import BaseAuthor
@@ -41,6 +41,9 @@ class Exporter:
     Raises:
         ValueError: If the object type is not supported for export.
     """
+
+    FORMAT_DATE_EVENT = "%m/%d/%Y"
+    FORMAT_DATE_SETTING = "%d.%m.%Y %H:%M:%S"
 
     @classmethod
     def export(cls, obj, separator: str = DEFAULT_SEPARATOR) -> str:
@@ -102,8 +105,8 @@ class Exporter:
         """
         return obj.abbreviation, obj.full_name, obj.notes
 
-    @staticmethod
-    def export_event(obj: BaseEvent) -> tuple:
+    @classmethod
+    def export_event(cls, obj: BaseEvent) -> tuple:
         """
         Prepare Event data for exporting to text file
 
@@ -113,7 +116,7 @@ class Exporter:
         return (
             obj.event_id,
             obj.name,
-            obj.date.strftime("%m/%d/%Y"),  # TODO Add format as class constant
+            obj.date.strftime(cls.FORMAT_DATE_EVENT),
             obj.definition,
             obj.annotation,
             obj.suffix,
@@ -127,10 +130,10 @@ class Exporter:
         Returns:
             tuple: elements for export
         """
-        return obj.name, obj.type, str(obj.allowed)
+        return obj.name, obj.type_, str(obj.allowed)
 
-    @staticmethod
-    def export_setting(obj: BaseSetting) -> tuple:
+    @classmethod
+    def export_setting(cls, obj: BaseSetting) -> tuple:
         """
         Prepare Setting data for exporting to text file
 
@@ -138,7 +141,7 @@ class Exporter:
             tuple: elements for export
         """
         return (
-            obj.date.strftime("%d.%m.%Y %H:%M:%S"),  # TODO Add format as class constant
+            obj.date.strftime(cls.FORMAT_DATE_SETTING),
             obj.db_version,
             obj.last_word_id,
             obj.db_release,
@@ -153,7 +156,7 @@ class Exporter:
             tuple: elements for export
         """
         return (
-            obj.type,
+            obj.type_,
             obj.type_x,
             obj.group,
             str(obj.parentable),
@@ -175,7 +178,7 @@ class Exporter:
         origin = ewc.stringer(obj.origin)
         return (
             obj.id_old,
-            obj.type.type,
+            obj.type.type_,
             obj.type.type_x,
             ewc.e_affixes,
             match,

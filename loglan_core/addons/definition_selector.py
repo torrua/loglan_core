@@ -11,9 +11,16 @@ Classes:
 
 from __future__ import annotations
 
-from sqlalchemy import select
+from typing import cast
+
+from sqlalchemy import select, true
 
 from loglan_core.addons.base_selector import BaseSelector
+from loglan_core.addons.utils import (
+    filter_word_by_event_id,
+    filter_key_by_word_cs,
+    filter_key_by_language,
+)
 from loglan_core.connect_tables import t_connect_keys
 from loglan_core.definition import BaseDefinition
 from loglan_core.key import BaseKey
@@ -86,10 +93,10 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             select(self.class_.id)
             .join(t_connect_keys)
             .join(BaseWord)
-            .where(BaseWord.filter_by_event_id(event_id))
+            .where(filter_word_by_event_id(event_id))
             .scalar_subquery()
         )
-        return self.where(self.class_.id.in_(subquery))
+        return cast(DefinitionSelector, self.where(self.class_.id.in_(subquery)))
 
     def by_key(
         self,
@@ -111,17 +118,13 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         """
 
         search_key = key.word if isinstance(key, BaseKey) else str(key)
-        filter_key = BaseKey.filter_by_key_cs(
-            search_key, case_sensitive, self.is_sqlite
-        )
-        filter_language = BaseKey.filter_by_language(
+        filter_key = filter_key_by_word_cs(search_key, case_sensitive, self.is_sqlite)
+        filter_language = filter_key_by_language(
             key.language if isinstance(key, BaseKey) else language
         )
 
-        statement = self.join(self.class_.relationship_keys).filter(
-            filter_key, filter_language
-        )
-        return statement.distinct()
+        statement = self.join(self.class_.keys).filter(filter_key, filter_language)
+        return cast(DefinitionSelector, statement.distinct())
 
     def by_language(self, language: str | None = None) -> DefinitionSelector:
         """
@@ -134,4 +137,5 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             DefinitionSelector: The filtered DefinitionSelector instance.
         """
-        return self.filter(self.class_.filter_language(language))
+        filter_language = self.class_.language == language if language else true()
+        return cast(DefinitionSelector, self.filter(filter_language))

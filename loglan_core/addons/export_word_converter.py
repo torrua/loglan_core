@@ -1,6 +1,7 @@
 """
 This module contains ExportWordConverter for Word model of LOD.
 """
+
 from loglan_core.word import BaseWord
 
 
@@ -59,7 +60,9 @@ class ExportWordConverter:
         Returns:
             str: A string with the names of the complexes separated by a vertical bar.
         """
-        return " | ".join(cpx.name for cpx in self.word.complexes)
+        return " | ".join(
+            cpx.name for cpx in self.word.derivatives if cpx.type.group == "Cpx"
+        )
 
     @property
     def e_affixes(self) -> str:
@@ -69,7 +72,11 @@ class ExportWordConverter:
         Returns:
             str: A string containing all affixes of the word with hyphens removed.
         """
-        return " ".join(afx.name.replace("-", "") for afx in self.word.affixes).strip()
+        return " ".join(
+            afx.name.replace("-", "")
+            for afx in self.word.derivatives
+            if afx.type.type_x == "Affix"
+        ).strip()
 
     @property
     def e_djifoa(self) -> str:

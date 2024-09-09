@@ -1,10 +1,12 @@
-# pylint: disable=C0103
+# pylint: disable=invalid-name
 """
 Initial common functions for LOD Model Classes
 """
+from __future__ import annotations
+
 from datetime import datetime
 
-from sqlalchemy import String, inspect, func
+from sqlalchemy import String, inspect, func, select
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session, registry as rg
 from typing_extensions import Annotated
@@ -129,11 +131,21 @@ class BaseModel(DeclarativeBase):
                 [
                     f"{k}={v!r}"
                     for k, v in self.__dict__.items()
-                    if not k.startswith("_") and k not in ["created", "updated"] and v
+                    if self._filter_add_to_repr(k, v)
                 ]
             )
         )
         return f"{self.__class__.__name__}({obj_str})"
+
+    @staticmethod
+    def _filter_add_to_repr(k, v):
+        """
+        Static method that filters out keys that start with "_" and keys
+        that are "created" or "updated" and keys without values from the
+        object's attributes. The method is used to generate a string
+        representation of the object. It is used internally by the __repr__.
+        """
+        return not k.startswith("_") and k not in ["created", "updated"] and v
 
     @classmethod
     def get_by_id(cls, session: Session, cid: int):
@@ -149,7 +161,7 @@ class BaseModel(DeclarativeBase):
             Object of class type or None: The instance of the class with
             the given id, or None if no such instance exists.
         """
-        return session.query(cls).filter(cls.id == cid).first()
+        return session.get(cls, cid)
 
     @classmethod
     def get_all(cls, session: Session):
@@ -163,7 +175,7 @@ class BaseModel(DeclarativeBase):
         Returns:
             list: A list of all instances of the class.
         """
-        return session.query(cls).all()
+        return session.scalars(select(cls)).all()
 
     def export(self):
         """
@@ -178,7 +190,8 @@ class BaseModel(DeclarativeBase):
         return {
             k: v
             for k, v in sorted(self.__dict__.items())
-            if not str(k).startswith("_") and k not in ["created", "updated"]
+            if not str(k).startswith("_")
+            and k not in ["created", "updated", *self.relationships()]
         }
 
     @classmethod

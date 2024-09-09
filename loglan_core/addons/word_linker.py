@@ -15,20 +15,6 @@ class WordLinker:
     relationships between words and to associate authors with words.
     """
 
-    @staticmethod
-    def _is_parented(parent: BaseWord, child: BaseWord) -> bool:
-        """
-        Determines if a given 'child' word is a derivative of a specified 'parent' word.
-
-        Args:
-            parent (BaseWord): A word which may be the parent.
-            child (BaseWord): A word which may be the child or derivative of the parent.
-
-        Returns:
-            bool: True if child is a derivative of parent, False otherwise.
-        """
-        return child in parent.derivatives
-
     @classmethod
     def add_child(cls, parent: BaseWord, child: BaseWord) -> str:
         """
@@ -50,7 +36,7 @@ class WordLinker:
             raise TypeError(f"{child} is not parentable")
 
         if child not in parent.derivatives:
-            parent.derivatives_query.append(child)
+            parent.derivatives.append(child)
         return child.name
 
     # mark_as_parent_for
@@ -67,13 +53,13 @@ class WordLinker:
         Raises:
             TypeError: If any of the children words are not parentable.
         """
-        new_children = list(set(children) - set(parent.derivatives_query))
+        new_children = list(set(children) - set(parent.derivatives))
 
         if not all(child.type.parentable for child in new_children):
             raise TypeError(f"At least some of {new_children} are not parentable")
 
         if new_children:
-            parent.derivatives_query.extend(new_children)
+            parent.derivatives.extend(new_children)
 
     @staticmethod
     def add_author(word: BaseWord, author: BaseAuthor) -> str:
@@ -88,13 +74,8 @@ class WordLinker:
         Returns:
             str: The abbreviation of the author's name.
         """
-        if (
-            not word.authors_query.filter(
-                BaseAuthor.abbreviation == author.abbreviation
-            ).count()
-            > 0
-        ):
-            word.authors_query.append(author)
+        if author not in word.authors:
+            word.authors.append(author)
         return author.abbreviation
 
     @staticmethod
@@ -109,4 +90,4 @@ class WordLinker:
         """
         new_authors = list(set(authors) - set(word.authors))
         if new_authors:
-            word.authors_query.extend(new_authors)
+            word.authors.extend(new_authors)

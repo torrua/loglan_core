@@ -7,11 +7,9 @@ from __future__ import annotations
 from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, Text
-from sqlalchemy import true
 from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
-from sqlalchemy.sql.expression import ColumnElement
 
 from loglan_core.base import BaseModel, str_008, str_016, str_064, str_255
 from loglan_core.connect_tables import t_connect_keys
@@ -43,8 +41,8 @@ class BaseDefinition(BaseModel):
         notes (Mapped[str_255] | None): The notes of the word.
         APPROVED_CASE_TAGS (tuple): A tuple of approved case tags.
         KEY_PATTERN (str): The pattern for the key.
-        relationship_keys (Mapped[list[BaseKey]]): The relationship of keys.
-        relationship_source_word (Mapped["BaseWord"]): The relationship of source word.
+        keys (Mapped[list[BaseKey]]): The relationship of keys.
+        source_word (Mapped["BaseWord"]): The relationship of source word.
 
     """
 
@@ -100,44 +98,16 @@ class BaseDefinition(BaseModel):
     APPROVED_CASE_TAGS = ("B", "C", "D", "F", "G", "J", "K", "N", "P", "S", "V")
     KEY_PATTERN = r"(?<=\«)(.+?)(?=\»)"
 
-    relationship_keys: Mapped[list[BaseKey]] = relationship(
-        BaseKey.__name__,
+    keys: Mapped[list[BaseKey]] = relationship(
+        BaseKey,
         secondary=t_connect_keys,
-        back_populates="relationship_definitions",
-        lazy="dynamic",
+        back_populates="definitions",
     )
 
-    relationship_source_word: Mapped[BaseWord] = relationship(  # type: ignore
+    source_word: Mapped[BaseWord] = relationship(
         "BaseWord",
-        back_populates="relationship_definitions",
+        back_populates="definitions",
     )
-
-    @property
-    def keys_query(self):
-        """
-        Returns:
-        """
-        return self.relationship_keys
-
-    @property
-    def keys(self):
-        """
-        Get all keys related to the BaseDefinition.
-
-        Returns:
-            list[BaseKey]: All keys related to the BaseDefinition.
-        """
-        return self.keys_query.all()
-
-    @property
-    def source_word(self):
-        """
-        Get source word related to the BaseDefinition.
-
-        Returns:
-            BaseWord: Source word of the BaseDefinition.
-        """
-        return self.relationship_source_word
 
     @property
     def grammar(self) -> str:
@@ -151,16 +121,3 @@ class BaseDefinition(BaseModel):
             f"({self.slots if self.slots else ''}"
             f"{self.grammar_code if self.grammar_code else ''})"
         )
-
-    @classmethod
-    def filter_language(cls, language: str | None = None) -> ColumnElement[bool]:
-        """
-        Filter by specified language.
-
-        Args:
-            language (str, optional): The language to filter by. Defaults to None.
-
-        Returns:
-            ColumnElement[bool]: The filtered query.
-        """
-        return cls.language == language if language else true()

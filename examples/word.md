@@ -16,7 +16,9 @@ This method returns a statement for the database, which we execute using the `se
 from loglan_core.addons.word_selector import WordSelector
 
 request = WordSelector().by_name("proga")
-word = session.execute(request).first()
+word = session.scalar(request)
+# or
+word = WordSelector().by_name("proga").scalar(session)
 
 print(word)
 >>> <BaseWord ID **** proga>

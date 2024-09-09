@@ -1,5 +1,5 @@
 import pytest
-from loglan_core import WordSource
+from loglan_core.addons.word_sourcer import WordSource
 from tests.data import word_sources
 
 
@@ -15,14 +15,11 @@ class TestWordSource:
 
     def test_str(self):
         ws: WordSource = WordSource(word_sources[0])  # "2/3E act"
-        assert str(ws) == '<BaseWordSource 2/3E act>'
+        assert str(ws) == '<WordSource 2/3E act>'
 
     def test_init_error(self):
-        ws: WordSource = WordSource(word_sources[3])  # "4/4S"
-        assert ws.coincidence is None
-        assert ws.length is None
-        assert ws.language is None
-        assert ws.transcription is None
+        with pytest.raises(ValueError):
+            WordSource(word_sources[3])  # "4/4S"
 
     def test_as_string(self):
         ws_0: WordSource = WordSource(word_sources[0])  # "2/3E act"

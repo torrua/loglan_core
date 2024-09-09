@@ -13,6 +13,7 @@ class TestBase:
     def test_get_all(self, db_session):
         words = Word.get_all(db_session)
         assert len(words) == 13
+        assert isinstance(words[0], Word)
 
     def test_export(self, db_session):
             kakto: Word = db_session.query(Word).filter(Word.name == 'kakto').first()
@@ -26,9 +27,9 @@ class TestBase:
 
     def test_attributes_all(self):
         assert Word.attributes_all() == {
-            'relationship_authors', 'relationship_definitions', 'relationship_derivatives',
-            'relationship_event_end', 'relationship_event_start', 'relationship_parents',
-            'relationship_type', 'created', 'event_end_id', 'event_start_id',
+            'authors', 'definitions', 'derivatives',
+            'event_end', 'event_start', 'parents',
+            'type', 'created', 'event_end_id', 'event_start_id',
             'id', 'id_old', 'match', 'name', 'notes', 'origin',
             'origin_x', 'rank', 'tid_old', 'type_id', 'updated', 'year'}
 
@@ -41,16 +42,16 @@ class TestBase:
 
     def test_attributes_extended(self):
         assert Word.attributes_extended() == {
-            'relationship_authors', 'relationship_definitions', 'relationship_derivatives',
-            'relationship_event_end', 'relationship_event_start',
-            'relationship_parents', 'relationship_type', 'created', 'id', 'id_old',
+            'authors', 'definitions', 'derivatives',
+            'event_end', 'event_start',
+            'parents', 'type', 'created', 'id', 'id_old',
             'match', 'name', 'notes', 'origin',
             'origin_x', 'rank', 'updated', 'year'}
 
     def test_relationships(self):
         assert Word.relationships() == {
-            'relationship_authors', 'relationship_definitions', 'relationship_derivatives',
-            'relationship_event_end', 'relationship_event_start', 'relationship_parents', 'relationship_type'}
+            'authors', 'definitions', 'derivatives',
+            'event_end', 'event_start', 'parents', 'type'}
 
     def test_foreign_keys(self):
         assert Word.foreign_keys() == {
