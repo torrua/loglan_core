@@ -10,3 +10,8 @@ tools:
 build:
   environment:
     python: 3.11.5
+  nodes:
+    tests:
+      dependencies:
+        before:
+          - pip install -r requirements-tests.txt
