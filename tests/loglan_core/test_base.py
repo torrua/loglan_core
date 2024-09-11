@@ -27,8 +27,8 @@ class TestBase:
 
     def test_attributes_all(self):
         assert Word.attributes_all() == {
-            'authors', 'definitions', 'derivatives',
-            'event_end', 'event_start', 'parents',
+            'affixes', 'authors', 'complexes', 'definitions',
+            'derivatives', 'event_end', 'event_start', 'parents',
             'type', 'created', 'event_end_id', 'event_start_id',
             'id', 'id_old', 'match', 'name', 'notes', 'origin',
             'origin_x', 'rank', 'tid_old', 'type_id', 'updated', 'year'}
@@ -42,8 +42,8 @@ class TestBase:
 
     def test_attributes_extended(self):
         assert Word.attributes_extended() == {
-            'authors', 'definitions', 'derivatives',
-            'event_end', 'event_start',
+            'affixes', 'authors', 'complexes', 'definitions',
+            'derivatives', 'event_end', 'event_start',
             'parents', 'type', 'created', 'id', 'id_old',
             'match', 'name', 'notes', 'origin',
             'origin_x', 'rank', 'updated', 'year'}

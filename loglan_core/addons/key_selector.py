@@ -23,7 +23,7 @@ This allows for flexible and powerful querying of keys in a codebase.
 
 from __future__ import annotations
 
-from typing import cast
+from typing import Type
 
 from sqlalchemy import select
 
@@ -49,7 +49,12 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         is_sqlite (bool): Indicator if the object is being used with SQLite or not.
     """
 
-    def __init__(self, class_=BaseKey, is_sqlite: bool = False) -> None:
+    def __init__(
+        self,
+        model: Type = BaseKey,
+        is_sqlite: bool = False,
+        case_sensitive: bool = False,
+    ) -> None:
         """
         Initializes the KeySelector object with the provided parameters.
 
@@ -61,13 +66,8 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Raises:
             ValueError: If the provided class_ is not a subclass of BaseKey.
         """
-        if not issubclass(class_, BaseKey):
-            raise ValueError(
-                f"Provided attribute class_={class_} is not a {BaseKey} or its child"
-            )
-        super().__init__(class_)
-        self.class_ = class_
-        self.is_sqlite = is_sqlite
+
+        super().__init__(model, is_sqlite, case_sensitive)
 
     @property
     def inherit_cache(self):  # pylint: disable=C0116
@@ -90,31 +90,30 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         """
 
         subquery = (
-            select(self.class_.id)
+            select(self.model.id)
             .join(t_connect_keys)
             .join(BaseDefinition)
             .join(BaseWord)
             .where(filter_word_by_event_id(event_id))
             .scalar_subquery()
         )
-        return cast(KeySelector, self.where(self.class_.id.in_(subquery)))
+        self._statement = self._statement.where(self.model.id.in_(subquery))
+        return self
 
-    def by_key(self, key: str, case_sensitive: bool = False) -> KeySelector:
+    def by_key(self, key: str) -> KeySelector:
         """
         Filters the keys by the given key.
 
         Args:
             key (str): The key to filter by.
-            case_sensitive (bool): Determines whether the key search should be
-                case-sensitive. Defaults to False.
 
         Returns:
             KeySelector: The filtered KeySelector instance.
         """
-        return cast(
-            KeySelector,
-            self.where(filter_key_by_word_cs(key, case_sensitive, self.is_sqlite)),
+        self._statement = self._statement.where(
+            filter_key_by_word_cs(key, self.case_sensitive, self.is_sqlite)
         )
+        return self
 
     def by_language(self, language: str | None = None) -> KeySelector:
         """
@@ -127,7 +126,8 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             KeySelector: The filtered KeySelector instance.
         """
-        return cast(KeySelector, self.where(filter_key_by_language(language)))
+        self._statement = self._statement.where(filter_key_by_language(language))
+        return self
 
     def by_word_id(self, word_id: int) -> KeySelector:
         """
@@ -143,12 +143,12 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         will be counted with ```.count()``` but excluded from ```.all()``` request
 
         """
-        return cast(
-            KeySelector,
-            self.distinct()
+        self._statement = (
+            self._statement.distinct()
             .join(t_connect_keys)
             .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
             .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
             .filter(BaseWord.id == word_id)
-            .order_by(BaseKey.word.asc()),
+            .order_by(BaseKey.word.asc())
         )
+        return self

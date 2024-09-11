@@ -23,37 +23,37 @@ class TestDefinitionSelector:
 
     @staticmethod
     def test_by_event_specified( db_session):
-        definitions = db_session.execute(DefinitionSelector().by_event(2)).scalars().all()
+        definitions = DefinitionSelector().by_event(2).all(db_session)
         result = sorted(d.id for d in definitions)
         assert result == [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16]
 
     @staticmethod
     def test_by_event_unspecified(db_session):
-        definitions = db_session.execute(DefinitionSelector().by_event()).scalars().all()
+        definitions = DefinitionSelector().by_event().all(db_session)
 
         result = sorted(d.id for d in definitions)
         assert len(result) == 17
 
     def test_by_language(self, db_session):
-        definitions = db_session.execute(DefinitionSelector().by_language("es")).scalars().all()
+        definitions = DefinitionSelector().by_language("es").all(db_session)
         assert len(definitions) == 2
 
     def test_by_key_as_str(self, db_session):
-        definitions = db_session.execute(DefinitionSelector().by_key("test")).scalars().all()
+        definitions = DefinitionSelector().by_key("test").all(db_session)
         assert len(definitions) == 5
 
     def test_by_key_as_str_by_language(self, db_session):
-        definitions = db_session.execute(DefinitionSelector().by_key("test").by_language("es")).scalars().all()
+        definitions = DefinitionSelector().by_key("test").by_language("es").all(db_session)
         assert len(definitions) == 1
 
     def test_by_key_as_obj_with_language(self, db_session):
-        key = db_session.execute(KeySelector().by_key("act").by_language("en")).scalars().first()
-        definitions = db_session.execute(DefinitionSelector().by_key(key)).scalars().all()
+        key = KeySelector().by_key("act").by_language("en").scalar(db_session)
+        definitions = DefinitionSelector().by_key(key).all(db_session)
         result = sorted(d.id for d in definitions)
         assert result == [6, 9, 15, 16]
 
-        key = db_session.execute(KeySelector().by_key("act").by_language("es")).scalars().first()
-        definitions = db_session.execute(DefinitionSelector().by_key(key)).scalars().all()
+        key = KeySelector().by_key("act").by_language("es").scalar(db_session)
+        definitions = DefinitionSelector().by_key(key).all(db_session)
         result = sorted(d.id for d in definitions)
         assert result == [15, ]
 

@@ -11,7 +11,7 @@ Classes:
 
 from __future__ import annotations
 
-from typing import cast
+from typing import Type
 
 from sqlalchemy import select, true
 
@@ -44,16 +44,20 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         ValueError: If the provided class_ is not a subclass of BaseDefinition.
 
     Attributes:
-        class_: The class to be used as the returned object.
+        model: The class to be used as the returned object.
         is_sqlite: Boolean specifying if the object is being used with SQLite or not.
     """
 
-    def __init__(self, class_=BaseDefinition, is_sqlite: bool = False):
+    def __init__(
+        self,
+        model: Type = BaseDefinition,
+        is_sqlite: bool = False,
+        case_sensitive: bool = False,
+    ):
         """
         Initializes the object with the given parameters.
 
         Args:
-            class_ (Type[BaseDefinition]): The class to be used as the returned object.
             Must be a subclass of BaseDefinition.
             is_sqlite (bool): Whether the object is being used with SQLite or not.
 
@@ -63,13 +67,7 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             None
         """
-        if not issubclass(class_, BaseDefinition):
-            raise ValueError(
-                f"Provided attribute class_={class_} is not a {BaseDefinition} or its child"
-            )
-        super().__init__(class_)
-        self.class_ = class_
-        self.is_sqlite = is_sqlite
+        super().__init__(model, is_sqlite, case_sensitive)
 
     @property
     def inherit_cache(self):  # pylint: disable=C0116
@@ -90,13 +88,14 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             DefinitionSelector: The filtered DefinitionSelector instance.
         """
         subquery = (
-            select(self.class_.id)
+            select(self.model.id)
             .join(t_connect_keys)
             .join(BaseWord)
             .where(filter_word_by_event_id(event_id))
             .scalar_subquery()
         )
-        return cast(DefinitionSelector, self.where(self.class_.id.in_(subquery)))
+        self._statement = self._statement.where(self.model.id.in_(subquery))
+        return self
 
     def by_key(
         self,
@@ -123,8 +122,12 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             key.language if isinstance(key, BaseKey) else language
         )
 
-        statement = self.join(self.class_.keys).filter(filter_key, filter_language)
-        return cast(DefinitionSelector, statement.distinct())
+        self._statement = (
+            self._statement.join(self.model.keys)
+            .where(filter_key, filter_language)
+            .distinct()
+        )
+        return self
 
     def by_language(self, language: str | None = None) -> DefinitionSelector:
         """
@@ -137,5 +140,7 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             DefinitionSelector: The filtered DefinitionSelector instance.
         """
-        filter_language = self.class_.language == language if language else true()
-        return cast(DefinitionSelector, self.filter(filter_language))
+        filter_language = self.model.language == language if language else true()
+        self._statement = self._statement.where(filter_language)
+
+        return self

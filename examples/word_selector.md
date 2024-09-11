@@ -40,8 +40,9 @@ ws_name = ws.by_name(name='proga')
 ```
 The `by_name` method, like `by_event`, also returns a new instance of WordSelector with the filter applied.
 Similarly, we can filter words by a specific key using the `by_key` method:
+
 ```python
-ws_key = ws.by_key(key='program')
+ws_key = ws.by_key(type_id='program')
 ```
 
 We can also combine filters:

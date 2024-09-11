@@ -4,16 +4,16 @@ This module provides a base selector for SQLAlchemy
 
 from __future__ import annotations
 
-from typing import Any, Type
-from typing_extensions import Self
+from typing import Type
 
-from sqlalchemy import Select, BinaryExpression
-from sqlalchemy.orm import Session, InstrumentedAttribute
+from sqlalchemy import true, and_, select
+from sqlalchemy.orm import Session
+from typing_extensions import Self
 
 from loglan_core.base import BaseModel
 
 
-class BaseSelector(Select):  # pylint: disable=too-many-ancestors
+class BaseSelector:  # pylint: disable=too-many-ancestors
     """
     A custom base selector that inherits from SQLAlchemy's Select class.
     This class provides methods to execute a session and fetch results
@@ -54,7 +54,7 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         Returns:
         ResultProxy: The result of the executed session.
         """
-        return session.execute(self)
+        return session.execute(self._statement)
 
     def all(self, session: Session):
         """
@@ -66,7 +66,7 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         Returns:
         List[ResultRow]: All the results of the executed session.
         """
-        return self.execute(session).scalars().all()
+        return session.scalars(self._statement).all()
 
     def scalar(self, session: Session):
         """
@@ -78,7 +78,7 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         Returns:
         Any: The scalar result of the executed session.
         """
-        return self.execute(session).scalar()
+        return session.scalar(self._statement)
 
     def fetchmany(self, session: Session, size: int | None = None):
         """
@@ -93,110 +93,160 @@ class BaseSelector(Select):  # pylint: disable=too-many-ancestors
         """
         return self.execute(session).scalars().fetchmany(size)
 
-    @classmethod
-    def condition_by_attribute(
-        cls,
-        class_: Type[BaseModel],
-        attr: InstrumentedAttribute | str,
-        value: Any,
+    def __init__(
+        self,
+        model: Type[BaseModel],
         is_sqlite: bool = False,
         case_sensitive: bool = False,
-    ) -> BinaryExpression:
-        """
-        Applies a filter to select words by a specific attribute value.
+    ):
+        """Initializes the WordSelector.
 
         Args:
-            class_ (BaseModel): The class to select from.
-            attr (str): The attribute to filter by.
-            value (Any): The value of the attribute to filter by.
-            is_sqlite (bool): If SQLite is being used. Defaults to False.
-            case_sensitive (bool): Whether the search should be case-sensitive.
-                Defaults to False.
-        Returns:
-            BaseSelector: A query with the filter applied.
+            model (Type): The SQLAlchemy model class to query.
+            is_sqlite (bool): Flag indicating if the database is SQLite.
+            case_sensitive (bool): Flag indicating if the queries should be case-sensitive.
         """
 
-        cls._is_class_acceptable(class_)
-        attr = cls._get_attr(class_, attr)
+        self._is_model_accepted(model)
+        self.model = model
+
+        self.is_sqlite = is_sqlite
+        self.case_sensitive = case_sensitive
+
+        self._statement = select(self.model)
+        self._selected_columns = [self.model]
+
+    def select_columns(self, *columns) -> Self:
+        """Specify which columns to select without resetting the filters.
+
+        Args:
+            *columns: The columns to select.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
+        self._selected_columns = columns
+        existing_conditions = self._statement._whereclause
+        self._statement = select(*self._selected_columns).where(existing_conditions)
+        return self
+
+    def limit(self, limit: int) -> Self:
+        """Limit the number of results returned.
+
+        Args:
+            limit (int): The maximum number of results to return.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
+        self._statement = self._statement.limit(limit)
+        return self
+
+    def offset(self, offset: int) -> Self:
+        """Set the offset for the results returned.
+
+        Args:
+            offset (int): The number of results to skip before starting to return results.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
+        self._statement = self._statement.offset(offset)
+        return self
+
+    def order_by(self, *columns) -> Self:
+        """Specify the order in which results should be returned.
+
+        Args:
+            *columns: The columns to order by.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
+        self._statement = self._statement.order_by(*columns)
+        return self
+
+    def filter_by(self, **kwargs) -> Self:
+        """Filter results based on arbitrary keyword arguments.
+
+        Args:
+            **kwargs: Column-value pairs to filter by.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
+        for key, value in kwargs.items():
+            condition = self._generate_column_condition(key, value)
+            self._statement = self._statement.where(condition)
+
+        return self
+
+    def _generate_column_condition(self, key, value):
+        column = getattr(self.model, key, None)
+        if column is None:
+            return true()
 
         value = str(value).replace("*", "%")
+        if self.case_sensitive:
+            return column.op("GLOB")(value) if self.is_sqlite else column.like(value)
+        return column.ilike(value)
 
-        if case_sensitive:
-            return attr.op("GLOB")(value) if is_sqlite else attr.like(value)
-        return attr.ilike(value)
-
-    @staticmethod
-    def _get_attr(
-        class_: Type[BaseModel],
-        attr: InstrumentedAttribute | str,
-    ) -> InstrumentedAttribute:
-        """
-        Gets the attribute from the class.
-
-        Args:
-            class_ (BaseModel): The class to get the attribute from.
-            attr (str | InstrumentedAttribute): The attribute to get.
-
-        Raises:
-            AttributeError: If the attribute is not found in the class.
+    def get_statement(self):
+        """Get the current SQLAlchemy _statement.
 
         Returns:
-            InstrumentedAttribute: The attribute from the class.
+            Select: The current SQLAlchemy _statement.
         """
-        if isinstance(attr, str):
-            try:
-                return getattr(class_, attr)
-            except AttributeError as exc:
-                raise AttributeError(
-                    f"Provided attribute={attr} is not an attribute of {class_}"
-                ) from exc
-        return attr
+        return self._statement
 
-    @staticmethod
-    def _is_class_acceptable(class_: Type[BaseModel]):
-        """
-        Checks if the class is an instance of BaseModel or its child.
+    def __call__(self, session: Session):
+        """Execute the current _statement and return the results.
 
         Args:
-            class_ (Type[BaseModel]): The class to check.
+            session (Session): The SQLAlchemy session to use for executing the query.
 
-        Raises:
-            ValueError: If the class is not an instance of BaseModel or its child.
+        Returns:
+            list: The results of the query.
         """
-        if not issubclass(class_, BaseModel):
+        try:
+            with session() as s:
+                results = s.execute(self._statement).scalars().all()
+            return results
+        except Exception as e:
+            print(f"An error occurred: {e}")
+            return []
+
+    @staticmethod
+    def _is_model_accepted(model):
+        """
+        Checks if the model is an instance of BaseModel or its child.
+        Raises:
+            ValueError: If the model is not an instance of BaseModel or its child.
+        """
+        if not issubclass(model, BaseModel):
             raise ValueError(
-                f"Provided class_={class_} is not a {BaseModel} or its child"
+                f"Provided class_={model} is not a inherited from {BaseModel}"
             )
 
-    def by_attrs(
-        self,
-        class_: Type[BaseModel],
-        is_sqlite: bool = False,
-        case_sensitive: bool = False,
-        **kwargs,
-    ) -> Self:
-        """
-        Selects all words by a set of attributes.
+    def where(self, *conditions) -> Self:
+        """Add additional conditions to the current statement.
 
         Args:
-            class_ (Type[BaseModel]): The class to select from.
-            is_sqlite (bool): If SQLite is being used. Defaults to False.
-            case_sensitive (bool): Whether the search should be case-sensitive.
-                Defaults to False.
-            **kwargs: A set of attributes to filter by.
+            *conditions: One or more SQLAlchemy expressions to filter by.
 
         Returns:
-            BaseSelector: A query with the filter applied.
+            Self: The current instance for method chaining.
         """
-        return self.where(
-            *{
-                self.condition_by_attribute(
-                    class_,
-                    k,
-                    v,
-                    is_sqlite=is_sqlite,
-                    case_sensitive=case_sensitive,
-                )
-                for k, v in kwargs.items()
-            }
-        )
+        if not conditions:
+            return self
+
+        # Combine existing conditions with new ones
+        existing_conditions = self._statement._whereclause
+        if existing_conditions is None:
+            self._statement = self._statement.where(and_(*conditions))
+        else:
+            self._statement = self._statement.where(
+                and_(existing_conditions, *conditions)
+            )
+
+        return self
