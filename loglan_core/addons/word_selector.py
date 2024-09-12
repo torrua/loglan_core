@@ -7,10 +7,9 @@ event, key, type, and name through the WordSelector class.
 from __future__ import annotations
 
 from functools import wraps
-from typing import Type, Iterable
+from typing import Type
 
 from sqlalchemy import and_, select
-from sqlalchemy.orm import selectinload
 from typing_extensions import Self
 
 from loglan_core.addons.base_selector import BaseSelector
@@ -75,28 +74,6 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         """
 
         super().__init__(model, is_sqlite, case_sensitive)
-
-    def with_relationships(self, selected: Iterable[str] | None = None) -> Self:
-        """
-        Adds relationships to the query.
-
-        Args:
-            selected (set[str]): A set of relationship names to include.
-            Defaults to None if all relationships should be included.
-
-        Returns:
-            Self: A query with the relationships added.
-        """
-        available_relationships = {
-            attr: getattr(self.model, attr) for attr in self.model.relationships()
-        }
-        relationships = {
-            selectinload(v)
-            for k, v in available_relationships.items()
-            if not selected or k in selected
-        }
-        self._statement = self._statement.options(*relationships)
-        return self
 
     @order_by_name
     def by_event(self, event_id: int | None = None) -> Self:

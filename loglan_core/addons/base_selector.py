@@ -4,10 +4,10 @@ This module provides a base selector for SQLAlchemy
 
 from __future__ import annotations
 
-from typing import Type
+from typing import Type, Iterable
 
 from sqlalchemy import true, and_, select
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session, selectinload
 from typing_extensions import Self
 
 from loglan_core.base import BaseModel
@@ -43,6 +43,29 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Creates a filter to select items by a specific attribute value.
         Support wildcard and case-sensitive search.
     """
+
+    def __init__(
+        self,
+        model: Type[BaseModel],
+        is_sqlite: bool = False,
+        case_sensitive: bool = False,
+    ):
+        """Initializes the WordSelector.
+
+        Args:
+            model (Type): The SQLAlchemy model class to query.
+            is_sqlite (bool): Flag indicating if the database is SQLite.
+            case_sensitive (bool): Flag indicating if the queries should be case-sensitive.
+        """
+
+        self._is_model_accepted(model)
+        self.model = model
+
+        self.is_sqlite = is_sqlite
+        self.case_sensitive = case_sensitive
+
+        self._statement = select(self.model)
+        self._selected_columns = [self.model]
 
     def execute(self, session: Session):
         """
@@ -92,29 +115,6 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         List[ResultRow]: The fetched results.
         """
         return self.execute(session).scalars().fetchmany(size)
-
-    def __init__(
-        self,
-        model: Type[BaseModel],
-        is_sqlite: bool = False,
-        case_sensitive: bool = False,
-    ):
-        """Initializes the WordSelector.
-
-        Args:
-            model (Type): The SQLAlchemy model class to query.
-            is_sqlite (bool): Flag indicating if the database is SQLite.
-            case_sensitive (bool): Flag indicating if the queries should be case-sensitive.
-        """
-
-        self._is_model_accepted(model)
-        self.model = model
-
-        self.is_sqlite = is_sqlite
-        self.case_sensitive = case_sensitive
-
-        self._statement = select(self.model)
-        self._selected_columns = [self.model]
 
     def select_columns(self, *columns) -> Self:
         """Specify which columns to select without resetting the filters.
@@ -210,7 +210,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         """
         try:
             with session() as s:
-                results = s.execute(self._statement).scalars().all()
+                results = s.scalars(self._statement).all()
             return results
         except Exception as e:
             print(f"An error occurred: {e}")
@@ -249,4 +249,26 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
                 and_(existing_conditions, *conditions)
             )
 
+        return self
+
+    def with_relationships(self, selected: Iterable[str] | None = None) -> Self:
+        """
+        Adds relationships to the query.
+
+        Args:
+            selected (set[str]): A set of relationship names to include.
+            Defaults to None if all relationships should be included.
+
+        Returns:
+            Self: A query with the relationships added.
+        """
+        available_relationships = {
+            attr: getattr(self.model, attr) for attr in self.model.relationships()
+        }
+        relationships = {
+            selectinload(v)
+            for k, v in available_relationships.items()
+            if not selected or k in selected
+        }
+        self._statement = self._statement.options(*relationships)
         return self
