@@ -182,7 +182,6 @@ class BaseWord(BaseModel):
         """
         return self.derivatives.join(BaseType).filter(BaseType.type_x == "Affix")
 
-
     @hybrid_property
     def complexes(self) -> list[BaseWord]:
         """Hybrid property that returns a list of complexes derived from the word.
