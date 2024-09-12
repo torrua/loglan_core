@@ -6,7 +6,6 @@ event, key, type, and name through the WordSelector class.
 
 from __future__ import annotations
 
-from functools import wraps
 from typing import Type
 
 from sqlalchemy import and_, select
@@ -19,38 +18,6 @@ from loglan_core.connect_tables import t_connect_words
 from loglan_core.key import BaseKey
 from loglan_core.type import BaseType
 from loglan_core.word import BaseWord
-
-
-def order_by_name(function):
-    """
-    A decorator that sorts the output of a function by the `name` attribute of
-    the resulting class instances.
-
-    Args:
-        function (callable): The function whose result is to be sorted.
-
-    Returns:
-        callable: A function that will execute the input function and sort its result.
-    """
-
-    @wraps(function)
-    def wrapper(*args, **kwargs):
-        """
-        Wrapper function that applies the sorting logic to the result of the decorated function.
-
-        Args:
-            *args: Positional arguments to be passed to the decorated function.
-            **kwargs: Keyword arguments to be passed to the decorated function.
-
-        Returns:
-            The sorted result of the decorated function.
-
-        """
-        result = function(*args, **kwargs)
-        result._statement = result.get_statement().order_by(result.model.name)
-        return result
-
-    return wrapper
 
 
 class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
@@ -74,8 +41,10 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         """
 
         super().__init__(model, is_sqlite, case_sensitive)
+        self.model = model
+        self.is_sqlite = is_sqlite
+        self.case_sensitive = case_sensitive
 
-    @order_by_name
     def by_event(self, event_id: int | None = None) -> Self:
         """
         Applies a filter to select words associated with a specific event.
@@ -86,7 +55,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             Self: A query with the filter applied.
         """
-        self._statement = self._statement.where(filter_word_by_event_id(event_id))
+        self._statement = self._statement.where(filter_word_by_event_id(event_id)).order_by(self.model.name)
         return self
 
     def by_name(
@@ -103,7 +72,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             Self: A query with the filter applied.
         """
 
-        return self.filter_by(name=name)
+        return self.filter_by(name=name).order_by(self.model.name)
 
     def by_key(
         self,
@@ -134,7 +103,6 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self._statement = self._statement.where(self.model.id.in_(subquery))
         return self
 
-    @order_by_name
     def by_type(
         self,
         type_: BaseType | str | None = None,
@@ -161,7 +129,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         if isinstance(type_, BaseType):
             self._statement = self._statement.join(BaseType).where(
                 BaseType.id == type_.id
-            )
+            ).order_by(self.model.name)
             return self
 
         type_values = (
@@ -175,12 +143,12 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         ]
 
         if not type_filters:
+            self._statement = self._statement.order_by(self.model.name)
             return self
 
-        self._statement = self._statement.join(BaseType).where(and_(*type_filters))
+        self._statement = self._statement.join(BaseType).where(and_(*type_filters)).order_by(self.model.name)
         return self
 
-    @order_by_name
     def get_derivatives_of(self, word_id: int) -> Self:
         """
         Selects all words that are derived from the given word.
@@ -196,7 +164,8 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             t_connect_words.c.parent_id == word_id
         )
 
-        return self.where(self.model.id.in_(derivative_ids_subquery))
+        self._statement = self._statement.where(self.model.id.in_(derivative_ids_subquery)).order_by(self.model.name)
+        return self
 
     def get_affixes_of(self, word_id: int) -> Self:
         """
