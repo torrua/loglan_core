@@ -62,7 +62,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
     def __init__(
         self,
-        model: Type = BaseWord,
+        model: Type[BaseWord] = BaseWord,
         is_sqlite: bool = False,
         case_sensitive: bool = False,
     ):
@@ -130,7 +130,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             language=language,
             case_sensitive=case_sensitive,
         )
-        subquery = select(definition_query._statement.subquery().c.word_id)
+        subquery = select(definition_query.get_statement().subquery().c.word_id)
         self._statement = self._statement.where(self.model.id.in_(subquery))
         return self
 
