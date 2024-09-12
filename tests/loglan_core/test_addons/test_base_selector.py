@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy import Result
 
 from loglan_core import WordSelector
 
@@ -23,3 +24,31 @@ class TestBaseSelector:
 
         kak_with_all_relationships = WordSelector().by_name("kak").with_relationships().scalar(db_session)
         assert kak_with_all_relationships.__dict__.get("definitions") is not None
+
+    def test_execute(self, db_session):
+        result = WordSelector().execute(db_session)
+        assert isinstance(result, Result)
+
+    def test_all(self, db_session):
+        all_words = WordSelector().all(db_session)
+        assert len(all_words) == 13
+
+    def test___call__(self, db_session):
+        all_words = WordSelector()
+        assert len(all_words(db_session)) == 13
+
+    def test_fetchmany(self, db_session):
+        fetch_5 = WordSelector().fetchmany(db_session, 5)
+        assert len(fetch_5) == 5
+
+    def test_limit(self, db_session):
+        limit_6 = WordSelector().limit(6).all(db_session)
+        assert len(limit_6) == 6
+
+    def test_offset(self, db_session):
+        offset_5 = WordSelector().offset(5).all(db_session)
+        assert len(offset_5) == 8
+
+    def test__generate_column_condition(self, db_session):
+        result = WordSelector().filter_by(wrong_arg=1).all(db_session)
+        assert len(result) == 13

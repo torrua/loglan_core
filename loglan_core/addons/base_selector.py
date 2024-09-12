@@ -115,7 +115,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
         List[ResultRow]: The fetched results.
         """
-        return self.execute(session).scalars().fetchmany(size)
+        return session.scalars(self._statement).fetchmany(size)
 
     def select_columns(self, *columns) -> Self:
         """Specify which columns to select without resetting the filters.
@@ -209,13 +209,8 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
             list: The results of the query.
         """
-        try:
-            with session() as s:
-                results = s.scalars(self._statement).all()
-            return results
-        except Exception as e:
-            print(f"An error occurred: {e}")
-            return []
+        return self.all(session)
+
 
     @staticmethod
     def _is_model_accepted(model):
