@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Type, Iterable
 
-from sqlalchemy import true, and_, select
+from sqlalchemy import true, select, Select
 from sqlalchemy.orm import Session, selectinload
 from typing_extensions import Self
 
@@ -103,6 +103,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         """
         return session.scalar(self._statement)
 
+
     def fetchmany(self, session: Session, size: int | None = None):
         """
         Executes the given session and fetches a specified number of results.
@@ -126,7 +127,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             Self: The current instance for method chaining.
         """
         self._selected_columns = columns
-        existing_conditions = self._statement._whereclause
+        existing_conditions = self._statement.whereclause
         self._statement = select(*self._selected_columns).where(existing_conditions)
         return self
 
@@ -191,7 +192,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             return column.op("GLOB")(value) if self.is_sqlite else column.like(value)
         return column.ilike(value)
 
-    def get_statement(self):
+    def get_statement(self) -> Select:
         """Get the current SQLAlchemy _statement.
 
         Returns:
@@ -228,28 +229,6 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
                 f"Provided class_={model} is not a inherited from {BaseModel}"
             )
 
-    def where(self, *conditions) -> Self:
-        """Add additional conditions to the current statement.
-
-        Args:
-            *conditions: One or more SQLAlchemy expressions to filter by.
-
-        Returns:
-            Self: The current instance for method chaining.
-        """
-        if not conditions:
-            return self
-
-        # Combine existing conditions with new ones
-        existing_conditions = self._statement._whereclause
-        if existing_conditions is None:
-            self._statement = self._statement.where(and_(*conditions))
-        else:
-            self._statement = self._statement.where(
-                and_(existing_conditions, *conditions)
-            )
-
-        return self
 
     def with_relationships(self, selected: Iterable[str] | None = None) -> Self:
         """
