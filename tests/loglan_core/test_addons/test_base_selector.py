@@ -2,6 +2,8 @@ import pytest
 from sqlalchemy import Result
 
 from loglan_core import WordSelector
+from loglan_core.definition import BaseDefinition
+from loglan_core.word import BaseWord
 
 
 @pytest.mark.usefixtures("db_session")
@@ -49,6 +51,20 @@ class TestBaseSelector:
         offset_5 = WordSelector().offset(5).all(db_session)
         assert len(offset_5) == 8
 
+    def test_select_columns(self, db_session):
+        result = WordSelector().select_columns(BaseWord.name).all(db_session)
+        assert all(isinstance(item, str) for item in result)
+
+    def test_select_columns_after_filter(self, db_session):
+        result = WordSelector().by_name("ka*").select_columns(BaseWord.name).all(db_session)
+        assert len(result) == 3
+        assert all(isinstance(item, str) for item in result)
+
     def test__generate_column_condition(self, db_session):
         result = WordSelector().filter_by(wrong_arg=1).all(db_session)
         assert len(result) == 13
+
+    def test_order_by(self, db_session):
+        result_asc = WordSelector().order_by(BaseWord.name).all(db_session)
+        result_unsorted = WordSelector().all(db_session)
+        assert result_asc != result_unsorted

@@ -12,6 +12,7 @@ Classes:
 from __future__ import annotations
 
 from typing import Type
+from typing_extensions import Self
 
 from sqlalchemy import select, true
 
@@ -50,9 +51,10 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
     def __init__(
         self,
-        model: Type = BaseDefinition,
+        model: Type[BaseDefinition] = BaseDefinition,
         is_sqlite: bool = False,
         case_sensitive: bool = False,
+        disable_model_check: bool = False,
     ):
         """
         Initializes the object with the given parameters.
@@ -67,7 +69,12 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             None
         """
-        super().__init__(model, is_sqlite, case_sensitive)
+
+        super().__init__(model, is_sqlite, case_sensitive, disable_model_check)
+        if not disable_model_check:
+            self._is_model_accepted(model, BaseDefinition)
+
+        self.model = model
 
     @property
     def inherit_cache(self):  # pylint: disable=C0116
@@ -102,7 +109,7 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         key: BaseKey | str,
         language: str | None = None,
         case_sensitive: bool = False,
-    ) -> DefinitionSelector:
+    ) -> Self:
         """
         This method filters the definitions by the provided key, language and case sensitivity.
 
@@ -110,10 +117,10 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             key (BaseKey | str): The key to filter by. Can be an instance of BaseKey or a string.
             language (str | None): The language to filter by.
             If None, no language filtering is applied.
-            case_sensitive (bool): Flag indicating whether filtering should be case sensitive.
+            case_sensitive (bool): Flag indicating whether filtering should be case-sensitive.
 
         Returns:
-            DefinitionSelector: The filtered DefinitionSelector instance with distinct keys.
+            Self: The filtered DefinitionSelector instance with distinct keys.
         """
 
         search_key = key.word if isinstance(key, BaseKey) else str(key)
@@ -122,14 +129,20 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             key.language if isinstance(key, BaseKey) else language
         )
 
-        self._statement = (
-            self._statement.join(self.model.keys)
-            .where(filter_key, filter_language)
-            .distinct()
-        )
+        if hasattr(self.model, "keys"):
+            self._statement = (
+                self._statement.join(self.model.keys)
+                .where(filter_key, filter_language)
+                .distinct()
+            )
+        else:
+            raise AttributeError(
+                f"{self.model.__name__} does not have a 'keys' attribute"
+            )
+
         return self
 
-    def by_language(self, language: str | None = None) -> DefinitionSelector:
+    def by_language(self, language: str | None = None) -> Self:
         """
         This method filters the definitions by the given language.
 
@@ -138,9 +151,14 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
                                    no language filtering is applied.
 
         Returns:
-            DefinitionSelector: The filtered DefinitionSelector instance.
+            Self: The filtered DefinitionSelector instance.
         """
-        filter_language = self.model.language == language if language else true()
+        if hasattr(self.model, "language"):
+            filter_language = self.model.language == language if language else true()
+        else:
+            raise AttributeError(
+                f"{self.model.__name__} does not have a 'language' attribute"
+            )
         self._statement = self._statement.where(filter_language)
 
         return self

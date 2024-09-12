@@ -4,10 +4,10 @@ This module provides a base selector for SQLAlchemy
 
 from __future__ import annotations
 
-from typing import Type, Iterable
+from typing import Type, Iterable, Any
 
 from sqlalchemy import true, select, Select
-from sqlalchemy.orm import Session, selectinload
+from sqlalchemy.orm import Session, selectinload, InstrumentedAttribute
 from typing_extensions import Self
 
 from loglan_core.base import BaseModel
@@ -49,6 +49,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         model: Type[BaseModel],
         is_sqlite: bool = False,
         case_sensitive: bool = False,
+        disable_model_check: bool = False,
     ):
         """Initializes the WordSelector.
 
@@ -57,15 +58,16 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             is_sqlite (bool): Flag indicating if the database is SQLite.
             case_sensitive (bool): Flag indicating if the queries should be case-sensitive.
         """
+        self.disable_model_check = disable_model_check
+        if not self.disable_model_check:
+            self._is_model_accepted(model, BaseModel)
 
-        self._is_model_accepted(model)
         self.model = model
+        self._statement = select(self.model)
+        self._selected_columns = [self.model]
 
         self.is_sqlite = is_sqlite
         self.case_sensitive = case_sensitive
-
-        self._statement = select(self.model)
-        self._selected_columns = [self.model]
 
     def execute(self, session: Session):
         """
@@ -89,7 +91,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
         List[ResultRow]: All the results of the executed session.
         """
-        return session.scalars(self._statement).all()
+        return session.execute(self._statement).scalars().all()
 
     def scalar(self, session: Session):
         """
@@ -101,8 +103,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
         Any: The scalar result of the executed session.
         """
-        return session.scalar(self._statement)
-
+        return session.execute(self._statement).scalar()
 
     def fetchmany(self, session: Session, size: int | None = None):
         """
@@ -115,9 +116,9 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
         List[ResultRow]: The fetched results.
         """
-        return session.scalars(self._statement).fetchmany(size)
+        return session.execute(self._statement).scalars().fetchmany(size)
 
-    def select_columns(self, *columns) -> Self:
+    def select_columns(self, *columns: type[BaseModel]) -> Self:
         """Specify which columns to select without resetting the filters.
 
         Args:
@@ -126,9 +127,13 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
             Self: The current instance for method chaining.
         """
-        self._selected_columns = columns
+        self._selected_columns = list(columns)
         existing_conditions = self._statement.whereclause
-        self._statement = select(*self._selected_columns).where(existing_conditions)
+
+        if existing_conditions is None:
+            self._statement = select(*self._selected_columns)
+        else:
+            self._statement = select(*self._selected_columns).where(existing_conditions)
         return self
 
     def limit(self, limit: int) -> Self:
@@ -182,8 +187,8 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
 
         return self
 
-    def _generate_column_condition(self, key, value):
-        column = getattr(self.model, key, None)
+    def _generate_column_condition(self, key: str | InstrumentedAttribute, value: Any):
+        column = getattr(self.model, key, None) if isinstance(key, str) else key
         if column is None:
             return true()
 
@@ -211,19 +216,17 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         """
         return self.all(session)
 
-
     @staticmethod
-    def _is_model_accepted(model):
+    def _is_model_accepted(model, parent: type[BaseModel] = BaseModel):
         """
         Checks if the model is an instance of BaseModel or its child.
         Raises:
             ValueError: If the model is not an instance of BaseModel or its child.
         """
-        if not issubclass(model, BaseModel):
+        if not issubclass(model, parent):
             raise ValueError(
-                f"Provided class_={model} is not a inherited from {BaseModel}"
+                f"Provided class_={model} is not a inherited from {parent}"
             )
-
 
     def with_relationships(self, selected: Iterable[str] | None = None) -> Self:
         """

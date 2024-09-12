@@ -51,7 +51,7 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
     def __init__(
         self,
-        model: Type = BaseKey,
+        model: Type[BaseKey] = BaseKey,
         is_sqlite: bool = False,
         case_sensitive: bool = False,
     ) -> None:

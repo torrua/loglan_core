@@ -1,6 +1,8 @@
 import pytest
 
 from loglan_core.addons.word_selector import WordSelector
+from loglan_core.definition import BaseDefinition
+from loglan_core.word import BaseWord
 
 
 @pytest.mark.usefixtures("db_session")
@@ -22,15 +24,15 @@ class TestWordSelector:
         result_from_db = result.all(db_session)
         sorted_names = [w.name for w in result_from_db]
         assert sorted_names == [
-            "cii",
-            "flekukfoa",
             "kak",
             "kakto",
             "kao",
-            "lekveo",
             "pru",
             "pruci",
             "prukao",
+            "cii",
+            "flekukfoa",
+            "lekveo",
         ]
 
     def test_by_event_custom_event_id(self, db_session):
@@ -41,10 +43,10 @@ class TestWordSelector:
             "kak",
             "kakto",
             "kao",
-            "osmio",
             "pru",
             "pruci",
             "prukao",
+            "osmio",
             "riyhasgru",
             "riyvei",
             "testuda",
@@ -104,21 +106,12 @@ class TestWordSelector:
 
         result_from_db = result.all(db_session)
         sorted_names = [w.name for w in result_from_db]
-        assert sorted_names == [
-            "cii",
-            "flekukfoa",
-            "kak",
-            "kakto",
-            "kao",
-            "lekveo",
-            "osmio",
-            "pru",
-            "pruci",
-            "prukao",
-            "riyhasgru",
-            "riyvei",
-            "testuda",
-        ]
+        assert sorted_names ==  [
+            'kak', 'kakto', 'kao',
+            'pru', 'pruci', 'prukao',
+            'cii', 'flekukfoa', 'lekveo',
+            'osmio', 'riyhasgru', 'riyvei',
+            'testuda']
 
     def test_by_type_with_all_parameters(self, db_session):
         type_ = "2-Cpx"
@@ -157,3 +150,18 @@ class TestWordSelector:
     def test_complexes(self, db_session):
         kakto = WordSelector().by_name("kakto").scalar(db_session)
         assert len(WordSelector().get_complexes_of(kakto.id).all(db_session)) == 1
+
+    def test_disable_model_check_true(self, db_session):
+        result = WordSelector(model=BaseDefinition, disable_model_check=True).all(db_session)
+        assert isinstance(result[0], BaseDefinition)
+
+    def test_disable_model_check_false(self, db_session):
+        with pytest.raises(ValueError) as _:
+            WordSelector(model=BaseDefinition, disable_model_check=False).all(db_session)
+
+    def test_disable_model_check_false_with_subclass(self, db_session):
+        class TestWord(BaseWord):
+            pass
+
+        result = WordSelector(model=TestWord, disable_model_check=False).scalar(db_session)
+        assert isinstance(result, TestWord)

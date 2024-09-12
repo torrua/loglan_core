@@ -4,6 +4,9 @@ import pytest
 
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.key_selector import KeySelector
+from loglan_core.definition import BaseDefinition
+from loglan_core.word import BaseWord
+
 
 @pytest.mark.usefixtures("db_session")
 class TestDefinitionSelector:
@@ -57,3 +60,17 @@ class TestDefinitionSelector:
         result = sorted(d.id for d in definitions)
         assert result == [15, ]
 
+    def test_disable_model_check_true(self, db_session):
+        result = DefinitionSelector(model=BaseWord, disable_model_check=True).all(db_session)
+        assert isinstance(result[0], BaseWord)
+
+    def test_disable_model_check_false(self, db_session):
+        with pytest.raises(ValueError) as _:
+            DefinitionSelector(model=BaseWord, disable_model_check=False).all(db_session)
+
+    def test_disable_model_check_false_with_subclass(self, db_session):
+        class TestDefinition(BaseDefinition):
+            pass
+
+        result = DefinitionSelector(model=TestDefinition, disable_model_check=False).scalar(db_session)
+        assert isinstance(result, TestDefinition)

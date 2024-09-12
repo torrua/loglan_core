@@ -32,6 +32,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         model: Type[BaseWord] = BaseWord,
         is_sqlite: bool = False,
         case_sensitive: bool = False,
+        disable_model_check: bool = False,
     ):
         """
         Initialize a WordSelector instance.
@@ -40,10 +41,17 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             is_sqlite (bool): If SQLite is being used. Defaults to False.
         """
 
-        super().__init__(model, is_sqlite, case_sensitive)
+        super().__init__(
+            model=model,
+            is_sqlite=is_sqlite,
+            case_sensitive=case_sensitive,
+            disable_model_check=disable_model_check,
+        )
+
+        if not self.disable_model_check:
+            self._is_model_accepted(model, BaseWord)
+
         self.model = model
-        self.is_sqlite = is_sqlite
-        self.case_sensitive = case_sensitive
 
     def by_event(self, event_id: int | None = None) -> Self:
         """
@@ -55,7 +63,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             Self: A query with the filter applied.
         """
-        self._statement = self._statement.where(filter_word_by_event_id(event_id)).order_by(self.model.name)
+        self._statement = self._statement.where(filter_word_by_event_id(event_id))
         return self
 
     def by_name(
@@ -71,8 +79,15 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             Self: A query with the filter applied.
         """
+        if hasattr(self.model, "name"):
+            condition = self._generate_column_condition(self.model.name, name)
+        else:
+            raise AttributeError(
+                f"{self.model.__name__} does not have a 'name' attribute"
+            )
 
-        return self.filter_by(name=name).order_by(self.model.name)
+        self._statement = self._statement.where(condition)
+        return self
 
     def by_key(
         self,
@@ -129,7 +144,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         if isinstance(type_, BaseType):
             self._statement = self._statement.join(BaseType).where(
                 BaseType.id == type_.id
-            ).order_by(self.model.name)
+            )
             return self
 
         type_values = (
@@ -143,10 +158,10 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         ]
 
         if not type_filters:
-            self._statement = self._statement.order_by(self.model.name)
+            self._statement = self._statement
             return self
 
-        self._statement = self._statement.join(BaseType).where(and_(*type_filters)).order_by(self.model.name)
+        self._statement = self._statement.join(BaseType).where(and_(*type_filters))
         return self
 
     def get_derivatives_of(self, word_id: int) -> Self:
@@ -164,7 +179,9 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             t_connect_words.c.parent_id == word_id
         )
 
-        self._statement = self._statement.where(self.model.id.in_(derivative_ids_subquery)).order_by(self.model.name)
+        self._statement = self._statement.where(
+            self.model.id.in_(derivative_ids_subquery)
+        )
         return self
 
     def get_affixes_of(self, word_id: int) -> Self:
