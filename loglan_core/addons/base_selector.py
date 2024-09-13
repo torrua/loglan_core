@@ -6,7 +6,7 @@ from __future__ import annotations
 
 from typing import Type, Iterable, Any
 
-from sqlalchemy import true, select, Select
+from sqlalchemy import select, Select
 from sqlalchemy.orm import Session, selectinload, InstrumentedAttribute
 from typing_extensions import Self
 
@@ -164,25 +164,50 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self._statement = self._statement.order_by(*columns)
         return self
 
-    def filter_by(self, **kwargs) -> Self:
+    def filter(self, *args) -> Self:
         """Filter results based on arbitrary keyword arguments.
 
         Args:
-            **kwargs: Column-value pairs to filter by.
+            *args: Column-value pairs to filter by.
 
         Returns:
             Self: The current instance for method chaining.
         """
-        for key, value in kwargs.items():
-            condition = self._generate_column_condition(key, value)
-            self._statement = self._statement.where(condition)
 
+        self._statement = self._statement.filter(*args)
+
+        return self
+
+    def filter_by(self, **kwargs) -> Self:
+        """Filter results based on arbitrary keyword arguments.
+
+        Args:
+            *kwargs: Column-value pairs to filter by.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
+
+        self._statement = self._statement.filter_by(**kwargs)
+
+        return self
+
+    def where(self, *args) -> Self:
+        """Filter results based on arbitrary keyword arguments.
+
+        Args:
+            *args: Column-value pairs to filter by.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
+        self._statement = self._statement.where(*args)
         return self
 
     def _generate_column_condition(self, key: str | InstrumentedAttribute, value: Any):
         column = getattr(self.model, key, None) if isinstance(key, str) else key
         if column is None:
-            return true()
+            raise AttributeError(f"Model {self.model} has no attribute {key}")
 
         value = str(value).replace("*", "%")
         if self.case_sensitive:

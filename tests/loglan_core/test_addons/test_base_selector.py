@@ -67,12 +67,34 @@ class TestBaseSelector:
         assert len(result) == 3
         assert all(isinstance(item, str) for item in result)
 
-    def test__generate_column_condition(self, db_session):
-        result = WordSelector().filter_by(wrong_arg=1).all(db_session)
-        assert len(result) == 13
-
     def test_order_by(self, db_session):
         result_asc = WordSelector().order_by(BaseWord.name).all(db_session)
         result_unsorted = WordSelector().all(db_session)
         assert result_asc != result_unsorted
         assert len(result_asc) == len(result_unsorted)
+
+    def test_filter(self, db_session):
+        result = WordSelector().filter(BaseWord.name == "kakto").all(db_session)
+        assert len(result) == 1
+        assert result[0].name == "kakto"
+
+    def test_where(self, db_session):
+        result = (
+            WordSelector()
+            .where(
+                BaseWord.name.in_(
+                    [
+                        "kakto",
+                    ]
+                )
+            )
+            .all(db_session)
+        )
+        assert len(result) == 1
+        assert result[0].name == "kakto"
+
+    def test__generate_column_condition_raise_error(self, db_session):
+        with pytest.raises(AttributeError) as _:
+            WordSelector()._generate_column_condition("wrong_name", "test").scalar(
+                db_session
+            )
