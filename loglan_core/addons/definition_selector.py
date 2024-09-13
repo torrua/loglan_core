@@ -12,9 +12,9 @@ Classes:
 from __future__ import annotations
 
 from typing import Type
-from typing_extensions import Self
 
 from sqlalchemy import select, true
+from typing_extensions import Self
 
 from loglan_core.addons.base_selector import BaseSelector
 from loglan_core.addons.utils import (
