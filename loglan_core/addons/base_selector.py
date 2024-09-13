@@ -33,15 +33,6 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
     fetchmany(session: Session, size: int | None = None) -> List[ResultRow]:
         Executes the session and fetches a specified number of results.
 
-    condition_by_attribute(
-        class_: Type[BaseModel],
-        attr: InstrumentedAttribute | str,
-        value: Any,
-        is_sqlite: bool = False,
-        case_sensitive: bool = False,
-    ) -> BinaryExpression:
-        Creates a filter to select items by a specific attribute value.
-        Support wildcard and case-sensitive search.
     """
 
     def __init__(
@@ -51,12 +42,13 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         case_sensitive: bool = False,
         disable_model_check: bool = False,
     ):
-        """Initializes the WordSelector.
+        """Initializes the Selector.
 
         Args:
             model (Type): The SQLAlchemy model class to query.
             is_sqlite (bool): Flag indicating if the database is SQLite.
             case_sensitive (bool): Flag indicating if the queries should be case-sensitive.
+            disable_model_check (bool): Flag indicating if the model check should be disabled.
         """
         self.disable_model_check = disable_model_check
         if not self.disable_model_check:
@@ -74,10 +66,10 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Executes the given session and returns the result.
 
         Args:
-        session (Session): SQLAlchemy Session object.
+            session (Session): SQLAlchemy Session object.
 
         Returns:
-        ResultProxy: The result of the executed session.
+            ResultProxy: The result of the executed session.
         """
         return session.execute(self._statement)
 
@@ -86,10 +78,10 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Executes the given session and returns all the results as a list.
 
         Args:
-        session (Session): SQLAlchemy Session object.
+            session (Session): SQLAlchemy Session object.
 
         Returns:
-        List[ResultRow]: All the results of the executed session.
+            List[ResultRow]: All the results of the executed session.
         """
         return session.execute(self._statement).scalars().all()
 
@@ -98,10 +90,10 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Executes the given session and returns a scalar result.
 
         Args:
-        session (Session): SQLAlchemy Session object.
+            session (Session): SQLAlchemy Session object.
 
         Returns:
-        Any: The scalar result of the executed session.
+            Any: The scalar result of the executed session.
         """
         return session.execute(self._statement).scalar()
 
@@ -110,11 +102,11 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Executes the given session and fetches a specified number of results.
 
         Args:
-        session (Session): SQLAlchemy Session object.
-        size (int, optional): Number of results to fetch. If None, fetches all results.
+            session (Session): SQLAlchemy Session object.
+            size (int, optional): Number of results to fetch. If None, fetches all results.
 
         Returns:
-        List[ResultRow]: The fetched results.
+            List[ResultRow]: The fetched results.
         """
         return session.execute(self._statement).scalars().fetchmany(size)
 

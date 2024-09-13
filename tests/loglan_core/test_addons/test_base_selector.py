@@ -2,7 +2,6 @@ import pytest
 from sqlalchemy import Result
 
 from loglan_core import WordSelector
-from loglan_core.definition import BaseDefinition
 from loglan_core.word import BaseWord
 
 
@@ -19,12 +18,18 @@ class TestBaseSelector:
 
     def test_with_relationships(self, db_session):
 
-        kakto_with_relationships = WordSelector().by_name("kakto").with_relationships(
-            selected=["definitions", "event_start"]).scalar(db_session)
+        kakto_with_relationships = (
+            WordSelector()
+            .by_name("kakto")
+            .with_relationships(selected=["definitions", "event_start"])
+            .scalar(db_session)
+        )
         assert kakto_with_relationships.__dict__.get("definitions") is not None
         assert kakto_with_relationships.__dict__.get("event_start") is not None
 
-        kak_with_all_relationships = WordSelector().by_name("kak").with_relationships().scalar(db_session)
+        kak_with_all_relationships = (
+            WordSelector().by_name("kak").with_relationships().scalar(db_session)
+        )
         assert kak_with_all_relationships.__dict__.get("definitions") is not None
 
     def test_execute(self, db_session):
@@ -56,7 +61,9 @@ class TestBaseSelector:
         assert all(isinstance(item, str) for item in result)
 
     def test_select_columns_after_filter(self, db_session):
-        result = WordSelector().by_name("ka*").select_columns(BaseWord.name).all(db_session)
+        result = (
+            WordSelector().by_name("ka*").select_columns(BaseWord.name).all(db_session)
+        )
         assert len(result) == 3
         assert all(isinstance(item, str) for item in result)
 
@@ -68,3 +75,4 @@ class TestBaseSelector:
         result_asc = WordSelector().order_by(BaseWord.name).all(db_session)
         result_unsorted = WordSelector().all(db_session)
         assert result_asc != result_unsorted
+        assert len(result_asc) == len(result_unsorted)

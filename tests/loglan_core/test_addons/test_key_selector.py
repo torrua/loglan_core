@@ -21,11 +21,7 @@ class TestKeySelector:
             KeySelector(TestClass)
 
     @staticmethod
-    def test_is_inherit_cache():
-        assert KeySelector().inherit_cache is True
-
-    @staticmethod
-    def test_by_event_specified( db_session):
+    def test_by_event_specified(db_session):
         keys = KeySelector().by_event(2).all(db_session)
         result = sorted(key.id for key in keys)
         assert result == [2, 4, 6, 7, 8, 9, 10, 11, 12]
@@ -53,14 +49,27 @@ class TestKeySelector:
 
     @staticmethod
     def test_by_key_and_language(db_session):
-        keys = KeySelector(is_sqlite=True, ).by_language("es").by_key("act").all(db_session)
+        keys = (
+            KeySelector(
+                is_sqlite=True,
+            )
+            .by_language("es")
+            .by_key("act")
+            .all(db_session)
+        )
 
         result = sorted(key.id for key in keys)
-        assert result == [12, ]
+        assert result == [
+            12,
+        ]
 
     @staticmethod
     def test_by_key_cs(db_session):
-        keys = KeySelector(is_sqlite=True, case_sensitive=True).by_key("Act").all(db_session)
+        keys = (
+            KeySelector(is_sqlite=True, case_sensitive=True)
+            .by_key("Act")
+            .all(db_session)
+        )
         assert keys == []
 
     @staticmethod
@@ -68,7 +77,12 @@ class TestKeySelector:
         keys = KeySelector(is_sqlite=True).by_key("Act*").all(db_session)
 
         result = sorted(key.id for key in keys)
-        assert result == [7, 9, 11, 12, ]
+        assert result == [
+            7,
+            9,
+            11,
+            12,
+        ]
 
     @staticmethod
     def test_by_word_id(db_session):
@@ -76,9 +90,10 @@ class TestKeySelector:
         keys = KeySelector(is_sqlite=True).by_word_id(kakto.id).all(db_session)
         assert len(keys) == 5
 
-
     def test_disable_model_check_true(self, db_session):
-        result = KeySelector(model=BaseDefinition, disable_model_check=True).all(db_session)
+        result = KeySelector(model=BaseDefinition, disable_model_check=True).all(
+            db_session
+        )
         assert isinstance(result[0], BaseDefinition)
 
     def test_disable_model_check_false(self, db_session):
@@ -89,6 +104,7 @@ class TestKeySelector:
         class TestKey(BaseKey):
             pass
 
-        result = KeySelector(model=TestKey, disable_model_check=False).scalar(db_session)
+        result = KeySelector(model=TestKey, disable_model_check=False).scalar(
+            db_session
+        )
         assert isinstance(result, TestKey)
-

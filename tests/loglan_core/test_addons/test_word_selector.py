@@ -14,9 +14,6 @@ class TestWordSelector:
         with pytest.raises(ValueError) as _:
             WordSelector(TestClass)
 
-    def test_is_inherit_cache(self):
-        assert WordSelector().inherit_cache is True
-
     def test_by_event_default_event_id(self, db_session):
         result = WordSelector().by_event()
         assert isinstance(result, WordSelector)
@@ -61,7 +58,11 @@ class TestWordSelector:
         assert result_from_db == []
 
     def test_by_name_case_insensitive(self, db_session):
-        result = WordSelector(is_sqlite=True, case_sensitive=False).by_name("Pru").all(db_session)
+        result = (
+            WordSelector(is_sqlite=True, case_sensitive=False)
+            .by_name("Pru")
+            .all(db_session)
+        )
         assert len(result) == 1
         assert result[0].name == "pru"
 
@@ -87,17 +88,29 @@ class TestWordSelector:
     def test_by_key_with_foreign_language(self, db_session):
         key = "test"
         language = "es"
-        result_from_db = WordSelector(is_sqlite=True).by_key(key=key, language=language).all(db_session)
+        result_from_db = (
+            WordSelector(is_sqlite=True)
+            .by_key(key=key, language=language)
+            .all(db_session)
+        )
         assert len(result_from_db) == 0
 
     def test_by_key_case_sensitive(self, db_session):
         key = "Test"
-        result_from_db = WordSelector(is_sqlite=True).by_key(key=key, case_sensitive=True).all(db_session)
+        result_from_db = (
+            WordSelector(is_sqlite=True, case_sensitive=True)
+            .by_key(key=key)
+            .all(db_session)
+        )
         assert len(result_from_db) == 0
 
     def test_by_key_case_insensitive(self, db_session):
         key = "Test"
-        result_from_db = WordSelector(is_sqlite=True).by_key(key=key, case_sensitive=False).all(db_session)
+        result_from_db = (
+            WordSelector(is_sqlite=True, case_sensitive=False)
+            .by_key(key=key)
+            .all(db_session)
+        )
         assert len(result_from_db) == 3
 
     def test_by_type_with_no_parameters(self, db_session):
@@ -106,20 +119,31 @@ class TestWordSelector:
 
         result_from_db = result.all(db_session)
         sorted_names = [w.name for w in result_from_db]
-        assert sorted_names ==  [
-            'kak', 'kakto', 'kao',
-            'pru', 'pruci', 'prukao',
-            'cii', 'flekukfoa', 'lekveo',
-            'osmio', 'riyhasgru', 'riyvei',
-            'testuda']
+        assert sorted_names == [
+            "kak",
+            "kakto",
+            "kao",
+            "pru",
+            "pruci",
+            "prukao",
+            "cii",
+            "flekukfoa",
+            "lekveo",
+            "osmio",
+            "riyhasgru",
+            "riyvei",
+            "testuda",
+        ]
 
     def test_by_type_with_all_parameters(self, db_session):
         type_ = "2-Cpx"
         type_x = "Predicate"
         group = "Cpx"
-        result_from_db = WordSelector(is_sqlite=True).by_type(
-            type_=type_, type_x=type_x, group=group
-        ).all(db_session)
+        result_from_db = (
+            WordSelector(is_sqlite=True)
+            .by_type(type_=type_, type_x=type_x, group=group)
+            .all(db_session)
+        )
         sorted_names = [w.name for w in result_from_db]
         assert sorted_names == ["prukao"]
 
@@ -142,7 +166,6 @@ class TestWordSelector:
         sorted_names = [w.name for w in result_from_db]
         assert sorted_names == ["kak", "kao"]
 
-
     def test_affixes(self, db_session):
         kakto = WordSelector().by_name("kakto").scalar(db_session)
         assert len(WordSelector().get_affixes_of(kakto.id).all(db_session)) == 2
@@ -152,20 +175,28 @@ class TestWordSelector:
         assert len(WordSelector().get_complexes_of(kakto.id).all(db_session)) == 1
 
     def test_disable_model_check_true(self, db_session):
-        result = WordSelector(model=BaseDefinition, disable_model_check=True).all(db_session)
+        result = WordSelector(model=BaseDefinition, disable_model_check=True).all(
+            db_session
+        )
         assert isinstance(result[0], BaseDefinition)
 
     def test_disable_model_check_false(self, db_session):
         with pytest.raises(ValueError) as _:
-            WordSelector(model=BaseDefinition, disable_model_check=False).all(db_session)
+            WordSelector(model=BaseDefinition, disable_model_check=False).all(
+                db_session
+            )
 
     def test_disable_model_check_false_with_subclass(self, db_session):
         class TestWord(BaseWord):
             pass
 
-        result = WordSelector(model=TestWord, disable_model_check=False).scalar(db_session)
+        result = WordSelector(model=TestWord, disable_model_check=False).scalar(
+            db_session
+        )
         assert isinstance(result, TestWord)
 
     def test_by_name_raise_error(self, db_session):
         with pytest.raises(AttributeError) as _:
-            WordSelector(model=BaseDefinition, disable_model_check=True).by_name("kakto").scalar(db_session)
+            WordSelector(model=BaseDefinition, disable_model_check=True).by_name(
+                "kakto"
+            ).scalar(db_session)

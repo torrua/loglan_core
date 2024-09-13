@@ -76,13 +76,6 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
         self.model = model
 
-    @property
-    def inherit_cache(self):  # pylint: disable=C0116
-        """
-        :return: bool
-        """
-        return True
-
     def by_event(self, event_id: int | None = None) -> DefinitionSelector:
         """
         This method filters the definitions by the given event id.
@@ -108,7 +101,6 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self,
         key: BaseKey | str,
         language: str | None = None,
-        case_sensitive: bool = False,
     ) -> Self:
         """
         This method filters the definitions by the provided key, language and case sensitivity.
@@ -117,14 +109,15 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             key (BaseKey | str): The key to filter by. Can be an instance of BaseKey or a string.
             language (str | None): The language to filter by.
             If None, no language filtering is applied.
-            case_sensitive (bool): Flag indicating whether filtering should be case-sensitive.
 
         Returns:
             Self: The filtered DefinitionSelector instance with distinct keys.
         """
 
         search_key = key.word if isinstance(key, BaseKey) else str(key)
-        filter_key = filter_key_by_word_cs(search_key, case_sensitive, self.is_sqlite)
+        filter_key = filter_key_by_word_cs(
+            search_key, self.case_sensitive, self.is_sqlite
+        )
         filter_language = filter_key_by_language(
             key.language if isinstance(key, BaseKey) else language
         )

@@ -44,9 +44,11 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
     A class used to select keys meeting certain criteria.
 
     Attributes:
-        class_ (Type[BaseKey]): The class to be used as the base key.
+        model (Type[BaseKey]): The class to be used as the base key.
             Must be a subclass of BaseKey.
-        is_sqlite (bool): Indicator if the object is being used with SQLite or not.
+        is_sqlite (bool): If SQLite is being used. Defaults to False.
+        case_sensitive (bool): If the queries should be case-sensitive.
+        disable_model_check (bool): If the model check is disabled during initialization.
     """
 
     def __init__(
@@ -76,14 +78,6 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
             self._is_model_accepted(model, BaseKey)
 
         self.model = model
-
-    @property
-    def inherit_cache(self):  # pylint: disable=C0116
-        """
-        Returns:
-             bool
-        """
-        return True
 
     def by_event(self, event_id: int | None = None) -> KeySelector:
         """

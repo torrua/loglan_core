@@ -100,7 +100,6 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self,
         key: BaseKey | str,
         language: str | None = None,
-        case_sensitive: bool = False,
     ) -> Self:
         """
         Applies a filter to select words by a specific key.
@@ -109,17 +108,18 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             key (BaseKey | str): The key to filter by.
             It can either be an instance of BaseKey or a string.
             language (str | None): The language of the key. Defaults to None.
-            case_sensitive (bool): Whether the search should be case-sensitive.
                 Defaults to False.
 
         Returns:
             Self: A query with the filter applied.
         """
 
-        definition_query = DefinitionSelector(is_sqlite=self.is_sqlite).by_key(
+        definition_query = DefinitionSelector(
+            is_sqlite=self.is_sqlite,
+            case_sensitive=self.case_sensitive,
+        ).by_key(
             key=key,
             language=language,
-            case_sensitive=case_sensitive,
         )
         subquery = select(definition_query.get_statement().subquery().c.word_id)
         self._statement = self._statement.where(self.model.id.in_(subquery))
@@ -214,7 +214,3 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             Self: A query with the filter applied.
         """
         return self.get_derivatives_of(word_id).by_type(group="Cpx")
-
-    @property
-    def inherit_cache(self):  # pylint: disable=missing-function-docstring
-        return True
