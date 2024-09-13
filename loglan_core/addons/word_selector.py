@@ -35,10 +35,17 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         disable_model_check: bool = False,
     ):
         """
-        Initialize a WordSelector instance.
+        Initializes the WordSelector object with the provided parameters.
 
         Args:
+            model (Type[BaseWord]): The class to be used as the base key.
+                Must be a subclass of BaseWord.
             is_sqlite (bool): If SQLite is being used. Defaults to False.
+            case_sensitive (bool): If the queries should be case-sensitive.
+            disable_model_check (bool): If the model check is disabled during initialization.
+
+        Raises:
+            ValueError: If the provided model is not a subclass of BaseWord.
         """
 
         super().__init__(

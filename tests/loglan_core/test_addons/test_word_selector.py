@@ -165,3 +165,7 @@ class TestWordSelector:
 
         result = WordSelector(model=TestWord, disable_model_check=False).scalar(db_session)
         assert isinstance(result, TestWord)
+
+    def test_by_name_raise_error(self, db_session):
+        with pytest.raises(AttributeError) as _:
+            WordSelector(model=BaseDefinition, disable_model_check=True).by_name("kakto").scalar(db_session)

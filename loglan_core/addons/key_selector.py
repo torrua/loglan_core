@@ -54,21 +54,28 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         model: Type[BaseKey] = BaseKey,
         is_sqlite: bool = False,
         case_sensitive: bool = False,
+        disable_model_check: bool = False,
     ) -> None:
         """
         Initializes the KeySelector object with the provided parameters.
 
         Args:
-            class_ (Type[BaseKey]): The class to be used as the base key.
+            model (Type[BaseKey]): The class to be used as the base key.
                 Must be a subclass of BaseKey.
-            is_sqlite (bool): Indicator if the object is being used with SQLite or not.
+            is_sqlite (bool): If SQLite is being used. Defaults to False.
+            case_sensitive (bool): If the queries should be case-sensitive.
+            disable_model_check (bool): If the model check is disabled during initialization.
 
         Raises:
-            ValueError: If the provided class_ is not a subclass of BaseKey.
+            ValueError: If the provided model is not a subclass of BaseKey.
         """
 
-        super().__init__(model, is_sqlite, case_sensitive)
+        super().__init__(model, is_sqlite, case_sensitive, disable_model_check)
 
+        if not self.disable_model_check:
+            self._is_model_accepted(model, BaseKey)
+
+        self.model = model
     @property
     def inherit_cache(self):  # pylint: disable=C0116
         """

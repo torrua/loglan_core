@@ -74,3 +74,11 @@ class TestDefinitionSelector:
 
         result = DefinitionSelector(model=TestDefinition, disable_model_check=False).scalar(db_session)
         assert isinstance(result, TestDefinition)
+
+    def test_by_key_raise_error(self, db_session):
+        with pytest.raises(AttributeError) as _:
+            DefinitionSelector(model=BaseWord, disable_model_check=True).by_key("act").scalar(db_session)
+
+    def test_by_language_raise_error(self, db_session):
+        with pytest.raises(AttributeError) as _:
+            DefinitionSelector(model=BaseWord, disable_model_check=True).by_language("en").scalar(db_session)

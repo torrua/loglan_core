@@ -57,17 +57,17 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         disable_model_check: bool = False,
     ):
         """
-        Initializes the object with the given parameters.
+        Initializes the DefinitionSelector object with the provided parameters.
 
         Args:
-            Must be a subclass of BaseDefinition.
-            is_sqlite (bool): Whether the object is being used with SQLite or not.
+            model (Type[BaseDefinition]): The class to be used as the base key.
+                Must be a subclass of BaseDefinition.
+            is_sqlite (bool): If SQLite is being used. Defaults to False.
+            case_sensitive (bool): If the queries should be case-sensitive.
+            disable_model_check (bool): If the model check is disabled during initialization.
 
         Raises:
-            ValueError: If the provided class_ is not a subclass of BaseDefinition.
-
-        Returns:
-            None
+            ValueError: If the provided model is not a subclass of BaseDefinition.
         """
 
         super().__init__(model, is_sqlite, case_sensitive, disable_model_check)
