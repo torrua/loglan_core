@@ -76,6 +76,7 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
             self._is_model_accepted(model, BaseKey)
 
         self.model = model
+
     @property
     def inherit_cache(self):  # pylint: disable=C0116
         """
