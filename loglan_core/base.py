@@ -7,6 +7,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from sqlalchemy import String, inspect, func, select
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session, registry as rg
 from typing_extensions import Annotated
@@ -137,15 +138,19 @@ class BaseModel(DeclarativeBase):
         )
         return f"{self.__class__.__name__}({obj_str})"
 
-    @staticmethod
-    def _filter_add_to_repr(k, v):
+    @classmethod
+    def _filter_add_to_repr(cls, k, v):
         """
         Static method that filters out keys that start with "_" and keys
         that are "created" or "updated" and keys without values from the
         object's attributes. The method is used to generate a string
         representation of the object. It is used internally by the __repr__.
         """
-        return not k.startswith("_") and k not in ["created", "updated"] and v
+        return (
+            not k.startswith("_")
+            and k not in ["created", "updated", *cls.relationships()]
+            and v
+        )
 
     @classmethod
     def get_by_id(cls, session: Session, cid: int):
@@ -205,7 +210,7 @@ class BaseModel(DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of all attribute keys.
         """
-        return set(cls.__mapper__.attrs.keys())
+        return set(cls.__mapper__.attrs.keys()) | cls.hybrid_properties()
 
     @classmethod
     def attributes_basic(cls) -> set[str]:
@@ -218,7 +223,7 @@ class BaseModel(DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of basic attributes.
         """
-        return set(cls.attributes_all() - cls.relationships())
+        return set(cls.attributes_all() - cls.relationships() - cls.hybrid_properties())
 
     @classmethod
     def attributes_extended(cls) -> set[str]:
@@ -258,7 +263,12 @@ class BaseModel(DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of the foreign keys.
         """
-        return set(cls.attributes_all() - cls.relationships() - cls.non_foreign_keys())
+        return set(
+            cls.attributes_all()
+            - cls.relationships()
+            - cls.non_foreign_keys()
+            - cls.hybrid_properties()
+        )
 
     @classmethod
     def non_foreign_keys(cls) -> set[str]:
@@ -278,3 +288,16 @@ class BaseModel(DeclarativeBase):
             column.name for column in columns if not column.foreign_keys
         }
         return non_foreign_keys
+
+    @classmethod
+    def hybrid_properties(cls) -> set[str]:
+        """
+        Class method that computes the hybrid properties of the class.
+
+        It doesn’t require any parameters as it operates on the class itself.
+
+        Returns:
+            set[str]: A set of strings with names of the hybrid properties.
+        """
+        inspector = inspect(cls).all_orm_descriptors
+        return {i.__name__ for i in inspector if isinstance(i, hybrid_property)}

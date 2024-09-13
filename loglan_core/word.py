@@ -7,6 +7,7 @@ from __future__ import annotations
 import datetime
 
 from sqlalchemy import ForeignKey, JSON
+from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
 
@@ -104,6 +105,7 @@ class BaseWord(BaseModel):
     type: Mapped[BaseType] = relationship(
         foreign_keys=[type_id],
         back_populates="words",
+        lazy="joined",  # required for proper loading affixes and complexes
     )
 
     event_start_id: Mapped[int] = mapped_column(
@@ -153,3 +155,28 @@ class BaseWord(BaseModel):
         secondaryjoin=(t_connect_words.c.parent_id == id),
         back_populates="derivatives",
     )
+
+    @hybrid_property
+    def affixes(self) -> list[BaseWord]:
+        """
+        Hybrid property that returns a list of affixes that are derived from the word.
+
+        This property is a hybrid of a Python property and a SQLAlchemy expression.
+        It can be used as a property in Python code or as a column in a SQLAlchemy query.
+
+        Returns:
+            list[BaseWord]: A list of affixes that are derived from the word.
+        """
+        return [child for child in self.derivatives if child.type.type_x == "Affix"]
+
+    @hybrid_property
+    def complexes(self) -> list[BaseWord]:
+        """Hybrid property that returns a list of complexes derived from the word.
+
+        This property is a hybrid of a Python property and a SQLAlchemy expression.
+        It can be used as a property in Python code or as a column in a SQLAlchemy query.
+
+        Returns:
+            list[BaseWord]: A list of complexes derived from the word.
+        """
+        return [child for child in self.derivatives if child.type.group == "Cpx"]

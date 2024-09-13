@@ -23,38 +23,36 @@ When manipulating a `WordSelector` object, several variables can be used:
 
 
 ## Create WordSelector instance
-```python
-ws = WordSelector()
-```
 
 We can then use the methods provided by the class to apply filters to our query.
 For example, to select words associated with a specific event, we use the `by_event` method:
 ```python
-ws_event = ws.by_event(event_id=1)
+ws_event = WordSelector().by_event(event_id=1)
 ```
 
 The `by_event` method returns a new instance of WordSelector with the filter applied.
 We can also filter words by a specific name. We use the `by_name` method:
 ```python
-ws_name = ws.by_name(name='proga')
+ws_name = WordSelector().by_name(name='proga')
 ```
 The `by_name` method, like `by_event`, also returns a new instance of WordSelector with the filter applied.
 Similarly, we can filter words by a specific key using the `by_key` method:
+
 ```python
-ws_key = ws.by_key(key='program')
+ws_key = WordSelector().by_key(key='program')
 ```
 
 We can also combine filters:
 ```python
-ws_combined = ws.by_event(event_id=1).by_name(name='proga')
+ws_combined = WordSelector().by_event(event_id=1).by_name(name='proga')
 ```
 This will select words that are associated with the specified event AND have the specified name.
 
 ## Get Results from WordSelector
 The WordSelector object returns a classic SQLAlchemy `Select` Object, so we can use it as normal within a session, like this:
 ```python
-all_words = session.scalars(ws_combined).all()
-first_word = session.scalar(ws_combined)
+all_words = session.scalars(ws_combined.get_statement()).all()
+first_word = session.scalar(ws_combined.get_statement())
 ```
 Also, we can use the internal `all`, `scalar` or `fetchmany` methods:
 ```python
