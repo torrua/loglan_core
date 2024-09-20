@@ -34,4 +34,3 @@ from loglan_core.addons.word_selector import WordSelector
 from loglan_core.addons.export_word_converter import ExportWordConverter
 from loglan_core.addons.exporter import Exporter
 from loglan_core.addons.word_linker import WordLinker
-from loglan_core.addons.word_sourcer import WordSourcer
