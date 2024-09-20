@@ -8,7 +8,7 @@ from typing import Type, Iterable, Any
 
 from sqlalchemy import select, Select
 from sqlalchemy.orm import Session, InstrumentedAttribute, joinedload
-from sqlalchemy.types import String
+from sqlalchemy.types import String, Integer
 from typing_extensions import Self
 
 from loglan_core.base import BaseModel
@@ -230,8 +230,11 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         """
         column = self._get_column(key)
 
-        if not isinstance(column.type, String):
+        if not isinstance(column.type, (String, Integer)):
             return column == value
+
+        if isinstance(column.type, Integer):
+            return column == int(value)
 
         value = value.replace("*", "%")
 
