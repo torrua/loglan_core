@@ -93,6 +93,22 @@ class TestBaseSelector:
         assert len(result) == 1
         assert result[0].name == "kakto"
 
+    def test_where_like_case_sensitive(self, db_session):
+        result = (
+            WordSelector(case_sensitive=True, is_sqlite=True)
+            .where_like(name="Ka*")
+            .all(db_session)
+        )
+        assert not result
+
+    def test_where_like_case_insensitive(self, db_session):
+        result = (
+            WordSelector(case_sensitive=False, is_sqlite=True)
+            .where_like(name="Ka*")
+            .all(db_session)
+        )
+        assert len(result) == 3
+
     def test__generate_column_condition_raise_error(self, db_session):
         with pytest.raises(AttributeError) as _:
             WordSelector()._generate_column_condition("wrong_name", "test").scalar(

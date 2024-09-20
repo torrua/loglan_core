@@ -204,6 +204,24 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self._statement = self._statement.where(*args)
         return self
 
+    def where_like(self, **kwargs) -> Self:
+        """Filter results based on arbitrary keyword arguments.
+            Use internal method `_generate_column_condition` to generate
+            the condition based on settings provided by Selector instance
+            like (is_sqlite, case_sensitive).
+
+        Args:
+            **kwargs: Column-value pairs to filter by.
+
+        Returns:
+            Self: The current instance for method chaining.
+        """
+        for key, value in kwargs.items():
+            self._statement = self._statement.where(
+                self._generate_column_condition(key, value)
+            )
+        return self
+
     def _generate_column_condition(self, key: str | InstrumentedAttribute, value: Any):
         column = getattr(self.model, key, None) if isinstance(key, str) else key
         if column is None:
