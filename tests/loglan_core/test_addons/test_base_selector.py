@@ -1,3 +1,5 @@
+from datetime import date
+
 import pytest
 from sqlalchemy import Result
 
@@ -109,8 +111,33 @@ class TestBaseSelector:
         )
         assert len(result) == 3
 
-    def test__generate_column_condition_raise_error(self, db_session):
+    def test_where_like_int(self, db_session):
+        result = (
+            WordSelector(case_sensitive=False, is_sqlite=True)
+            .where_like(id=1)
+            .all(db_session)
+        )
+        assert len(result) == 1
+
+    def test_where_like_date(self, db_session):
+        result = (
+            WordSelector(case_sensitive=False, is_sqlite=True)
+            .where_like(year=date(1988, 1, 1))
+            .all(db_session)
+        )
+        for r in result:
+            assert r.year == date(1988, 1, 1)
+
+        assert len(result) == 4
+
+    def test_get_like_condition_raise_error(self, db_session):
         with pytest.raises(AttributeError) as _:
-            WordSelector()._generate_column_condition("wrong_name", "test").scalar(
-                db_session
-            )
+            WordSelector().get_like_condition("wrong_name", "test")
+
+    def test_get_like_condition(self, db_session):
+        # trick to get the coverage because we use sqlite but specify as False
+        wrong_cond = WordSelector(
+            case_sensitive=True, is_sqlite=False
+        ).get_like_condition("name", "kakto")
+        word = WordSelector().where(wrong_cond).scalar(db_session)
+        assert word.name == "kakto"

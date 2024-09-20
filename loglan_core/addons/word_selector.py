@@ -87,7 +87,7 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             Self: A query with the filter applied.
         """
         if hasattr(self.model, "name"):
-            condition = self._generate_column_condition(self.model.name, name)
+            condition = self.get_like_condition(self.model.name, name)
         else:
             raise AttributeError(
                 f"{self.model.__name__} does not have a 'name' attribute"

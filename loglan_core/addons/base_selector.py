@@ -8,6 +8,7 @@ from typing import Type, Iterable, Any
 
 from sqlalchemy import select, Select
 from sqlalchemy.orm import Session, InstrumentedAttribute, joinedload
+from sqlalchemy.types import String
 from typing_extensions import Self
 
 from loglan_core.base import BaseModel
@@ -62,8 +63,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self.case_sensitive = case_sensitive
 
     def execute(self, session: Session):
-        """
-        Executes the given session and returns the result.
+        """Executes the given session and returns the result.
 
         Args:
             session (Session): SQLAlchemy Session object.
@@ -74,8 +74,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         return session.execute(self._statement)
 
     def all(self, session: Session):
-        """
-        Executes the given session and returns all the results as a list.
+        """Executes the given session and returns all the results as a list.
 
         Args:
             session (Session): SQLAlchemy Session object.
@@ -86,8 +85,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         return session.execute(self._statement).scalars().all()
 
     def scalar(self, session: Session):
-        """
-        Executes the given session and returns a scalar result.
+        """Executes the given session and returns a scalar result.
 
         Args:
             session (Session): SQLAlchemy Session object.
@@ -98,8 +96,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         return session.execute(self._statement).scalar()
 
     def fetchmany(self, session: Session, size: int | None = None):
-        """
-        Executes the given session and fetches a specified number of results.
+        """Executes the given session and fetches a specified number of results.
 
         Args:
             session (Session): SQLAlchemy Session object.
@@ -217,20 +214,34 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             Self: The current instance for method chaining.
         """
         for key, value in kwargs.items():
-            self._statement = self._statement.where(
-                self._generate_column_condition(key, value)
-            )
+            self._statement = self._statement.where(self.get_like_condition(key, value))
         return self
 
-    def _generate_column_condition(self, key: str | InstrumentedAttribute, value: Any):
-        column = getattr(self.model, key, None) if isinstance(key, str) else key
-        if column is None:
-            raise AttributeError(f"Model {self.model} has no attribute {key}")
+    def get_like_condition(self, key: str | InstrumentedAttribute, value: Any):
+        """Generate the condition based on settings provided by Selector instance
+        like (is_sqlite, case_sensitive).
 
-        value = str(value).replace("*", "%")
-        if self.case_sensitive:
-            return column.op("GLOB")(value) if self.is_sqlite else column.like(value)
-        return column.ilike(value)
+        Args:
+            key (str | InstrumentedAttribute): The key of the column to filter by.
+            value (Any): The value to filter by.
+
+        Returns:
+            Condition: The SQLAlchemy condition to filter by.
+        """
+        column = self._get_column(key)
+
+        if not isinstance(column.type, String):
+            return column == value
+
+        value = value.replace("*", "%")
+
+        if not self.case_sensitive:
+            return column.ilike(value)
+
+        if self.is_sqlite:
+            return column.op("GLOB")(value)
+
+        return column.like(value)
 
     def get_statement(self) -> Select:
         """Get the current SQLAlchemy _statement.
@@ -251,21 +262,8 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         """
         return self.all(session)
 
-    @staticmethod
-    def _is_model_accepted(model, parent: type[BaseModel] = BaseModel):
-        """
-        Checks if the model is an instance of BaseModel or its child.
-        Raises:
-            ValueError: If the model is not an instance of BaseModel or its child.
-        """
-        if not issubclass(model, parent):
-            raise ValueError(
-                f"Provided class_={model} is not a inherited from {parent}"
-            )
-
     def with_relationships(self, selected: Iterable[str] | None = None) -> Self:
-        """
-        Adds relationships to the query.
+        """Adds relationships to the query.
 
         Args:
             selected (set[str]): A set of relationship names to include.
@@ -284,3 +282,30 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         }
         self._statement = self._statement.options(*relationships)
         return self
+
+    @staticmethod
+    def _is_model_accepted(model, parent: type[BaseModel] = BaseModel):
+        """Checks if the model is an instance of BaseModel or its child.
+
+        Raises:
+            ValueError: If the model is not an instance of BaseModel or its child.
+        """
+        if not issubclass(model, parent):
+            raise ValueError(f"Provided model={model} is not a inherited from {parent}")
+
+    def _get_column(self, key: str | InstrumentedAttribute) -> InstrumentedAttribute:
+        """Get the column from the model.
+
+        Args:
+            key (str | InstrumentedAttribute): The key of the column to filter by.
+
+        Raises:
+            AttributeError: If the model has no attribute with the given key.
+
+        Returns:
+            InstrumentedAttribute: The SQLAlchemy column to filter by.
+        """
+        column = getattr(self.model, key, None) if isinstance(key, str) else key
+        if column is None:
+            raise AttributeError(f"Model {self.model} has no attribute {key}")
+        return column
