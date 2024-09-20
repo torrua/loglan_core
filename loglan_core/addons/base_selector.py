@@ -7,7 +7,7 @@ from __future__ import annotations
 from typing import Type, Iterable, Any
 
 from sqlalchemy import select, Select
-from sqlalchemy.orm import Session, selectinload, InstrumentedAttribute
+from sqlalchemy.orm import Session, InstrumentedAttribute, joinedload
 from typing_extensions import Self
 
 from loglan_core.base import BaseModel
@@ -260,7 +260,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             attr: getattr(self.model, attr) for attr in self.model.relationships()
         }
         relationships = {
-            selectinload(v)
+            joinedload(v)
             for k, v in available_relationships.items()
             if not selected or k in selected
         }
