@@ -48,7 +48,7 @@ class BaseDefinition(BaseModel):
 
     __tablename__ = T_NAME_DEFINITIONS
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-positional-arguments
         self,
         word_id: Mapped[int],
         position: Mapped[int],

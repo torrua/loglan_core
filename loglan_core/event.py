@@ -43,7 +43,7 @@ class BaseEvent(BaseModel):
 
     __tablename__ = T_NAME_EVENTS
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-positional-arguments
         self,
         event_id: Mapped[int],
         name: Mapped[str_064],

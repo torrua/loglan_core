@@ -34,7 +34,7 @@ class BaseWord(BaseModel):
 
     __tablename__ = T_NAME_WORDS
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-positional-arguments
         self,
         id_old: Mapped[int],
         name: Mapped[str_064],

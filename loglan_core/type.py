@@ -27,7 +27,7 @@ class BaseType(BaseModel):
 
     __tablename__ = T_NAME_TYPES
 
-    def __init__(
+    def __init__(  # pylint: disable=too-many-positional-arguments
         self,
         type_: Mapped[str_016],
         type_x: Mapped[str_016],
