@@ -112,12 +112,11 @@ class BaseDefinition(BaseModel):
     @property
     def grammar(self) -> str:
         """
-        Combine definition's 'slots' and 'grammar_code' attributes
+        Combine definition's 'slots' and 'grammar_code' attributes.
 
         Returns:
-            String with grammar data like (3v) or (2n)
+            String with grammar data like (3v) or (2n), or an empty string if both are None.
         """
-        return (
-            f"({self.slots if self.slots else ''}"
-            f"{self.grammar_code if self.grammar_code else ''})"
-        )
+        sl_str = self.slots or ""
+        gr_str = self.grammar_code or ""
+        return f"({sl_str}{gr_str})" if sl_str or gr_str else ""
