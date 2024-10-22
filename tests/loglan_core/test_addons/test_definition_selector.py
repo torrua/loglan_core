@@ -60,6 +60,11 @@ class TestDefinitionSelector:
             15,
         ]
 
+    def test_by_key_distinct(self, db_session):
+        definitions = DefinitionSelector().by_key("act", distinct=True).all(db_session)
+        result = sorted(d.id for d in definitions)
+        assert result == [6, 9, 15, 16]
+
     def test_disable_model_check_true(self, db_session):
         result = DefinitionSelector(model=BaseWord, disable_model_check=True).all(
             db_session
