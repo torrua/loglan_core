@@ -88,6 +88,16 @@ class TestKeySelector:
     def test_by_word_id(db_session):
         kakto = WordSelector(is_sqlite=True).by_name("kakto").scalar(db_session)
         keys = KeySelector(is_sqlite=True).by_word_id(kakto.id).all(db_session)
+        assert len(keys) == 6
+
+    @staticmethod
+    def test_by_word_id_distinct(db_session):
+        kakto = WordSelector(is_sqlite=True).by_name("kakto").scalar(db_session)
+        keys = (
+            KeySelector(is_sqlite=True)
+            .by_word_id(kakto.id, distinct=True)
+            .all(db_session)
+        )
         assert len(keys) == 5
 
     def test_disable_model_check_true(self, db_session):
