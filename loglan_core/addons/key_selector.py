@@ -131,12 +131,13 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
         self._statement = self._statement.where(filter_key_by_language(language))
         return self
 
-    def by_word_id(self, word_id: int) -> KeySelector:
+    def by_word_id(self, word_id: int, distinct: bool = False) -> KeySelector:
         """
         Filters the keys by the given word ID.
 
         Args:
             word_id (int): The identifier of the word to filter by.
+            distinct (bool): If the query should be distinct. Defaults to False.
 
         Returns:
             KeySelector: The filtered KeySelector instance.
@@ -146,11 +147,14 @@ class KeySelector(BaseSelector):  # pylint: disable=too-many-ancestors
 
         """
         self._statement = (
-            self._statement.distinct()
-            .join(t_connect_keys)
+            self._statement.join(t_connect_keys)
             .join(BaseDefinition, BaseDefinition.id == t_connect_keys.c.DID)
             .join(BaseWord, BaseWord.id == BaseDefinition.word_id)
             .filter(BaseWord.id == word_id)
             .order_by(BaseKey.word.asc())
         )
+
+        if distinct:
+            self._statement = self._statement.distinct()
+
         return self
