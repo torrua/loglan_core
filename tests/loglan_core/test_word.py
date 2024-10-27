@@ -1,9 +1,6 @@
 import pytest
-from docutils.parsers.rst.states import Definition
-
 from loglan_core import Word, Type, Event, WordSelector, DefinitionSelector
 from loglan_core.addons.base_selector import BaseSelector
-from tests.data import definitions
 
 
 @pytest.mark.usefixtures("db_session")
