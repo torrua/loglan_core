@@ -11,8 +11,6 @@ license = { text = "MIT" }
 authors = [
     { name = "torrua", email = "torrua@gmail.com" }
 ]
-homepage = "https://github.com/torrua/loglan_core"
-repository = "https://github.com/torrua/loglan_core"
 keywords = ["Loglan", "Dictionary", "Database", "Model", "LOD"]
 classifiers = [
     "Development Status :: 5 - Production/Stable",
@@ -29,6 +27,11 @@ requires-python = ">=3.10"
 dependencies = [
     "sqlalchemy>=2.0.21",
 ]
+
+[project.urls]
+"Download" = "https://github.com/torrua/loglan_core/archive/0.4.6.tar.gz"  # Placeholder, will be replaced by the script
+"Homepage" = "https://github.com/torrua/loglan_core"
+"Repository" = "https://github.com/torrua/loglan_core"
 
 [tool.setuptools.packages.find]
 include = ["loglan_core", "loglan_core.addons"]
