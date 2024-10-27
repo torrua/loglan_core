@@ -138,6 +138,7 @@ class BaseWord(BaseModel):
 
     definitions: Mapped[list[BaseDefinition]] = relationship(
         back_populates="source_word",
+        cascade="all, delete-orphan",
     )
 
     # word's derivatives
