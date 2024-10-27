@@ -2,6 +2,40 @@
 requires = ['setuptools>=42']
 build-backend = 'setuptools.build_meta'
 
+[project]
+name = "Loglan-Core"
+version = "0.4.6"  # Placeholder, will be replaced by the script
+description = "Loglan Dictionary Database Model for SQLAlchemy"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [
+    { name = "torrua", email = "torrua@gmail.com" }
+]
+keywords = ["Loglan", "Dictionary", "Database", "Model", "LOD"]
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "Topic :: Database",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+]
+requires-python = ">=3.10"
+
+dependencies = [
+    "sqlalchemy>=2.0.21",
+]
+
+[project.urls]
+"Download" = "https://github.com/torrua/loglan_core/archive/0.4.6.tar.gz"  # Placeholder, will be replaced by the script
+"Homepage" = "https://github.com/torrua/loglan_core"
+"Repository" = "https://github.com/torrua/loglan_core"
+
+[tool.setuptools.packages.find]
+include = ["loglan_core", "loglan_core.addons"]
+
 [tool.pylint]
 disable = ["R0902", "R0913", "R0801"]
 
