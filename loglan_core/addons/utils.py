@@ -2,8 +2,6 @@
 This module provides utility functions for the loglan_core package.
 """
 
-from __future__ import annotations
-
 from sqlalchemy import select, true, func
 from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.elements import BooleanClauseList

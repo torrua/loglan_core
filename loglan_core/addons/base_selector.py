@@ -2,8 +2,6 @@
 This module provides a base selector for SQLAlchemy
 """
 
-from __future__ import annotations
-
 from typing import Type, Iterable, Any
 
 from sqlalchemy import select, Select
@@ -62,11 +60,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self.is_sqlite = is_sqlite
         self.case_sensitive = case_sensitive
 
-    def execute(
-        self,
-        session: Session,
-        unique: bool = False,
-    ) -> Any:
+    def execute(self, session: Session, unique: bool = False) -> Any:
         """Executes the given session and returns the result.
 
         Args:
@@ -79,11 +73,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         result = session.execute(self._statement)
         return result.unique() if unique else result
 
-    def all(
-        self,
-        session: Session,
-        unique: bool = False,
-    ):
+    def all(self, session: Session, unique: bool = False):
         """Executes the given session and returns all the results as a list.
 
         Args:
@@ -107,10 +97,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         return self.execute(session).scalar()
 
     def fetchmany(
-        self,
-        session: Session,
-        size: int | None = None,
-        unique: bool = False,
+        self, session: Session, size: int | None = None, unique: bool = False
     ):
         """Executes the given session and fetches a specified number of results.
 
