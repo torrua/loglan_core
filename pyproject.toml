@@ -4,7 +4,7 @@ build-backend = 'setuptools.build_meta'
 
 [project]
 name = "Loglan-Core"
-version = "0.0.0"  # Placeholder, will be replaced by the script
+version = "0.0.0"
 description = "Loglan Dictionary Database Model for SQLAlchemy"
 readme = "README.md"
 license = { text = "MIT" }
@@ -29,7 +29,7 @@ dependencies = [
 ]
 
 [project.urls]
-"Download" = "https://github.com/torrua/loglan_core/archive/0.0.0.tar.gz"  # Placeholder, will be replaced by the script
+"Download" = "https://github.com/torrua/loglan_core/archive/0.0.0.tar.gz"
 "Homepage" = "https://github.com/torrua/loglan_core"
 "Repository" = "https://github.com/torrua/loglan_core"
 
