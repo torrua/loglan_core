@@ -46,7 +46,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         """Initializes the Selector.
 
         Args:
-            model (Type): The SQLAlchemy model class to query.
+            model (Type): The SQLAlchemy model class to select from.
             is_sqlite (bool): Flag indicating if the database is SQLite.
             case_sensitive (bool): Flag indicating if the queries should be case-sensitive.
             disable_model_check (bool): Flag indicating if the model check should be disabled.
@@ -62,27 +62,38 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self.is_sqlite = is_sqlite
         self.case_sensitive = case_sensitive
 
-    def execute(self, session: Session):
+    def execute(
+        self,
+        session: Session,
+        unique: bool = False,
+    ) -> Any:
         """Executes the given session and returns the result.
 
         Args:
             session (Session): SQLAlchemy Session object.
-
+            unique (bool, optional): Flag indicating if the result should be unique.
+            Defaults to False.
         Returns:
             ResultProxy: The result of the executed session.
         """
-        return session.execute(self._statement)
+        result = session.execute(self._statement)
+        return result.unique() if unique else result
 
-    def all(self, session: Session):
+    def all(
+        self,
+        session: Session,
+        unique: bool = False,
+    ):
         """Executes the given session and returns all the results as a list.
 
         Args:
             session (Session): SQLAlchemy Session object.
-
+            unique (bool, optional): Flag indicating if the result should contain unique items.
+            Defaults to False.
         Returns:
             List[ResultRow]: All the results of the executed session.
         """
-        return session.execute(self._statement).scalars().all()
+        return self.execute(session, unique).scalars().all()
 
     def scalar(self, session: Session):
         """Executes the given session and returns a scalar result.
@@ -93,19 +104,37 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
             Any: The scalar result of the executed session.
         """
-        return session.execute(self._statement).scalar()
+        return self.execute(session).scalar()
 
-    def fetchmany(self, session: Session, size: int | None = None):
+    def fetchmany(
+        self,
+        session: Session,
+        size: int | None = None,
+        unique: bool = False,
+    ):
         """Executes the given session and fetches a specified number of results.
 
         Args:
             session (Session): SQLAlchemy Session object.
             size (int, optional): Number of results to fetch. If None, fetches all results.
-
+            unique (bool, optional): Flag indicating if the result should contain unique items.
+            Defaults to False.
         Returns:
             List[ResultRow]: The fetched results.
         """
-        return session.execute(self._statement).scalars().fetchmany(size)
+        return self.execute(session, unique).scalars().fetchmany(size)
+
+    def __call__(self, session: Session, unique: bool = False) -> list:
+        """Execute the current _statement and return the results.
+
+        Args:
+            session (Session): The SQLAlchemy session to use for executing the query.
+            unique (bool, optional): Flag indicating if the result should contain unique items.
+            Defaults to False.
+        Returns:
+            list: The results of the query.
+        """
+        return self.all(session, unique)
 
     def select_columns(self, *columns: type[BaseModel]) -> Self:
         """Specify which columns to select without resetting the filters.
@@ -253,17 +282,6 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             Select: The current SQLAlchemy _statement.
         """
         return self._statement
-
-    def __call__(self, session: Session):
-        """Execute the current _statement and return the results.
-
-        Args:
-            session (Session): The SQLAlchemy session to use for executing the query.
-
-        Returns:
-            list: The results of the query.
-        """
-        return self.all(session)
 
     def with_relationships(self, selected: Iterable[str] | None = None) -> Self:
         """Adds relationships to the query.
