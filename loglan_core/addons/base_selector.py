@@ -5,6 +5,7 @@ This module provides a base selector for SQLAlchemy
 from typing import Type, Iterable, Any
 
 from sqlalchemy import select, Select
+from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session, InstrumentedAttribute, joinedload
 from sqlalchemy.types import String, Integer
 from typing_extensions import Self
@@ -59,69 +60,6 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
 
         self.is_sqlite = is_sqlite
         self.case_sensitive = case_sensitive
-
-    def execute(self, session: Session, unique: bool = False) -> Any:
-        """Executes the given session and returns the result.
-
-        Args:
-            session (Session): SQLAlchemy Session object.
-            unique (bool, optional): Flag indicating if the result should be unique.
-            Defaults to False.
-        Returns:
-            ResultProxy: The result of the executed session.
-        """
-        result = session.execute(self._statement)
-        return result.unique() if unique else result
-
-    def all(self, session: Session, unique: bool = False):
-        """Executes the given session and returns all the results as a list.
-
-        Args:
-            session (Session): SQLAlchemy Session object.
-            unique (bool, optional): Flag indicating if the result should contain unique items.
-            Defaults to False.
-        Returns:
-            List[ResultRow]: All the results of the executed session.
-        """
-        return self.execute(session, unique).scalars().all()
-
-    def scalar(self, session: Session):
-        """Executes the given session and returns a scalar result.
-
-        Args:
-            session (Session): SQLAlchemy Session object.
-
-        Returns:
-            Any: The scalar result of the executed session.
-        """
-        return self.execute(session).scalar()
-
-    def fetchmany(
-        self, session: Session, size: int | None = None, unique: bool = False
-    ):
-        """Executes the given session and fetches a specified number of results.
-
-        Args:
-            session (Session): SQLAlchemy Session object.
-            size (int, optional): Number of results to fetch. If None, fetches all results.
-            unique (bool, optional): Flag indicating if the result should contain unique items.
-            Defaults to False.
-        Returns:
-            List[ResultRow]: The fetched results.
-        """
-        return self.execute(session, unique).scalars().fetchmany(size)
-
-    def __call__(self, session: Session, unique: bool = False) -> list:
-        """Execute the current _statement and return the results.
-
-        Args:
-            session (Session): The SQLAlchemy session to use for executing the query.
-            unique (bool, optional): Flag indicating if the result should contain unique items.
-            Defaults to False.
-        Returns:
-            list: The results of the query.
-        """
-        return self.all(session, unique)
 
     def select_columns(self, *columns: type[BaseModel]) -> Self:
         """Specify which columns to select without resetting the filters.
@@ -317,3 +255,108 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         if column is None:
             raise AttributeError(f"Model {self.model} has no attribute {key}")
         return column
+
+    def execute(self, session: Session, unique: bool = False) -> Any:
+        """Executes the given session and returns the result.
+
+        Args:
+            session (Session): SQLAlchemy Session object.
+            unique (bool, optional): Flag indicating if the result should be unique.
+            Defaults to False.
+        Returns:
+            ResultProxy: The result of the executed session.
+        """
+        result = session.execute(self._statement)
+        return result.unique() if unique else result
+
+    def all(self, session: Session, unique: bool = False):
+        """Executes the given session and returns all the results as a list.
+
+        Args:
+            session (Session): SQLAlchemy Session object.
+            unique (bool, optional): Flag indicating if the result should contain unique items.
+            Defaults to False.
+        Returns:
+            List[ResultRow]: All the results of the executed session.
+        """
+        return self.execute(session, unique).scalars().all()
+
+    def scalar(self, session: Session):
+        """Executes the given session and returns a scalar result.
+
+        Args:
+            session (Session): SQLAlchemy Session object.
+
+        Returns:
+            Any: The scalar result of the executed session.
+        """
+        return self.execute(session).scalar()
+
+    def fetchmany(
+        self, session: Session, size: int | None = None, unique: bool = False
+    ):
+        """Executes the given session and fetches a specified number of results.
+
+        Args:
+            session (Session): SQLAlchemy Session object.
+            size (int, optional): Number of results to fetch. If None, fetches all results.
+            unique (bool, optional): Flag indicating if the result should contain unique items.
+            Defaults to False.
+        Returns:
+            List[ResultRow]: The fetched results.
+        """
+        return self.execute(session, unique).scalars().fetchmany(size)
+
+    async def execute_async(self, session: AsyncSession, unique: bool = False):
+        """Executes the given session and returns the result.
+
+        Args:
+            session (AsyncSession): SQLAlchemy Session object.
+            unique (bool, optional): Flag indicating if the result should be unique.
+            Defaults to False.
+        Returns:
+            ResultProxy: The result of the executed session.
+        """
+        result = await session.execute(self._statement)
+        return result.unique() if unique else result
+
+    async def all_async(self, session: AsyncSession, unique: bool = False):
+        """Executes the given session and returns all the results as a list.
+
+        Args:
+            session (AsyncSession): SQLAlchemy Session object.
+            unique (bool, optional): Flag indicating if the result should contain unique items.
+            Defaults to False.
+        Returns:
+            List[ResultRow]: All the results of the executed session.
+        """
+        result = await self.execute_async(session, unique)
+        return result.scalars().all()
+
+    async def scalar_async(self, session: AsyncSession):
+        """Executes the given session and returns a scalar result.
+
+        Args:
+            session (AsyncSession): SQLAlchemy Session object.
+
+        Returns:
+            Any: The scalar result of the executed session.
+        """
+        result = await self.execute_async(session)
+        return result.scalar()
+
+    async def fetchmany_async(
+        self, session: AsyncSession, size: int | None = None, unique: bool = False
+    ):
+        """Executes the given session and fetches a specified number of results.
+
+        Args:
+            session (AsyncSession): SQLAlchemy Session object.
+            size (int, optional): Number of results to fetch. If None, fetches all results.
+            unique (bool, optional): Flag indicating if the result should contain unique items.
+            Defaults to False.
+        Returns:
+            List[ResultRow]: The fetched results.
+        """
+        result = await self.execute_async(session, unique)
+        return result.scalars().fetchmany(size)
