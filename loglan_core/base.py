@@ -7,6 +7,7 @@ from __future__ import annotations
 from datetime import datetime
 
 from sqlalchemy import String, inspect, func, select
+from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session, registry as rg
@@ -55,7 +56,7 @@ contexts, such as specifying the length for a string field in a database.
 """
 
 
-class BaseModel(DeclarativeBase):
+class BaseModel(AsyncAttrs, DeclarativeBase):
     """
     BaseModel is a subclass of DeclarativeBase. It serves as the parent class
     for other database models, providing common attributes and methods to its
