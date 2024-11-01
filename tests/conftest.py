@@ -1,6 +1,5 @@
 import pytest
 from sqlalchemy import create_engine
-from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
 from sqlalchemy.orm import scoped_session, sessionmaker, Session
 
 from loglan_core import Syllable, Setting
@@ -97,65 +96,3 @@ def get_objects():
         types_objects,
         words_objects,
     )
-
-
-DATABASE_URL = "sqlite+aiosqlite://"
-
-engine = create_async_engine(DATABASE_URL, echo=True)
-AsyncSessionLocal = async_sessionmaker(
-    bind=engine,
-    class_=AsyncSession,
-    expire_on_commit=False,
-)
-
-
-async def get_db():
-    async with AsyncSessionLocal() as session:
-        yield session
-
-
-async def async_link_objects(session: AsyncSession):
-    for parent_id, child_id in connect_words:
-        ins = t_connect_words.insert().values(parent_id=parent_id, child_id=child_id)
-        await session.execute(ins)
-    await session.commit()
-
-    for author_id, word_id in connect_authors:
-        ins = t_connect_authors.insert().values(AID=author_id, WID=word_id)
-        await session.execute(ins)
-    await session.commit()
-
-    for key_id, definition_id in connect_keys:
-        ins = t_connect_keys.insert().values(KID=key_id, DID=definition_id)
-        await session.execute(ins)
-    await session.commit()
-
-
-async def async_add_objects(session: AsyncSession):
-    objects = get_objects()  # Ensure this returns a list of objects
-    for obj in objects:
-        session.add_all(obj)  # Add all objects at once
-        await session.commit()
-
-
-async def async_create_db(session: AsyncSession):
-    await async_add_objects(session)
-    await async_link_objects(session)
-
-
-@pytest.fixture(scope="module")
-async def setup_database():
-    # Create the database tables
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.create_all)
-    yield
-    # Drop the database tables after tests
-    async with engine.begin() as conn:
-        await conn.run_sync(Base.metadata.drop_all)
-
-
-@pytest.fixture
-async def async_db_session(setup_database):
-    async for session in get_db():  # Use async for to get the session
-        await async_create_db(session)
-        yield session

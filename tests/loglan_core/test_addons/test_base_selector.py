@@ -137,8 +137,3 @@ class TestBaseSelector:
         ).get_like_condition("name", "kakto")
         word = WordSelector().where(wrong_cond).scalar(db_session)
         assert word.name == "kakto"
-
-
-@pytest.mark.usefixtures("async_db_session")
-class TestAsyncBaseSelector:
-    pass
