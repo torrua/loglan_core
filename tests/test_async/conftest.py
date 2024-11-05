@@ -1,7 +1,6 @@
 from typing import AsyncGenerator
 
 import pytest
-from sqlalchemy import select
 from sqlalchemy.ext.asyncio import (
     AsyncConnection,
     AsyncSession,
@@ -9,52 +8,12 @@ from sqlalchemy.ext.asyncio import (
     AsyncTransaction,
 )
 
-from loglan_core.connect_tables import (
-    t_connect_words,
-    t_connect_authors,
-    t_connect_keys,
-)
-
-from tests.data import connect_words, connect_authors, connect_keys, Base, Word
-from tests.objects import get_objects
+from loglan_core import Base
+from ..objects import add_objects
 
 DATABASE_URL = "sqlite+aiosqlite://"
 
 engine = create_async_engine(DATABASE_URL)
-
-
-async def async_link_objects(session: AsyncSession):
-    for parent_id, child_id in connect_words:
-        ins = t_connect_words.insert().values(parent_id=parent_id, child_id=child_id)
-        await session.execute(ins)
-    await session.commit()
-
-    for author_id, word_id in connect_authors:
-        ins = t_connect_authors.insert().values(AID=author_id, WID=word_id)
-        await session.execute(ins)
-    await session.commit()
-
-    for key_id, definition_id in connect_keys:
-        ins = t_connect_keys.insert().values(KID=key_id, DID=definition_id)
-        await session.execute(ins)
-    await session.commit()
-
-
-async def async_add_objects(session: AsyncSession):
-    objects = get_objects()  # Ensure this returns a list of objects
-    for obj in objects:
-        session.add_all(obj)  # Add all objects at once
-        await session.commit()
-
-
-@pytest.fixture(autouse=True)
-async def async_create_db(session: AsyncSession):
-    await async_add_objects(session)
-    await async_link_objects(session)
-
-
-# To run async tests
-pytestmark = pytest.mark.anyio
 
 
 # Required per https://anyio.readthedocs.io/en/stable/testing.html#using-async-fixtures-with-higher-scopes
@@ -76,6 +35,11 @@ async def setup_database(connection: AsyncConnection):
         await connection.run_sync(Base.metadata.create_all)
 
 
+@pytest.fixture(autouse=True)
+async def async_create_db(session: AsyncSession):
+    await session.run_sync(add_objects)
+
+
 @pytest.fixture()
 async def transaction(
     connection: AsyncConnection,
@@ -95,9 +59,3 @@ async def session(
     yield async_session
 
     await transaction.rollback()
-
-
-async def test_add_profiles(session: AsyncSession):
-    existing_profiles = await session.execute(select(Word))
-    existing_profiles = existing_profiles.scalars().all()
-    assert len(existing_profiles) == 13

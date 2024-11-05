@@ -1,7 +1,8 @@
 """Data for test_models"""
 
+# fmt: off
+
 import datetime
-from loglan_core import Word, Definition, Type, Event, Author, Key, Setting
 
 # ===== KEYS ===================================================================
 key_1 = {'word': 'examine', 'language': 'en', }
@@ -18,7 +19,6 @@ key_11 = {'word': 'activity', 'language': 'en', }
 key_12 = {'word': 'act', 'language': 'es', }
 
 keys = [key_1, key_2, key_3, key_4, key_5, key_6, key_7, key_8, key_9, key_10, key_11, key_12]
-keys_pair = (keys, Key)
 
 un_key_1 = {'word': 'test', 'language': 'fr', }
 un_key_2 = {'word': 'test', 'language': 'es', }
@@ -127,14 +127,3 @@ other_word_3 = {'event_end_id': None, 'event_start_id': 1, 'id_old': 3589, 'matc
 other_word_4 = {'match': '', 'tid_old': None, 'rank': '3.8', 'type_id': 5, 'year': datetime.date(1975, 1, 1), 'event_start_id': 1, 'notes': None, 'event_end_id': None, 'id_old': 58, 'name': 'aiai', 'origin': 'ai+ai', 'origin_x': 'Yes Yes'}
 other_word_5 = {'event_end_id': None, 'event_start_id': 1, 'id_old': 57, 'match': '', 'name': 'ai', 'notes': None, 'origin': '', 'origin_x': '', 'rank': '1.0', 'tid_old': None, 'type_id': 6, 'year': datetime.date(1975, 1, 1)}
 other_words = [other_word_1, other_word_2, other_word_3, other_word_4, other_word_5 ]
-
-
-all_objects = [
-    (Key, keys),
-    (Event, events),
-    (Author, authors),
-    (Type, types),
-    (Word, words),
-    (Definition, definitions),
-    (Setting, settings),
-]
