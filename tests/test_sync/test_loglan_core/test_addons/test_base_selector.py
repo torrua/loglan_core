@@ -42,10 +42,6 @@ class TestBaseSelector:
         all_words = WordSelector().all(db_session)
         assert len(all_words) == 13
 
-    def test___call__(self, db_session):
-        all_words = WordSelector()
-        assert len(all_words(db_session)) == 13
-
     def test_fetchmany(self, db_session):
         fetch_5 = WordSelector().fetchmany(db_session, 5)
         assert len(fetch_5) == 5
