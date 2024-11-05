@@ -2,21 +2,14 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, Session
 
-from loglan_core import Syllable, Setting
 from loglan_core.base import BaseModel as Base
 from loglan_core.connect_tables import (
     t_connect_words,
     t_connect_authors,
     t_connect_keys,
 )
-from tests.data import Author, authors
-from tests.data import Definition, definitions
-from tests.data import Event, events
-from tests.data import Key, keys, un_keys
-from tests.data import Type, types
-from tests.data import Word, words, changed_words
-from tests.data import connect_words, connect_authors, connect_keys
-from tests.data import syllables, settings
+from ..data import connect_words, connect_authors, connect_keys
+from ..objects import get_objects
 
 
 @pytest.fixture(scope="function")
@@ -75,24 +68,3 @@ def add_objects(session):
     for obj in objects:
         session.add_all(obj)
     session.commit()
-
-
-def get_objects():
-    words_objects = [Word(**obj) for obj in words + changed_words]
-    types_objects = [Type(**obj) for obj in types]
-    events_objects = [Event(**obj) for obj in events]
-    authors_objects = [Author(**obj) for obj in authors]
-    definitions_objects = [Definition(**obj) for obj in definitions]
-    keys_objects = [Key(**obj) for obj in keys + un_keys]
-    syllables_objects = [Syllable(**obj) for obj in syllables]
-    settings_objects = [Setting(**obj) for obj in settings]
-    return (
-        authors_objects,
-        definitions_objects,
-        events_objects,
-        keys_objects,
-        settings_objects,
-        syllables_objects,
-        types_objects,
-        words_objects,
-    )
