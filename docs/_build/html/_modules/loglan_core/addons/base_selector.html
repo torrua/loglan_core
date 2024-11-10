@@ -1,0 +1,523 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loglan_core.addons.base_selector &mdash; Loglan-Core 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Loglan-Core
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">loglan_core</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Loglan-Core</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">loglan_core.addons.base_selector</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for loglan_core.addons.base_selector</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides a base selector for SQLAlchemy</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Any</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">select</span><span class="p">,</span> <span class="n">Select</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.asyncio</span> <span class="kn">import</span> <span class="n">AsyncSession</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">InstrumentedAttribute</span><span class="p">,</span> <span class="n">joinedload</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.types</span> <span class="kn">import</span> <span class="n">String</span><span class="p">,</span> <span class="n">Integer</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
+
+<span class="kn">from</span> <span class="nn">..base</span> <span class="kn">import</span> <span class="n">BaseModel</span>
+
+
+<div class="viewcode-block" id="BaseSelector">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseSelector</span><span class="p">:</span>  <span class="c1"># pylint: disable=too-many-ancestors</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A custom base selector that inherits from SQLAlchemy&#39;s Select class.</span>
+<span class="sd">    This class provides methods to execute a session and fetch results</span>
+<span class="sd">    in different ways. It also provides a way to fetch many results.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">    --------</span>
+<span class="sd">    execute(session: Session) -&gt; ResultProxy:</span>
+<span class="sd">        Executes the session and returns the result.</span>
+
+<span class="sd">    all(session: Session) -&gt; List[ResultRow]:</span>
+<span class="sd">        Executes the session and returns all the results.</span>
+
+<span class="sd">    scalar(session: Session) -&gt; Any:</span>
+<span class="sd">        Executes the session and returns a scalar result.</span>
+
+<span class="sd">    fetchmany(session: Session, size: int | None = None) -&gt; List[ResultRow]:</span>
+<span class="sd">        Executes the session and fetches a specified number of results.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">],</span>
+        <span class="n">is_sqlite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">case_sensitive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">disable_model_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Initializes the Selector.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (Type): The SQLAlchemy model class to select from.</span>
+<span class="sd">            is_sqlite (bool): Flag indicating if the database is SQLite.</span>
+<span class="sd">            case_sensitive (bool): Flag indicating if the queries should be case-sensitive.</span>
+<span class="sd">            disable_model_check (bool): Flag indicating if the model check should be disabled.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">disable_model_check</span> <span class="o">=</span> <span class="n">disable_model_check</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable_model_check</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_model_accepted</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">BaseModel</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selected_columns</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">is_sqlite</span> <span class="o">=</span> <span class="n">is_sqlite</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span> <span class="o">=</span> <span class="n">case_sensitive</span>
+
+<div class="viewcode-block" id="BaseSelector.select_columns">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.select_columns">[docs]</a>
+    <span class="k">def</span> <span class="nf">select_columns</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">columns</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Specify which columns to select without resetting the filters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *columns: The columns to select.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The current instance for method chaining.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_selected_columns</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">columns</span><span class="p">)</span>
+        <span class="n">existing_conditions</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">whereclause</span>
+
+        <span class="k">if</span> <span class="n">existing_conditions</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_columns</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="n">select</span><span class="p">(</span><span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">_selected_columns</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">existing_conditions</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.limit">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.limit">[docs]</a>
+    <span class="k">def</span> <span class="nf">limit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">limit</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Limit the number of results returned.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            limit (int): The maximum number of results to return.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The current instance for method chaining.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="n">limit</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.offset">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.offset">[docs]</a>
+    <span class="k">def</span> <span class="nf">offset</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">offset</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Set the offset for the results returned.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            offset (int): The number of results to skip before starting to return results.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The current instance for method chaining.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">offset</span><span class="p">(</span><span class="n">offset</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.order_by">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.order_by">[docs]</a>
+    <span class="k">def</span> <span class="nf">order_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">columns</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Specify the order in which results should be returned.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *columns: The columns to order by.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The current instance for method chaining.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="o">*</span><span class="n">columns</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.filter">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.filter">[docs]</a>
+    <span class="k">def</span> <span class="nf">filter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter results based on arbitrary keyword arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *args: Column-value pairs to filter by.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The current instance for method chaining.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.filter_by">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.filter_by">[docs]</a>
+    <span class="k">def</span> <span class="nf">filter_by</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter results based on arbitrary keyword arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *kwargs: Column-value pairs to filter by.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The current instance for method chaining.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">filter_by</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.where">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.where">[docs]</a>
+    <span class="k">def</span> <span class="nf">where</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter results based on arbitrary keyword arguments.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            *args: Column-value pairs to filter by.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The current instance for method chaining.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.where_like">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.where_like">[docs]</a>
+    <span class="k">def</span> <span class="nf">where_like</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Filter results based on arbitrary keyword arguments.</span>
+<span class="sd">            Use internal method `_generate_column_condition` to generate</span>
+<span class="sd">            the condition based on settings provided by Selector instance</span>
+<span class="sd">            like (is_sqlite, case_sensitive).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            **kwargs: Column-value pairs to filter by.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The current instance for method chaining.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">value</span> <span class="ow">in</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">get_like_condition</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">value</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.get_like_condition">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.get_like_condition">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_like_condition</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">InstrumentedAttribute</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generate the condition based on settings provided by Selector instance</span>
+<span class="sd">        like (is_sqlite, case_sensitive).</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str | InstrumentedAttribute): The key of the column to filter by.</span>
+<span class="sd">            value (Any): The value to filter by.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Condition: The SQLAlchemy condition to filter by.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_column</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="p">(</span><span class="n">String</span><span class="p">,</span> <span class="n">Integer</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="n">column</span> <span class="o">==</span> <span class="n">value</span>
+
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">column</span><span class="o">.</span><span class="n">type</span><span class="p">,</span> <span class="n">Integer</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">column</span> <span class="o">==</span> <span class="nb">int</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="n">value</span> <span class="o">=</span> <span class="n">value</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">,</span> <span class="s2">&quot;%&quot;</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">column</span><span class="o">.</span><span class="n">ilike</span><span class="p">(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_sqlite</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">column</span><span class="o">.</span><span class="n">op</span><span class="p">(</span><span class="s2">&quot;GLOB&quot;</span><span class="p">)(</span><span class="n">value</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">column</span><span class="o">.</span><span class="n">like</span><span class="p">(</span><span class="n">value</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.get_statement">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.get_statement">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_statement</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Select</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the current SQLAlchemy _statement.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Select: The current SQLAlchemy _statement.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.with_relationships">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.with_relationships">[docs]</a>
+    <span class="k">def</span> <span class="nf">with_relationships</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">selected</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Adds relationships to the query.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            selected (set[str]): A set of relationship names to include.</span>
+<span class="sd">            Defaults to None if all relationships should be included.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: A query with the relationships added.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">available_relationships</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">attr</span><span class="p">:</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">attr</span><span class="p">)</span> <span class="k">for</span> <span class="n">attr</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">relationships</span><span class="p">()</span>
+        <span class="p">}</span>
+        <span class="n">relationships</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">joinedload</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">available_relationships</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">selected</span> <span class="ow">or</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">selected</span>
+        <span class="p">}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">options</span><span class="p">(</span><span class="o">*</span><span class="n">relationships</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">_is_model_accepted</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">parent</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">BaseModel</span><span class="p">]</span> <span class="o">=</span> <span class="n">BaseModel</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Checks if the model is an instance of BaseModel or its child.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the model is not an instance of BaseModel or its child.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">issubclass</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">parent</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Provided model=</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2"> is not a inherited from </span><span class="si">{</span><span class="n">parent</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_get_column</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">InstrumentedAttribute</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">InstrumentedAttribute</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Get the column from the model.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str | InstrumentedAttribute): The key of the column to filter by.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            AttributeError: If the model has no attribute with the given key.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            InstrumentedAttribute: The SQLAlchemy column to filter by.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">column</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="n">key</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">else</span> <span class="n">key</span>
+        <span class="k">if</span> <span class="n">column</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Model </span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="si">}</span><span class="s2"> has no attribute </span><span class="si">{</span><span class="n">key</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">column</span>
+
+<div class="viewcode-block" id="BaseSelector.execute">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.execute">[docs]</a>
+    <span class="k">def</span> <span class="nf">execute</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">unique</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the given session and returns the result.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (Session): SQLAlchemy Session object.</span>
+<span class="sd">            unique (bool, optional): Flag indicating if the result should be unique.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ResultProxy: The result of the executed session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="k">if</span> <span class="n">unique</span> <span class="k">else</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.all">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.all">[docs]</a>
+    <span class="k">def</span> <span class="nf">all</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">unique</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the given session and returns all the results as a list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (Session): SQLAlchemy Session object.</span>
+<span class="sd">            unique (bool, optional): Flag indicating if the result should contain unique items.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[ResultRow]: All the results of the executed session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">unique</span><span class="p">)</span><span class="o">.</span><span class="n">scalars</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.scalar">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.scalar">[docs]</a>
+    <span class="k">def</span> <span class="nf">scalar</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the given session and returns a scalar result.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (Session): SQLAlchemy Session object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: The scalar result of the executed session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">session</span><span class="p">)</span><span class="o">.</span><span class="n">scalar</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.fetchmany">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.fetchmany">[docs]</a>
+    <span class="k">def</span> <span class="nf">fetchmany</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unique</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the given session and fetches a specified number of results.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (Session): SQLAlchemy Session object.</span>
+<span class="sd">            size (int, optional): Number of results to fetch. If None, fetches all results.</span>
+<span class="sd">            unique (bool, optional): Flag indicating if the result should contain unique items.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[ResultRow]: The fetched results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">unique</span><span class="p">)</span><span class="o">.</span><span class="n">scalars</span><span class="p">()</span><span class="o">.</span><span class="n">fetchmany</span><span class="p">(</span><span class="n">size</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.execute_async">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.execute_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">execute_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">AsyncSession</span><span class="p">,</span> <span class="n">unique</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the given session and returns the result.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (AsyncSession): SQLAlchemy Session object.</span>
+<span class="sd">            unique (bool, optional): Flag indicating if the result should be unique.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            ResultProxy: The result of the executed session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="n">session</span><span class="o">.</span><span class="n">execute</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">unique</span><span class="p">()</span> <span class="k">if</span> <span class="n">unique</span> <span class="k">else</span> <span class="n">result</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.all_async">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.all_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">all_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">AsyncSession</span><span class="p">,</span> <span class="n">unique</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the given session and returns all the results as a list.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (AsyncSession): SQLAlchemy Session object.</span>
+<span class="sd">            unique (bool, optional): Flag indicating if the result should contain unique items.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[ResultRow]: All the results of the executed session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">unique</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">scalars</span><span class="p">()</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.scalar_async">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.scalar_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">scalar_async</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">AsyncSession</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the given session and returns a scalar result.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (AsyncSession): SQLAlchemy Session object.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Any: The scalar result of the executed session.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">session</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">scalar</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseSelector.fetchmany_async">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.base_selector.BaseSelector.fetchmany_async">[docs]</a>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">fetchmany_async</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">AsyncSession</span><span class="p">,</span> <span class="n">size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="n">unique</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Executes the given session and fetches a specified number of results.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            session (AsyncSession): SQLAlchemy Session object.</span>
+<span class="sd">            size (int, optional): Number of results to fetch. If None, fetches all results.</span>
+<span class="sd">            unique (bool, optional): Flag indicating if the result should contain unique items.</span>
+<span class="sd">            Defaults to False.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            List[ResultRow]: The fetched results.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">execute_async</span><span class="p">(</span><span class="n">session</span><span class="p">,</span> <span class="n">unique</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">scalars</span><span class="p">()</span><span class="o">.</span><span class="n">fetchmany</span><span class="p">(</span><span class="n">size</span><span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, torrua.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

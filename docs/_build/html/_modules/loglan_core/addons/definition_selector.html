@@ -1,0 +1,273 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loglan_core.addons.definition_selector &mdash; Loglan-Core 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Loglan-Core
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">loglan_core</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Loglan-Core</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">loglan_core.addons.definition_selector</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for loglan_core.addons.definition_selector</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides the DefinitionSelector class which is a Selector for the BaseDefinition object.</span>
+
+<span class="sd">The DefinitionSelector class allows for querying and filtering of BaseDefinition objects based on</span>
+<span class="sd">various parameters such as event, key, and language. It is a subclass of the Select class.</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    DefinitionSelector: A selector model for the BaseDefinition object, it allows for querying and</span>
+<span class="sd">    filtering of BaseDefinition objects.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">select</span><span class="p">,</span> <span class="n">true</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Self</span>
+
+<span class="kn">from</span> <span class="nn">.base_selector</span> <span class="kn">import</span> <span class="n">BaseSelector</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">filter_word_by_event_id</span><span class="p">,</span>
+    <span class="n">filter_key_by_word_cs</span><span class="p">,</span>
+    <span class="n">filter_key_by_language</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..connect_tables</span> <span class="kn">import</span> <span class="n">t_connect_keys</span>
+<span class="kn">from</span> <span class="nn">..definition</span> <span class="kn">import</span> <span class="n">BaseDefinition</span>
+<span class="kn">from</span> <span class="nn">..key</span> <span class="kn">import</span> <span class="n">BaseKey</span>
+<span class="kn">from</span> <span class="nn">..word</span> <span class="kn">import</span> <span class="n">BaseWord</span>
+
+
+<div class="viewcode-block" id="DefinitionSelector">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.definition_selector.DefinitionSelector">[docs]</a>
+<span class="k">class</span> <span class="nc">DefinitionSelector</span><span class="p">(</span><span class="n">BaseSelector</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-ancestors</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class is a selector model for the BaseDefinition object. It allows for</span>
+<span class="sd">    querying and filtering of BaseDefinition objects based on various parameters</span>
+<span class="sd">    such as event, key, and language. It is a subclass of the Select class.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        __init__: Initializes the DefinitionSelector object.</span>
+<span class="sd">        inherit_cache: Property that always returns True.</span>
+<span class="sd">        by_event: Returns a new DefinitionSelector object filtered by a specific event.</span>
+<span class="sd">        by_key: Returns a BaseQuery object filtered by a specific key.</span>
+<span class="sd">        by_language: Returns a new DefinitionSelector object filtered by a specific language.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the provided class_ is not a subclass of BaseDefinition.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        model: The class to be used as the returned object.</span>
+<span class="sd">        is_sqlite: Boolean specifying if the object is being used with SQLite or not.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseDefinition</span><span class="p">]</span> <span class="o">=</span> <span class="n">BaseDefinition</span><span class="p">,</span>
+        <span class="n">is_sqlite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">case_sensitive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">disable_model_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the DefinitionSelector object with the provided parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (Type[BaseDefinition]): The class to be used as the base key.</span>
+<span class="sd">                Must be a subclass of BaseDefinition.</span>
+<span class="sd">            is_sqlite (bool): If SQLite is being used. Defaults to False.</span>
+<span class="sd">            case_sensitive (bool): If the queries should be case-sensitive.</span>
+<span class="sd">            disable_model_check (bool): If the model check is disabled during initialization.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the provided model is not a subclass of BaseDefinition.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">is_sqlite</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="p">,</span> <span class="n">disable_model_check</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">disable_model_check</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_model_accepted</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">BaseDefinition</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+<div class="viewcode-block" id="DefinitionSelector.by_event">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.definition_selector.DefinitionSelector.by_event">[docs]</a>
+    <span class="k">def</span> <span class="nf">by_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">DefinitionSelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method filters the definitions by the given event id.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            event_id (int | None): The id of the event to filter by. If None,</span>
+<span class="sd">                                   no event filtering is applied.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            DefinitionSelector: The filtered DefinitionSelector instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">subquery</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_connect_keys</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseWord</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">filter_word_by_event_id</span><span class="p">(</span><span class="n">event_id</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">scalar_subquery</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">subquery</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="DefinitionSelector.by_key">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.definition_selector.DefinitionSelector.by_key">[docs]</a>
+    <span class="k">def</span> <span class="nf">by_key</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">key</span><span class="p">:</span> <span class="n">BaseKey</span> <span class="o">|</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">distinct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method filters the definitions by the provided key, language and case sensitivity.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            key (BaseKey | str): The key to filter by. Can be an instance of BaseKey or a string.</span>
+<span class="sd">            language (str | None): The language to filter by.</span>
+<span class="sd">            If None, no language filtering is applied.</span>
+<span class="sd">            distinct (bool): If True, only distinct keys will be returned.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The filtered DefinitionSelector instance with distinct keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">search_key</span> <span class="o">=</span> <span class="n">key</span><span class="o">.</span><span class="n">word</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">BaseKey</span><span class="p">)</span> <span class="k">else</span> <span class="nb">str</span><span class="p">(</span><span class="n">key</span><span class="p">)</span>
+        <span class="n">filter_key</span> <span class="o">=</span> <span class="n">filter_key_by_word_cs</span><span class="p">(</span>
+            <span class="n">search_key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_sqlite</span>
+        <span class="p">)</span>
+        <span class="n">filter_language</span> <span class="o">=</span> <span class="n">filter_key_by_language</span><span class="p">(</span>
+            <span class="n">key</span><span class="o">.</span><span class="n">language</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="n">BaseKey</span><span class="p">)</span> <span class="k">else</span> <span class="n">language</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;keys&quot;</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> does not have a &#39;keys&#39; attribute&quot;</span>
+            <span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">keys</span><span class="p">)</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">filter_key</span><span class="p">,</span> <span class="n">filter_language</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">distinct</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="DefinitionSelector.by_language">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.definition_selector.DefinitionSelector.by_language">[docs]</a>
+    <span class="k">def</span> <span class="nf">by_language</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Self</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        This method filters the definitions by the given language.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            language (str | None): The language to filter by. If None,</span>
+<span class="sd">                                   no language filtering is applied.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Self: The filtered DefinitionSelector instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">hasattr</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="p">,</span> <span class="s2">&quot;language&quot;</span><span class="p">):</span>
+            <span class="n">filter_language</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">language</span> <span class="o">==</span> <span class="n">language</span> <span class="k">if</span> <span class="n">language</span> <span class="k">else</span> <span class="n">true</span><span class="p">()</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">AttributeError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2"> does not have a &#39;language&#39; attribute&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">filter_language</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, torrua.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

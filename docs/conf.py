@@ -8,9 +8,11 @@ release = "0.5.0"
 
 # -- General configuration ---------------------------------------------------
 extensions = [
+    "sphinx_rtd_theme",
     "sphinx.ext.autodoc",
     "sphinx.ext.viewcode",  # Optional: to include source code in the documentation
 ]
+html_theme = "sphinx_rtd_theme"
 templates_path = ["_templates"]
 exclude_patterns = ["_build", "Thumbs.db", ".DS_Store"]
 

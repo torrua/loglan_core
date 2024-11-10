@@ -1,0 +1,438 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loglan_core.base &mdash; Loglan-Core 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            Loglan-Core
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../modules.html">loglan_core</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">Loglan-Core</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">loglan_core.base</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for loglan_core.base</h1><div class="highlight"><pre>
+<span></span><span class="c1"># pylint: disable=invalid-name</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">Initial common functions for LOD Model Classes</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">datetime</span> <span class="kn">import</span> <span class="n">datetime</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">String</span><span class="p">,</span> <span class="n">inspect</span><span class="p">,</span> <span class="n">func</span><span class="p">,</span> <span class="n">select</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.asyncio</span> <span class="kn">import</span> <span class="n">AsyncAttrs</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.ext.hybrid</span> <span class="kn">import</span> <span class="n">hybrid_property</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">DeclarativeBase</span><span class="p">,</span> <span class="n">Mapped</span><span class="p">,</span> <span class="n">mapped_column</span>
+<span class="kn">from</span> <span class="nn">sqlalchemy.orm</span> <span class="kn">import</span> <span class="n">Session</span><span class="p">,</span> <span class="n">registry</span> <span class="k">as</span> <span class="n">rg</span>
+<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Annotated</span>
+
+<span class="n">str_008</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="mi">8</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A custom type annotation that annotates a string with a metadata value </span>
+<span class="sd">of 8. It can be used to associate a string with the number 8 in certain </span>
+<span class="sd">contexts, such as specifying the length for a string field in a database.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">str_016</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="mi">16</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A custom type annotation that annotates a string with a metadata value </span>
+<span class="sd">of 16. It can be used to associate a string with the number 16 in certain </span>
+<span class="sd">contexts, such as specifying the length for a string field in a database.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">str_032</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="mi">32</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A custom type annotation that annotates a string with a metadata value </span>
+<span class="sd">of 32. It can be used to associate a string with the number 32 in certain </span>
+<span class="sd">contexts, such as specifying the length for a string field in a database.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">str_064</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="mi">64</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A custom type annotation that annotates a string with a metadata value </span>
+<span class="sd">of 64. It can be used to associate a string with the number 64 in certain </span>
+<span class="sd">contexts, such as specifying the length for a string field in a database.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">str_128</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="mi">128</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A custom type annotation that annotates a string with a metadata value </span>
+<span class="sd">of 128. It can be used to associate a string with the number 128 in certain </span>
+<span class="sd">contexts, such as specifying the length for a string field in a database.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">str_255</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="mi">255</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">A custom type annotation that annotates a string with a metadata value </span>
+<span class="sd">of 255. It can be used to associate a string with the number 255 in certain </span>
+<span class="sd">contexts, such as specifying the length for a string field in a database.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+
+<div class="viewcode-block" id="BaseModel">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel">[docs]</a>
+<span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">AsyncAttrs</span><span class="p">,</span> <span class="n">DeclarativeBase</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    BaseModel is a subclass of DeclarativeBase. It serves as the parent class</span>
+<span class="sd">    for other database models, providing common attributes and methods to its</span>
+<span class="sd">    child classes. It doesn&#39;t contain any class-specific attributes/methods.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">registry</span> <span class="o">=</span> <span class="n">rg</span><span class="p">(</span>
+        <span class="n">type_annotation_map</span><span class="o">=</span><span class="p">{</span>
+            <span class="n">str_008</span><span class="p">:</span> <span class="n">String</span><span class="p">(</span><span class="mi">8</span><span class="p">),</span>
+            <span class="n">str_016</span><span class="p">:</span> <span class="n">String</span><span class="p">(</span><span class="mi">16</span><span class="p">),</span>
+            <span class="n">str_032</span><span class="p">:</span> <span class="n">String</span><span class="p">(</span><span class="mi">32</span><span class="p">),</span>
+            <span class="n">str_064</span><span class="p">:</span> <span class="n">String</span><span class="p">(</span><span class="mi">64</span><span class="p">),</span>
+            <span class="n">str_128</span><span class="p">:</span> <span class="n">String</span><span class="p">(</span><span class="mi">128</span><span class="p">),</span>
+            <span class="n">str_255</span><span class="p">:</span> <span class="n">String</span><span class="p">(</span><span class="mi">255</span><span class="p">),</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This code creates a registry that maps custom type annotations to </span>
+<span class="sd">    SQLAlchemy String types with specified lengths. The keys are custom </span>
+<span class="sd">    type annotation names and the values are SQLAlchemy String types with </span>
+<span class="sd">    the specified lengths.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">__abstract__</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class attribute that indicates that this class is an abstract base </span>
+<span class="sd">    class. When set to True, this class won&#39;t be mapped to any database </span>
+<span class="sd">    table. Instead, it serves as a base for other classes which will be </span>
+<span class="sd">    mapped to tables.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="nb">id</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">primary_key</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class attribute mapped to a column in the database table. It serves as </span>
+<span class="sd">    the primary key for the table.</span>
+<span class="sd"> </span>
+<span class="sd">    :type: int</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">created</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="n">datetime</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span><span class="n">default</span><span class="o">=</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">(),</span> <span class="n">nullable</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class attribute mapped to a column in the database table. It represents </span>
+<span class="sd">    the timestamp when a row is created. The default value is the current </span>
+<span class="sd">    timestamp, and it can&#39;t be null.</span>
+<span class="sd">    </span>
+<span class="sd">    :type: datetime</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">updated</span><span class="p">:</span> <span class="n">Mapped</span><span class="p">[</span><span class="n">datetime</span> <span class="o">|</span> <span class="kc">None</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapped_column</span><span class="p">(</span>
+        <span class="n">onupdate</span><span class="o">=</span><span class="n">func</span><span class="o">.</span><span class="n">now</span><span class="p">()</span>  <span class="c1"># pylint: disable=E1102</span>
+    <span class="p">)</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class attribute mapped to a column in the database table. It represents </span>
+<span class="sd">    the timestamp when a row is last updated. Whenever the row is updated, </span>
+<span class="sd">    this timestamp is automatically set to the current time. It can be ``null`` </span>
+<span class="sd">    if the row has never been updated.</span>
+<span class="sd">    </span>
+<span class="sd">    :type: datetime</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Special method that returns a string representation of the object.</span>
+<span class="sd">        It forms the string by joining key-value pairs of the object&#39;s attributes,</span>
+<span class="sd">        excluding keys that start with &quot;_&quot; and keys that are &quot;created&quot; or &quot;updated&quot;.</span>
+<span class="sd">        The key-value pairs are sorted before joining.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            str: A string representation of the object in the format:</span>
+<span class="sd">                 &quot;ClassName(key1=value1, key2=value2, ...)&quot;.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">obj_str</span> <span class="o">=</span> <span class="s2">&quot;, &quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="nb">sorted</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">k</span><span class="si">}</span><span class="s2">=</span><span class="si">{</span><span class="n">v</span><span class="si">!r}</span><span class="s2">&quot;</span>
+                    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+                    <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_filter_add_to_repr</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
+                <span class="p">]</span>
+            <span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="vm">__class__</span><span class="o">.</span><span class="vm">__name__</span><span class="si">}</span><span class="s2">(</span><span class="si">{</span><span class="n">obj_str</span><span class="si">}</span><span class="s2">)&quot;</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_filter_add_to_repr</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Static method that filters out keys that start with &quot;_&quot; and keys</span>
+<span class="sd">        that are &quot;created&quot; or &quot;updated&quot; and keys without values from the</span>
+<span class="sd">        object&#39;s attributes. The method is used to generate a string</span>
+<span class="sd">        representation of the object. It is used internally by the __repr__.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="ow">not</span> <span class="n">k</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;created&quot;</span><span class="p">,</span> <span class="s2">&quot;updated&quot;</span><span class="p">,</span> <span class="o">*</span><span class="bp">cls</span><span class="o">.</span><span class="n">relationships</span><span class="p">()]</span>
+            <span class="ow">and</span> <span class="n">v</span>
+        <span class="p">)</span>
+
+<div class="viewcode-block" id="BaseModel.get_by_id">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.get_by_id">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_by_id</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">,</span> <span class="n">cid</span><span class="p">:</span> <span class="nb">int</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that retrieves an instance of the class from the</span>
+<span class="sd">        database using the provided session and id.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            session (Session): The session to use for the database query.</span>
+<span class="sd">            cid (int): The id of the instance to retrieve.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            Object of class type or None: The instance of the class with</span>
+<span class="sd">            the given id, or None if no such instance exists.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">cid</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.get_all">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.get_all">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">get_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">session</span><span class="p">:</span> <span class="n">Session</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that retrieves all instances of the class from the</span>
+<span class="sd">        database using the provided session.</span>
+
+<span class="sd">        Parameters:</span>
+<span class="sd">            session (Session): The session to use for the database query.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            list: A list of all instances of the class.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">session</span><span class="o">.</span><span class="n">scalars</span><span class="p">(</span><span class="n">select</span><span class="p">(</span><span class="bp">cls</span><span class="p">))</span><span class="o">.</span><span class="n">all</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.export">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.export">[docs]</a>
+    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that exports the object&#39;s attributes into a dictionary.</span>
+<span class="sd">        It filters out keys that start with &quot;_&quot; and keys that are</span>
+<span class="sd">        &quot;created&quot; or &quot;updated&quot;, then sorts the remaining keys.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            dict: A dictionary with sorted keys and corresponding</span>
+<span class="sd">            values of the object&#39;s attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">v</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="vm">__dict__</span><span class="o">.</span><span class="n">items</span><span class="p">())</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="nb">str</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;_&quot;</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">k</span> <span class="ow">not</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;created&quot;</span><span class="p">,</span> <span class="s2">&quot;updated&quot;</span><span class="p">,</span> <span class="o">*</span><span class="bp">self</span><span class="o">.</span><span class="n">relationships</span><span class="p">()]</span>
+        <span class="p">}</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.attributes_all">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.attributes_all">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">attributes_all</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that computes the all attribute keys from the class</span>
+<span class="sd">        mapper and returns their names as a set.</span>
+
+<span class="sd">        It doesn&#39;t require any parameters as it operates on the class itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: A set of strings with names of all attribute keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__mapper__</span><span class="o">.</span><span class="n">attrs</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span> <span class="o">|</span> <span class="bp">cls</span><span class="o">.</span><span class="n">hybrid_properties</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.attributes_basic">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.attributes_basic">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">attributes_basic</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that computes the set of basic attributes for the class.</span>
+<span class="sd">        It subtracts any relationships from all attributes.</span>
+
+<span class="sd">        It doesn’t require any parameters as it operates on the class itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: A set of strings with names of basic attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">attributes_all</span><span class="p">()</span> <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">relationships</span><span class="p">()</span> <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">hybrid_properties</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.attributes_extended">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.attributes_extended">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">attributes_extended</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that computes the extended attributes of the class.</span>
+<span class="sd">        It does this by subtracting foreign keys from all attributes.</span>
+
+<span class="sd">        It doesn’t require any parameters as it operates on the class itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: A set of strings with names of the extended attributes.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">attributes_all</span><span class="p">()</span> <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">foreign_keys</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.relationships">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.relationships">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">relationships</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that computes the relationship names from the</span>
+<span class="sd">        class mapper and returns them as a set.</span>
+
+<span class="sd">        It doesn&#39;t require any parameters as it operates on the class itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: A set of strings with names of the relationships.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">__mapper__</span><span class="o">.</span><span class="n">relationships</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.foreign_keys">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.foreign_keys">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">foreign_keys</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that computes the names of foreign keys of the class.</span>
+<span class="sd">        It does this by subtracting relationship keys and non-foreign keys</span>
+<span class="sd">        from all attributes.</span>
+
+<span class="sd">        It doesn’t require any parameters as it operates on the class itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: A set of strings with names of the foreign keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span>
+            <span class="bp">cls</span><span class="o">.</span><span class="n">attributes_all</span><span class="p">()</span>
+            <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">relationships</span><span class="p">()</span>
+            <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">non_foreign_keys</span><span class="p">()</span>
+            <span class="o">-</span> <span class="bp">cls</span><span class="o">.</span><span class="n">hybrid_properties</span><span class="p">()</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.non_foreign_keys">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.non_foreign_keys">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">non_foreign_keys</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that computes the non-foreign keys of the class.</span>
+<span class="sd">        It does this by inspecting the class columns and selecting those</span>
+<span class="sd">        without foreign keys.</span>
+
+<span class="sd">        It doesn’t require any parameters as it operates on the class itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: A set of strings with names of the non-foreign keys.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inspector</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span>
+        <span class="n">columns</span> <span class="o">=</span> <span class="n">inspector</span><span class="o">.</span><span class="n">columns</span>
+        <span class="n">non_foreign_keys</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">column</span><span class="o">.</span><span class="n">name</span> <span class="k">for</span> <span class="n">column</span> <span class="ow">in</span> <span class="n">columns</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">column</span><span class="o">.</span><span class="n">foreign_keys</span>
+        <span class="p">}</span>
+        <span class="k">return</span> <span class="n">non_foreign_keys</span></div>
+
+
+<div class="viewcode-block" id="BaseModel.hybrid_properties">
+<a class="viewcode-back" href="../../loglan_core.html#loglan_core.base.BaseModel.hybrid_properties">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">hybrid_properties</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Class method that computes the hybrid properties of the class.</span>
+
+<span class="sd">        It doesn’t require any parameters as it operates on the class itself.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            set[str]: A set of strings with names of the hybrid properties.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">inspector</span> <span class="o">=</span> <span class="n">inspect</span><span class="p">(</span><span class="bp">cls</span><span class="p">)</span><span class="o">.</span><span class="n">all_orm_descriptors</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">i</span><span class="o">.</span><span class="vm">__name__</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">inspector</span> <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">hybrid_property</span><span class="p">)}</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, torrua.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

@@ -1,0 +1,276 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loglan_core.addons.key_selector &mdash; Loglan-Core 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Loglan-Core
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">loglan_core</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Loglan-Core</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">loglan_core.addons.key_selector</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for loglan_core.addons.key_selector</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module provides the `KeySelector` class, which inherits from `Select`</span>
+<span class="sd">and provides methods for filtering keys based on certain criteria.</span>
+
+<span class="sd">The KeySelector class has methods to filter keys by event ID, key, and language.</span>
+<span class="sd">Each method returns a new instance of KeySelector with the applied filters.</span>
+
+<span class="sd">The KeySelector class is initialized with a class object and a boolean</span>
+<span class="sd">indicating if it is being used with SQLite. The class object must be</span>
+<span class="sd">a subclass of BaseKey.</span>
+
+<span class="sd">Classes:</span>
+<span class="sd">    KeySelector: A class used to select keys meeting certain criteria.</span>
+
+<span class="sd">Example:</span>
+<span class="sd">    key_selector = KeySelector(MyKeyClass)</span>
+<span class="sd">    filtered_by_event = key_selector.by_event(1)</span>
+<span class="sd">    filtered_by_key = key_selector.by_key(&#39;mykey&#39;)</span>
+<span class="sd">    filtered_by_language = key_selector.by_language(&#39;English&#39;)</span>
+
+<span class="sd">This allows for flexible and powerful querying of keys in a codebase.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Type</span>
+
+<span class="kn">from</span> <span class="nn">sqlalchemy</span> <span class="kn">import</span> <span class="n">select</span>
+
+<span class="kn">from</span> <span class="nn">.base_selector</span> <span class="kn">import</span> <span class="n">BaseSelector</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">filter_word_by_event_id</span><span class="p">,</span>
+    <span class="n">filter_key_by_word_cs</span><span class="p">,</span>
+    <span class="n">filter_key_by_language</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">..connect_tables</span> <span class="kn">import</span> <span class="n">t_connect_keys</span>
+<span class="kn">from</span> <span class="nn">..definition</span> <span class="kn">import</span> <span class="n">BaseDefinition</span>
+<span class="kn">from</span> <span class="nn">..key</span> <span class="kn">import</span> <span class="n">BaseKey</span>
+<span class="kn">from</span> <span class="nn">..word</span> <span class="kn">import</span> <span class="n">BaseWord</span>
+
+
+<div class="viewcode-block" id="KeySelector">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.key_selector.KeySelector">[docs]</a>
+<span class="k">class</span> <span class="nc">KeySelector</span><span class="p">(</span><span class="n">BaseSelector</span><span class="p">):</span>  <span class="c1"># pylint: disable=too-many-ancestors</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    A class used to select keys meeting certain criteria.</span>
+
+<span class="sd">    Attributes:</span>
+<span class="sd">        model (Type[BaseKey]): The class to be used as the base key.</span>
+<span class="sd">            Must be a subclass of BaseKey.</span>
+<span class="sd">        is_sqlite (bool): If SQLite is being used. Defaults to False.</span>
+<span class="sd">        case_sensitive (bool): If the queries should be case-sensitive.</span>
+<span class="sd">        disable_model_check (bool): If the model check is disabled during initialization.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">model</span><span class="p">:</span> <span class="n">Type</span><span class="p">[</span><span class="n">BaseKey</span><span class="p">]</span> <span class="o">=</span> <span class="n">BaseKey</span><span class="p">,</span>
+        <span class="n">is_sqlite</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">case_sensitive</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+        <span class="n">disable_model_check</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Initializes the KeySelector object with the provided parameters.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            model (Type[BaseKey]): The class to be used as the base key.</span>
+<span class="sd">                Must be a subclass of BaseKey.</span>
+<span class="sd">            is_sqlite (bool): If SQLite is being used. Defaults to False.</span>
+<span class="sd">            case_sensitive (bool): If the queries should be case-sensitive.</span>
+<span class="sd">            disable_model_check (bool): If the model check is disabled during initialization.</span>
+
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the provided model is not a subclass of BaseKey.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">is_sqlite</span><span class="p">,</span> <span class="n">case_sensitive</span><span class="p">,</span> <span class="n">disable_model_check</span><span class="p">)</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">disable_model_check</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_is_model_accepted</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">BaseKey</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">model</span> <span class="o">=</span> <span class="n">model</span>
+
+<div class="viewcode-block" id="KeySelector.by_event">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.key_selector.KeySelector.by_event">[docs]</a>
+    <span class="k">def</span> <span class="nf">by_event</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">event_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeySelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters the keys by the given event ID.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            event_id (int | None): The identifier of the event to filter by.</span>
+<span class="sd">                If None, no event filtering is applied.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            KeySelector: The filtered KeySelector instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">subquery</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="n">select</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_connect_keys</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseWord</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">filter_word_by_event_id</span><span class="p">(</span><span class="n">event_id</span><span class="p">))</span>
+            <span class="o">.</span><span class="n">scalar_subquery</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model</span><span class="o">.</span><span class="n">id</span><span class="o">.</span><span class="n">in_</span><span class="p">(</span><span class="n">subquery</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="KeySelector.by_key">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.key_selector.KeySelector.by_key">[docs]</a>
+    <span class="k">def</span> <span class="nf">by_key</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">key</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeySelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters the keys by the given key.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            key (str): The key to filter by.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            KeySelector: The filtered KeySelector instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">where</span><span class="p">(</span>
+            <span class="n">filter_key_by_word_cs</span><span class="p">(</span><span class="n">key</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">case_sensitive</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">is_sqlite</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="KeySelector.by_language">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.key_selector.KeySelector.by_language">[docs]</a>
+    <span class="k">def</span> <span class="nf">by_language</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">language</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeySelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters the keys by the given language.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            language (str | None): The language to filter by.</span>
+<span class="sd">                If None, no language filtering is applied.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            KeySelector: The filtered KeySelector instance.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">filter_key_by_language</span><span class="p">(</span><span class="n">language</span><span class="p">))</span>
+        <span class="k">return</span> <span class="bp">self</span></div>
+
+
+<div class="viewcode-block" id="KeySelector.by_word_id">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.key_selector.KeySelector.by_word_id">[docs]</a>
+    <span class="k">def</span> <span class="nf">by_word_id</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">word_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">distinct</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">KeySelector</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Filters the keys by the given word ID.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            word_id (int): The identifier of the word to filter by.</span>
+<span class="sd">            distinct (bool): If the query should be distinct. Defaults to False.</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            KeySelector: The filtered KeySelector instance.</span>
+
+<span class="sd">        Keep in mind that duplicated keys from related definitions</span>
+<span class="sd">        will be counted with ```.count()``` but excluded from ```.all()``` request</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">t_connect_keys</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseDefinition</span><span class="p">,</span> <span class="n">BaseDefinition</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">t_connect_keys</span><span class="o">.</span><span class="n">c</span><span class="o">.</span><span class="n">DID</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">BaseWord</span><span class="p">,</span> <span class="n">BaseWord</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">BaseDefinition</span><span class="o">.</span><span class="n">word_id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">filter</span><span class="p">(</span><span class="n">BaseWord</span><span class="o">.</span><span class="n">id</span> <span class="o">==</span> <span class="n">word_id</span><span class="p">)</span>
+            <span class="o">.</span><span class="n">order_by</span><span class="p">(</span><span class="n">BaseKey</span><span class="o">.</span><span class="n">word</span><span class="o">.</span><span class="n">asc</span><span class="p">())</span>
+        <span class="p">)</span>
+
+        <span class="k">if</span> <span class="n">distinct</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_statement</span><span class="o">.</span><span class="n">distinct</span><span class="p">()</span>
+
+        <span class="k">return</span> <span class="bp">self</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, torrua.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

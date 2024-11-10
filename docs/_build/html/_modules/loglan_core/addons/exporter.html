@@ -1,0 +1,366 @@
+
+
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" data-content_root="../../../">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>loglan_core.addons.exporter &mdash; Loglan-Core 0.5.0 documentation</title>
+      <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=80d5e7a1" />
+      <link rel="stylesheet" type="text/css" href="../../../_static/css/theme.css?v=e59714d7" />
+
+  
+      <script src="../../../_static/jquery.js?v=5d32c60e"></script>
+      <script src="../../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="../../../_static/documentation_options.js?v=1dd76d02"></script>
+      <script src="../../../_static/doctools.js?v=9bcbadda"></script>
+      <script src="../../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../../index.html" class="icon icon-home">
+            Loglan-Core
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../../modules.html">loglan_core</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../../index.html">Loglan-Core</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">loglan_core.addons.exporter</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for loglan_core.addons.exporter</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">This module contains an &quot;Export extensions&quot; for LOD dictionary SQL model.</span>
+<span class="sd">Add export() function to db object for returning its text string presentation.</span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Type</span>
+
+<span class="kn">from</span> <span class="nn">..addons.export_word_converter</span> <span class="kn">import</span> <span class="n">ExportWordConverter</span>
+<span class="kn">from</span> <span class="nn">..author</span> <span class="kn">import</span> <span class="n">BaseAuthor</span>
+<span class="kn">from</span> <span class="nn">..definition</span> <span class="kn">import</span> <span class="n">BaseDefinition</span>
+<span class="kn">from</span> <span class="nn">..event</span> <span class="kn">import</span> <span class="n">BaseEvent</span>
+<span class="kn">from</span> <span class="nn">..setting</span> <span class="kn">import</span> <span class="n">BaseSetting</span>
+<span class="kn">from</span> <span class="nn">..syllable</span> <span class="kn">import</span> <span class="n">BaseSyllable</span>
+<span class="kn">from</span> <span class="nn">..type</span> <span class="kn">import</span> <span class="n">BaseType</span>
+<span class="kn">from</span> <span class="nn">..word</span> <span class="kn">import</span> <span class="n">BaseWord</span>
+<span class="kn">from</span> <span class="nn">..word_spell</span> <span class="kn">import</span> <span class="n">BaseWordSpell</span>
+
+<span class="n">DEFAULT_SEPARATOR</span> <span class="o">=</span> <span class="s2">&quot;@&quot;</span>
+
+
+<div class="viewcode-block" id="Exporter">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter">[docs]</a>
+<span class="k">class</span> <span class="nc">Exporter</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    This class serves as a general exporter for various types of objects. The types of objects</span>
+<span class="sd">    that can be exported include: BaseAuthor, BaseDefinition, BaseEvent, BaseSetting,</span>
+<span class="sd">    BaseSyllable, BaseType, BaseWord, and BaseWordSpell. For each of these types of objects,</span>
+<span class="sd">    there&#39;s an associated method that takes the object as an input and returns a formatted</span>
+<span class="sd">    string suitable for export.</span>
+
+<span class="sd">    Methods:</span>
+<span class="sd">        export: The main method that uses a dictionary to map the type of the input object</span>
+<span class="sd">                to the respective export method.</span>
+<span class="sd">        export_author: Converts a BaseAuthor object to a tuple of items.</span>
+<span class="sd">        export_definition: Converts a BaseDefinition object to a tuple of items.</span>
+<span class="sd">        export_event: Converts a BaseEvent object to a tuple of items.</span>
+<span class="sd">        export_setting: Converts a BaseSetting object to a tuple of items.</span>
+<span class="sd">        export_syllable: Converts a BaseSyllable object to a tuple of items.</span>
+<span class="sd">        export_type: Converts a BaseType object to a tuple of items.</span>
+<span class="sd">        export_word: Converts a BaseWord object to a tuple of items.</span>
+<span class="sd">        export_word_spell: Converts a BaseWordSpell object to a tuple of items.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ValueError: If the object type is not supported for export.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">FORMAT_DATE_EVENT</span> <span class="o">=</span> <span class="s2">&quot;%m/</span><span class="si">%d</span><span class="s2">/%Y&quot;</span>
+    <span class="n">FORMAT_DATE_SETTING</span> <span class="o">=</span> <span class="s2">&quot;</span><span class="si">%d</span><span class="s2">.%m.%Y %H:%M:%S&quot;</span>
+
+<div class="viewcode-block" id="Exporter.export">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">export</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_SEPARATOR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Export the given object using the appropriate exporter function.</span>
+<span class="sd">        Args:</span>
+<span class="sd">            obj: The object to be exported.</span>
+<span class="sd">            separator: The separator to be used in the exported string.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">            The exported object.</span>
+<span class="sd">        Raises:</span>
+<span class="sd">            ValueError: If the object type is not supported.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">exporters</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">Type</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="n">BaseAuthor</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">export_author</span><span class="p">,</span>
+            <span class="n">BaseEvent</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">export_event</span><span class="p">,</span>
+            <span class="n">BaseType</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">export_type</span><span class="p">,</span>
+            <span class="n">BaseWordSpell</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">export_word_spell</span><span class="p">,</span>
+            <span class="n">BaseWord</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">export_word</span><span class="p">,</span>
+            <span class="n">BaseDefinition</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">export_definition</span><span class="p">,</span>
+            <span class="n">BaseSetting</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">export_setting</span><span class="p">,</span>
+            <span class="n">BaseSyllable</span><span class="p">:</span> <span class="bp">cls</span><span class="o">.</span><span class="n">export_syllable</span><span class="p">,</span>
+        <span class="p">}</span>
+
+        <span class="n">exporter_func</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">for</span> <span class="n">base_class</span><span class="p">,</span> <span class="n">func</span> <span class="ow">in</span> <span class="n">exporters</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">base_class</span><span class="p">):</span>
+                <span class="n">exporter_func</span> <span class="o">=</span> <span class="n">func</span>
+                <span class="k">break</span>
+
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">exporter_func</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Unsupported object type: </span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="vm">__class__</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+        <span class="n">items</span> <span class="o">=</span> <span class="n">exporter_func</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="o">.</span><span class="n">merge_by</span><span class="p">(</span><span class="n">items</span><span class="p">,</span> <span class="n">separator</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Exporter.merge_by">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.merge_by">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">merge_by</span><span class="p">(</span><span class="n">items</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">separator</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">DEFAULT_SEPARATOR</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Merges a list of items into a single string, separated by the</span>
+<span class="sd">        specified separator.</span>
+<span class="sd">        Parameters:</span>
+<span class="sd">            items (list): The list of items to merge.</span>
+<span class="sd">            separator (str): The string to use as a separator, with a default</span>
+<span class="sd">                         value.</span>
+<span class="sd">        Returns:</span>
+<span class="sd">        str: The resulting string after joining the items.</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">separator</span><span class="o">.</span><span class="n">join</span><span class="p">([</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span> <span class="ow">or</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">items</span><span class="p">])</span></div>
+
+
+<div class="viewcode-block" id="Exporter.export_author">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export_author">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">export_author</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">BaseAuthor</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare Author data for exporting to text file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: elements for export</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">abbreviation</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">full_name</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">notes</span></div>
+
+
+<div class="viewcode-block" id="Exporter.export_event">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export_event">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">export_event</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">BaseEvent</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare Event data for exporting to text file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: elements for export</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">event_id</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">FORMAT_DATE_EVENT</span><span class="p">),</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">definition</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">annotation</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">suffix</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Exporter.export_syllable">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export_syllable">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">export_syllable</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">BaseSyllable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare Syllable data for exporting to text file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: elements for export</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span> <span class="n">obj</span><span class="o">.</span><span class="n">type_</span><span class="p">,</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">allowed</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Exporter.export_setting">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export_setting">[docs]</a>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">export_setting</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">obj</span><span class="p">:</span> <span class="n">BaseSetting</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare Setting data for exporting to text file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: elements for export</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">date</span><span class="o">.</span><span class="n">strftime</span><span class="p">(</span><span class="bp">cls</span><span class="o">.</span><span class="n">FORMAT_DATE_SETTING</span><span class="p">),</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">db_version</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">last_word_id</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">db_release</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Exporter.export_type">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export_type">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">export_type</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">BaseType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare Type data for exporting to text file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: elements for export</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">type_</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">type_x</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">group</span><span class="p">,</span>
+            <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">parentable</span><span class="p">),</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">description</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Exporter.export_word">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export_word">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">export_word</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">BaseWord</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare Word data for exporting to text file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: elements for export</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">ewc</span> <span class="o">=</span> <span class="n">ExportWordConverter</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+        <span class="n">match</span> <span class="o">=</span> <span class="n">ewc</span><span class="o">.</span><span class="n">stringer</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">match</span><span class="p">)</span>
+        <span class="n">tid_old</span> <span class="o">=</span> <span class="n">ewc</span><span class="o">.</span><span class="n">stringer</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">tid_old</span><span class="p">)</span>
+        <span class="n">origin_x</span> <span class="o">=</span> <span class="n">ewc</span><span class="o">.</span><span class="n">stringer</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">origin_x</span><span class="p">)</span>
+        <span class="n">origin</span> <span class="o">=</span> <span class="n">ewc</span><span class="o">.</span><span class="n">stringer</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">origin</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">id_old</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">type_</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">type</span><span class="o">.</span><span class="n">type_x</span><span class="p">,</span>
+            <span class="n">ewc</span><span class="o">.</span><span class="n">e_affixes</span><span class="p">,</span>
+            <span class="n">match</span><span class="p">,</span>
+            <span class="n">ewc</span><span class="o">.</span><span class="n">e_source</span><span class="p">,</span>
+            <span class="n">ewc</span><span class="o">.</span><span class="n">e_year</span><span class="p">,</span>
+            <span class="n">ewc</span><span class="o">.</span><span class="n">e_rank</span><span class="p">,</span>
+            <span class="n">origin</span><span class="p">,</span>
+            <span class="n">origin_x</span><span class="p">,</span>
+            <span class="n">ewc</span><span class="o">.</span><span class="n">e_usedin</span><span class="p">,</span>
+            <span class="n">tid_old</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Exporter.export_definition">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export_definition">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">export_definition</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">BaseDefinition</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare Definition data for exporting to text file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: elements for export</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">e_grammar</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">obj</span><span class="o">.</span><span class="n">slots</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}{</span><span class="n">obj</span><span class="o">.</span><span class="n">grammar_code</span><span class="w"> </span><span class="ow">or</span><span class="w"> </span><span class="s1">&#39;&#39;</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">source_word</span><span class="o">.</span><span class="n">id_old</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">position</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">usage</span><span class="p">,</span>
+            <span class="n">e_grammar</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">body</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">case_tags</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Exporter.export_word_spell">
+<a class="viewcode-back" href="../../../loglan_core.addons.html#loglan_core.addons.exporter.Exporter.export_word_spell">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">export_word_spell</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">BaseWordSpell</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        Prepare WordSpell data for exporting to text file</span>
+
+<span class="sd">        Returns:</span>
+<span class="sd">            tuple: elements for export</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">code_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span>
+            <span class="s2">&quot;0&quot;</span> <span class="k">if</span> <span class="n">symbol</span><span class="o">.</span><span class="n">isupper</span><span class="p">()</span> <span class="k">else</span> <span class="s2">&quot;5&quot;</span> <span class="k">for</span> <span class="n">symbol</span> <span class="ow">in</span> <span class="nb">str</span><span class="p">(</span><span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">id_old</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">lower</span><span class="p">(),</span>
+            <span class="n">code_name</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">event_start_id</span><span class="p">,</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">event_end_id</span> <span class="k">if</span> <span class="n">obj</span><span class="o">.</span><span class="n">event_end</span> <span class="k">else</span> <span class="mi">9999</span><span class="p">,</span>
+            <span class="s2">&quot;&quot;</span><span class="p">,</span>
+        <span class="p">)</span></div>
+</div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2024, torrua.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>
