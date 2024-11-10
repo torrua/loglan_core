@@ -2,7 +2,7 @@
 This module contains a basic WordSpell Model
 """
 
-from loglan_core.word import BaseWord
+from .word import BaseWord
 
 
 class BaseWordSpell(BaseWord):

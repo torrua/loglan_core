@@ -5,15 +5,15 @@ Add export() function to db object for returning its text string presentation.
 
 from typing import Iterable, Callable, Type
 
-from loglan_core.addons.export_word_converter import ExportWordConverter
-from loglan_core.author import BaseAuthor
-from loglan_core.definition import BaseDefinition
-from loglan_core.event import BaseEvent
-from loglan_core.setting import BaseSetting
-from loglan_core.syllable import BaseSyllable
-from loglan_core.type import BaseType
-from loglan_core.word import BaseWord
-from loglan_core.word_spell import BaseWordSpell
+from ..addons.export_word_converter import ExportWordConverter
+from ..author import BaseAuthor
+from ..definition import BaseDefinition
+from ..event import BaseEvent
+from ..setting import BaseSetting
+from ..syllable import BaseSyllable
+from ..type import BaseType
+from ..word import BaseWord
+from ..word_spell import BaseWordSpell
 
 DEFAULT_SEPARATOR = "@"
 

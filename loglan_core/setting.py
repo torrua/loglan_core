@@ -6,8 +6,8 @@ from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from loglan_core.base import BaseModel, str_016
-from loglan_core.table_names import T_NAME_SETTINGS
+from .base import BaseModel, str_016
+from .table_names import T_NAME_SETTINGS
 
 __pdoc__ = {
     "BaseSetting.created": False,

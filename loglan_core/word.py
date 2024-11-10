@@ -11,22 +11,16 @@ from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
 
-from loglan_core.author import BaseAuthor
-from loglan_core.base import BaseModel
-from loglan_core.base import str_008, str_064, str_128
-from loglan_core.connect_tables import (
+from .author import BaseAuthor
+from .base import BaseModel, str_008, str_064, str_128
+from .connect_tables import (
     t_connect_authors,
     t_connect_words,
 )
-from loglan_core.definition import BaseDefinition
-from loglan_core.event import BaseEvent
-from loglan_core.table_names import T_NAME_EVENTS, T_NAME_TYPES, T_NAME_WORDS
-from loglan_core.type import BaseType
-
-__pdoc__ = {
-    "BaseWord.created": False,
-    "BaseWord.updated": False,
-}
+from .definition import BaseDefinition
+from .event import BaseEvent
+from .table_names import T_NAME_EVENTS, T_NAME_TYPES, T_NAME_WORDS
+from .type import BaseType
 
 
 class BaseWord(BaseModel):
@@ -168,7 +162,9 @@ class BaseWord(BaseModel):
         Returns:
             list[BaseWord]: A list of affixes that are derived from the word.
         """
-        return [child for child in self.derivatives if child.type.type_x == "Affix"]
+        return list(
+            filter(lambda child: child.type.type_x == "Affix", self.derivatives)
+        )
 
     @hybrid_property
     def complexes(self) -> list[BaseWord]:
@@ -180,4 +176,4 @@ class BaseWord(BaseModel):
         Returns:
             list[BaseWord]: A list of complexes derived from the word.
         """
-        return [child for child in self.derivatives if child.type.group == "Cpx"]
+        return list(filter(lambda child: child.type.group == "Cpx", self.derivatives))

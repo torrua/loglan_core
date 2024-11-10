@@ -7,9 +7,9 @@ from sqlalchemy.sql.elements import BinaryExpression
 from sqlalchemy.sql.elements import BooleanClauseList
 from sqlalchemy.sql.expression import ColumnElement
 
-from loglan_core.event import BaseEvent
-from loglan_core.key import BaseKey
-from loglan_core.word import BaseWord
+from ..event import BaseEvent
+from ..key import BaseKey
+from ..word import BaseWord
 
 
 def filter_word_by_event_id(event_id: int | None) -> BooleanClauseList:

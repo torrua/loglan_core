@@ -14,23 +14,23 @@ from loglan_core.connect_tables import (
     t_connect_keys,
 )
 
-from loglan_core.base import BaseModel as Base
+from .base import BaseModel as Base
 
-from loglan_core.author import BaseAuthor as Author
-from loglan_core.definition import BaseDefinition as Definition
-from loglan_core.event import BaseEvent as Event
-from loglan_core.key import BaseKey as Key
-from loglan_core.setting import BaseSetting as Setting
-from loglan_core.syllable import BaseSyllable as Syllable
-from loglan_core.type import BaseType as Type
-from loglan_core.word import BaseWord as Word
-from loglan_core.word_spell import BaseWordSpell as WordSpell
+from .author import BaseAuthor as Author
+from .definition import BaseDefinition as Definition
+from .event import BaseEvent as Event
+from .key import BaseKey as Key
+from .setting import BaseSetting as Setting
+from .syllable import BaseSyllable as Syllable
+from .type import BaseType as Type
+from .word import BaseWord as Word
+from .word_spell import BaseWordSpell as WordSpell
 
-from loglan_core.addons.base_selector import BaseSelector
-from loglan_core.addons.definition_selector import DefinitionSelector
-from loglan_core.addons.key_selector import KeySelector
-from loglan_core.addons.word_selector import WordSelector
+from .addons.base_selector import BaseSelector
+from .addons.definition_selector import DefinitionSelector
+from .addons.key_selector import KeySelector
+from .addons.word_selector import WordSelector
 
-from loglan_core.addons.export_word_converter import ExportWordConverter
-from loglan_core.addons.exporter import Exporter
-from loglan_core.addons.word_linker import WordLinker
+from .addons.export_word_converter import ExportWordConverter
+from .addons.exporter import Exporter
+from .addons.word_linker import WordLinker

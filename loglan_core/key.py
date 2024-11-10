@@ -10,12 +10,12 @@ from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
 
-from loglan_core.base import BaseModel, str_016, str_064
-from loglan_core.connect_tables import t_connect_keys
-from loglan_core.table_names import T_NAME_KEYS
+from .base import BaseModel, str_016, str_064
+from .connect_tables import t_connect_keys
+from .table_names import T_NAME_KEYS
 
 if TYPE_CHECKING:
-    from loglan_core.definition import BaseDefinition
+    from .definition import BaseDefinition
 
 __pdoc__ = {
     "BaseKey.definitions": """

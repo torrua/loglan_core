@@ -8,12 +8,11 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
-from loglan_core.base import BaseModel
-from loglan_core.base import str_016, str_255
-from loglan_core.table_names import T_NAME_TYPES
+from .base import BaseModel, str_016, str_255
+from .table_names import T_NAME_TYPES
 
 if TYPE_CHECKING:
-    from loglan_core.word import BaseWord
+    from .word import BaseWord
 
 __pdoc__ = {
     "BaseType.words": "words",

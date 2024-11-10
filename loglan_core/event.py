@@ -11,11 +11,11 @@ from sqlalchemy import Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
-from loglan_core.base import BaseModel, str_016, str_064
-from loglan_core.table_names import T_NAME_EVENTS
+from .base import BaseModel, str_016, str_064
+from .table_names import T_NAME_EVENTS
 
 if TYPE_CHECKING:
-    from loglan_core.word import BaseWord
+    from .word import BaseWord
 
 __pdoc__ = {
     "BaseEvent.created": False,

@@ -11,8 +11,8 @@ from typing import Iterable
 from sqlalchemy import select, or_
 from sqlalchemy.sql.selectable import Select
 
-from loglan_core import Type
-from loglan_core import Word
+from ..type import BaseType
+from ..word import BaseWord
 
 
 class WordSource:
@@ -98,7 +98,7 @@ class WordSourcer:
     ]
 
     @classmethod
-    def get_sources_prim(cls, word: Word):
+    def get_sources_prim(cls, word: BaseWord):
         """
 
         Returns:
@@ -115,7 +115,7 @@ class WordSourcer:
         return f"{word.name}: {word.origin}{' < ' + word.origin_x if word.origin_x else ''}"
 
     @staticmethod
-    def _get_sources_c_prim(word: Word) -> list[WordSource] | None:
+    def _get_sources_c_prim(word: BaseWord) -> list[WordSource] | None:
         """
         Returns:
         """
@@ -128,8 +128,8 @@ class WordSourcer:
 
     @classmethod
     def get_sources_cpx(
-        cls, word: Word, as_str: bool = False
-    ) -> Select[tuple[Word]] | list[str]:
+        cls, word: BaseWord, as_str: bool = False
+    ) -> Select[tuple[BaseWord]] | list[str]:
         """Extract source words from self.origin field accordingly
         Args:
             word (Word):
@@ -149,7 +149,7 @@ class WordSourcer:
         return sources if as_str else cls.words_from_source_cpx(sources)
 
     @classmethod
-    def words_from_source_cpx(cls, sources: list[str]) -> Select[tuple[Word]]:
+    def words_from_source_cpx(cls, sources: list[str]) -> Select[tuple[BaseWord]]:
         """
 
         Args:
@@ -161,9 +161,9 @@ class WordSourcer:
         exclude_ids = cls.get_type_ids(types=("LW", "Cpd"))
 
         return (
-            select(Word)
-            .filter(Word.name.in_(sources))
-            .filter(Word.type_id.notin_(exclude_ids))
+            select(BaseWord)
+            .filter(BaseWord.name.in_(sources))
+            .filter(BaseWord.type_id.notin_(exclude_ids))
         )
 
     @classmethod
@@ -178,19 +178,19 @@ class WordSourcer:
             Subquery
         """
         return (
-            select(Type.id)
+            select(BaseType.id)
             .filter(
                 or_(
-                    Type.type_.in_(types),
-                    Type.type_x.in_(types),
-                    Type.group.in_(types),
+                    BaseType.type_.in_(types),
+                    BaseType.type_x.in_(types),
+                    BaseType.group.in_(types),
                 )
             )
             .scalar_subquery()
         )
 
     @staticmethod
-    def _prepare_sources_cpx(word: Word) -> list[str]:
+    def _prepare_sources_cpx(word: BaseWord) -> list[str]:
         """
         Returns:
         """
@@ -208,8 +208,8 @@ class WordSourcer:
 
     @classmethod
     def get_sources_cpd(
-        cls, word: Word, as_str: bool = False
-    ) -> Select[tuple[Word]] | list[str]:
+        cls, word: BaseWord, as_str: bool = False
+    ) -> Select[tuple[BaseWord]] | list[str]:
         """Extract source words from self.origin field accordingly
 
         Args:
@@ -228,7 +228,7 @@ class WordSourcer:
         return sources if as_str else cls.words_from_source_cpd(sources)
 
     @staticmethod
-    def _prepare_sources_cpd(word: Word) -> list[str]:
+    def _prepare_sources_cpd(word: BaseWord) -> list[str]:
         """
         Returns:
         """
@@ -245,7 +245,7 @@ class WordSourcer:
         return sources
 
     @classmethod
-    def words_from_source_cpd(cls, sources: list[str]) -> Select[tuple[Word]]:
+    def words_from_source_cpd(cls, sources: list[str]) -> Select[tuple[BaseWord]]:
         """
 
         Args:
@@ -258,7 +258,7 @@ class WordSourcer:
         type_ids = cls.get_type_ids(types=("LW", "Cpd"))
 
         return (
-            select(Word)
-            .filter(Word.name.in_(sources))
-            .filter(Word.type_id.in_(type_ids))
+            select(BaseWord)
+            .filter(BaseWord.name.in_(sources))
+            .filter(BaseWord.type_id.in_(type_ids))
         )

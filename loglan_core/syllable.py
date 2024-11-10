@@ -4,9 +4,8 @@ This module contains a basic Syllable Model
 
 from sqlalchemy.orm import mapped_column, Mapped
 
-from loglan_core.base import BaseModel
-from loglan_core.base import str_008, str_032
-from loglan_core.table_names import T_NAME_SYLLABLES
+from .base import BaseModel, str_008, str_032
+from .table_names import T_NAME_SYLLABLES
 
 __pdoc__ = {
     "BaseSyllable.created": False,

@@ -5,8 +5,8 @@ This is done via the WordLinker class which provides methods to check and add
 parent-child relationships between words and associate authors with words.
 """
 
-from loglan_core.author import BaseAuthor
-from loglan_core.word import BaseWord
+from ..author import BaseAuthor
+from ..word import BaseWord
 
 
 class WordLinker:

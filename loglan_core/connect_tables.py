@@ -20,8 +20,8 @@ and includes indices on key columns to enhance query performance.
 
 from sqlalchemy import Column, ForeignKey, Table, Index
 
-from loglan_core.base import BaseModel as Base
-from loglan_core.table_names import (
+from .base import BaseModel as Base
+from .table_names import (
     T_NAME_AUTHORS,
     T_NAME_KEYS,
     T_NAME_WORDS,

@@ -11,13 +11,13 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from loglan_core.base import BaseModel, str_008, str_016, str_064, str_255
-from loglan_core.connect_tables import t_connect_keys
-from loglan_core.key import BaseKey
-from loglan_core.table_names import T_NAME_WORDS, T_NAME_DEFINITIONS
+from .base import BaseModel, str_008, str_016, str_064, str_255
+from .connect_tables import t_connect_keys
+from .key import BaseKey
+from .table_names import T_NAME_WORDS, T_NAME_DEFINITIONS
 
 if TYPE_CHECKING:
-    from loglan_core.word import BaseWord
+    from .word import BaseWord
 
 __pdoc__ = {
     "BaseDefinition.created": False,

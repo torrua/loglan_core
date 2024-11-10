@@ -11,13 +11,13 @@ from typing import Type
 from sqlalchemy import and_, select
 from typing_extensions import Self
 
-from loglan_core.addons.base_selector import BaseSelector
-from loglan_core.addons.definition_selector import DefinitionSelector
-from loglan_core.addons.utils import filter_word_by_event_id
-from loglan_core.connect_tables import t_connect_words
-from loglan_core.key import BaseKey
-from loglan_core.type import BaseType
-from loglan_core.word import BaseWord
+from .base_selector import BaseSelector
+from .definition_selector import DefinitionSelector
+from .utils import filter_word_by_event_id
+from ..connect_tables import t_connect_words
+from ..key import BaseKey
+from ..type import BaseType
+from ..word import BaseWord
 
 
 class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
