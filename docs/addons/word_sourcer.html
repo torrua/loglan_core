@@ -91,7 +91,7 @@ Returns:</p></div>
 <h3>Static methods</h3>
 <dl>
 <dt id="loglan_core.addons.word_sourcer.WordSourcer.get_sources_cpd"><code class="name flex">
-<span>def <span class="ident">get_sources_cpd</span></span>(<span>word: Word, as_str: bool = False) ‑> sqlalchemy.sql.selectable.Select | list[str]</span>
+<span>def <span class="ident">get_sources_cpd</span></span>(<span>word: BaseWord, as_str: bool = False) ‑> sqlalchemy.sql.selectable.Select | list[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract source words from self.origin field accordingly</p>
@@ -107,7 +107,7 @@ Returns:</p></div>
 <p>List of words from which the self.name was created</p></div>
 </dd>
 <dt id="loglan_core.addons.word_sourcer.WordSourcer.get_sources_cpx"><code class="name flex">
-<span>def <span class="ident">get_sources_cpx</span></span>(<span>word: Word, as_str: bool = False) ‑> sqlalchemy.sql.selectable.Select | list[str]</span>
+<span>def <span class="ident">get_sources_cpx</span></span>(<span>word: BaseWord, as_str: bool = False) ‑> sqlalchemy.sql.selectable.Select | list[str]</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Extract source words from self.origin field accordingly</p>
@@ -124,7 +124,7 @@ Returns:</p></div>
 <p>List of words from which the self.name was created</p></div>
 </dd>
 <dt id="loglan_core.addons.word_sourcer.WordSourcer.get_sources_prim"><code class="name flex">
-<span>def <span class="ident">get_sources_prim</span></span>(<span>word: Word)</span>
+<span>def <span class="ident">get_sources_prim</span></span>(<span>word: BaseWord)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Returns:</p></div>

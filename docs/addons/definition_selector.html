@@ -43,7 +43,7 @@ filtering of BaseDefinition objects.</p>
 <dl>
 <dt id="loglan_core.addons.definition_selector.DefinitionSelector"><code class="flex name class">
 <span>class <span class="ident">DefinitionSelector</span></span>
-<span>(</span><span>class_=loglan_core.definition.BaseDefinition, is_sqlite: bool = False)</span>
+<span>(</span><span>model: Type[BaseDefinition] = loglan_core.definition.BaseDefinition, is_sqlite: bool = False, case_sensitive: bool = False, disable_model_check: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This class is a selector model for the BaseDefinition object. It allows for
@@ -62,77 +62,33 @@ by_language: Returns a new DefinitionSelector object filtered by a specific lang
 </dl>
 <h2 id="attributes">Attributes</h2>
 <dl>
-<dt><strong><code>class_</code></strong></dt>
+<dt><strong><code>model</code></strong></dt>
 <dd>The class to be used as the returned object.</dd>
 <dt><strong><code>is_sqlite</code></strong></dt>
 <dd>Boolean specifying if the object is being used with SQLite or not.</dd>
 </dl>
-<p>Initializes the object with the given parameters.</p>
+<p>Initializes the DefinitionSelector object with the provided parameters.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>class_</code></strong> :&ensp;<code>Type[BaseDefinition]</code></dt>
-<dd>The class to be used as the returned object.</dd>
-<dt>Must be a subclass of BaseDefinition.</dt>
+<dt><strong><code>model</code></strong> :&ensp;<code>Type[BaseDefinition]</code></dt>
+<dd>The class to be used as the base key.
+Must be a subclass of BaseDefinition.</dd>
 <dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Whether the object is being used with SQLite or not.</dd>
+<dd>If SQLite is being used. Defaults to False.</dd>
+<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If the queries should be case-sensitive.</dd>
+<dt><strong><code>disable_model_check</code></strong> :&ensp;<code>bool</code></dt>
+<dd>If the model check is disabled during initialization.</dd>
 </dl>
 <h2 id="raises_1">Raises</h2>
 <dl>
 <dt><code>ValueError</code></dt>
-<dd>If the provided class_ is not a subclass of BaseDefinition.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<p>None</p></div>
+<dd>If the provided model is not a subclass of BaseDefinition.</dd>
+</dl></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></li>
-<li>sqlalchemy.sql.selectable.Select</li>
-<li>sqlalchemy.sql.selectable.HasPrefixes</li>
-<li>sqlalchemy.sql.selectable.HasSuffixes</li>
-<li>sqlalchemy.sql.selectable.HasHints</li>
-<li>sqlalchemy.sql.base.HasCompileState</li>
-<li>sqlalchemy.sql.selectable._SelectFromElements</li>
-<li>sqlalchemy.sql.selectable.GenerativeSelect</li>
-<li>sqlalchemy.sql.selectable.SelectBase</li>
-<li>sqlalchemy.sql.roles.SelectStatementRole</li>
-<li>sqlalchemy.sql.selectable.TypedReturnsRows</li>
-<li>sqlalchemy.sql.selectable.ExecutableReturnsRows</li>
-<li>sqlalchemy.sql.base.Executable</li>
-<li>sqlalchemy.sql.roles.StatementRole</li>
-<li>sqlalchemy.sql.roles.DMLSelectRole</li>
-<li>sqlalchemy.sql.roles.CompoundElementRole</li>
-<li>sqlalchemy.sql.roles.AllowsLambdaRole</li>
-<li>sqlalchemy.sql.roles.InElementRole</li>
-<li>sqlalchemy.sql.selectable.HasCTE</li>
-<li>sqlalchemy.sql.roles.HasCTERole</li>
-<li>sqlalchemy.sql.selectable.SelectsRows</li>
-<li>sqlalchemy.sql.annotation.SupportsCloneAnnotations</li>
-<li>sqlalchemy.sql.selectable.Selectable</li>
-<li>sqlalchemy.sql.selectable.ReturnsRows</li>
-<li>sqlalchemy.sql.roles.ReturnsRowsRole</li>
-<li>sqlalchemy.sql.roles.SQLRole</li>
-<li>sqlalchemy.sql.elements.DQLDMLClauseElement</li>
-<li>sqlalchemy.sql.elements.ClauseElement</li>
-<li>sqlalchemy.sql.annotation.SupportsWrappingAnnotations</li>
-<li>sqlalchemy.sql.annotation.SupportsAnnotations</li>
-<li>sqlalchemy.sql.cache_key.MemoizedHasCacheKey</li>
-<li>sqlalchemy.sql.cache_key.HasCacheKey</li>
-<li>sqlalchemy.sql.base.Generative</li>
-<li>sqlalchemy.util.langhelpers.HasMemoized</li>
-<li>sqlalchemy.sql.traversals.HasCopyInternals</li>
-<li>sqlalchemy.sql.visitors.ExternallyTraversible</li>
-<li>sqlalchemy.sql.visitors.HasTraverseInternals</li>
-<li>sqlalchemy.sql.elements.CompilerElement</li>
-<li>sqlalchemy.sql.visitors.Visitable</li>
-<li>typing.Generic</li>
 </ul>
-<h3>Instance variables</h3>
-<dl>
-<dt id="loglan_core.addons.definition_selector.DefinitionSelector.inherit_cache"><code class="name">prop <span class="ident">inherit_cache</span></code></dt>
-<dd>
-<div class="desc"><p>:return: bool</p></div>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="loglan_core.addons.definition_selector.DefinitionSelector.by_event"><code class="name flex">
@@ -150,7 +106,7 @@ no event filtering is applied.</p>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.definition_selector.DefinitionSelector.by_key"><code class="name flex">
-<span>def <span class="ident">by_key</span></span>(<span>self, key: BaseKey | str, language: str | None = None, case_sensitive: bool = False) ‑> <a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></span>
+<span>def <span class="ident">by_key</span></span>(<span>self, key: BaseKey | str, language: str | None = None, distinct: bool = False) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This method filters the definitions by the provided key, language and case sensitivity.</p>
@@ -158,15 +114,15 @@ no event filtering is applied.</p>
 <p>key (BaseKey | str): The key to filter by. Can be an instance of BaseKey or a string.
 language (str | None): The language to filter by.
 If None, no language filtering is applied.
-case_sensitive (bool): Flag indicating whether filtering should be case sensitive.</p>
+distinct (bool): If True, only distinct keys will be returned.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>The filtered DefinitionSelector instance with distinct keys.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.definition_selector.DefinitionSelector.by_language"><code class="name flex">
-<span>def <span class="ident">by_language</span></span>(<span>self, language: str | None = None) ‑> <a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></span>
+<span>def <span class="ident">by_language</span></span>(<span>self, language: str | None = None) ‑> Self</span>
 </code></dt>
 <dd>
 <div class="desc"><p>This method filters the definitions by the given language.</p>
@@ -175,7 +131,7 @@ case_sensitive (bool): Flag indicating whether filtering should be case sensitiv
 no language filtering is applied.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.definition_selector.DefinitionSelector" href="#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></code></dt>
+<dt><code>Self</code></dt>
 <dd>The filtered DefinitionSelector instance.</dd>
 </dl></div>
 </dd>
@@ -185,11 +141,24 @@ no language filtering is applied.</p>
 <li><code><b><a title="loglan_core.addons.base_selector.BaseSelector" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></b></code>:
 <ul class="hlist">
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.all" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.all">all</a></code></li>
-<li><code><a title="loglan_core.addons.base_selector.BaseSelector.by_attrs" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.by_attrs">by_attrs</a></code></li>
-<li><code><a title="loglan_core.addons.base_selector.BaseSelector.condition_by_attribute" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.condition_by_attribute">condition_by_attribute</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.all_async" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.all_async">all_async</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.execute">execute</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute_async" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.execute_async">execute_async</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.fetchmany">fetchmany</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany_async" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.fetchmany_async">fetchmany_async</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.filter" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.filter">filter</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.filter_by" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.filter_by">filter_by</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.get_like_condition" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.get_like_condition">get_like_condition</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.get_statement" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.get_statement">get_statement</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.limit" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.limit">limit</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.offset" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.offset">offset</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.order_by" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.order_by">order_by</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.scalar">scalar</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar_async" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.scalar_async">scalar_async</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.select_columns" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.select_columns">select_columns</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.where" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.where">where</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.where_like" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.where_like">where_like</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.with_relationships" href="base_selector.html#loglan_core.addons.base_selector.BaseSelector.with_relationships">with_relationships</a></code></li>
 </ul>
 </li>
 </ul>
@@ -215,7 +184,6 @@ no language filtering is applied.</p>
 <li><code><a title="loglan_core.addons.definition_selector.DefinitionSelector.by_event" href="#loglan_core.addons.definition_selector.DefinitionSelector.by_event">by_event</a></code></li>
 <li><code><a title="loglan_core.addons.definition_selector.DefinitionSelector.by_key" href="#loglan_core.addons.definition_selector.DefinitionSelector.by_key">by_key</a></code></li>
 <li><code><a title="loglan_core.addons.definition_selector.DefinitionSelector.by_language" href="#loglan_core.addons.definition_selector.DefinitionSelector.by_language">by_language</a></code></li>
-<li><code><a title="loglan_core.addons.definition_selector.DefinitionSelector.inherit_cache" href="#loglan_core.addons.definition_selector.DefinitionSelector.inherit_cache">inherit_cache</a></code></li>
 </ul>
 </li>
 </ul>

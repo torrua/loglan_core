@@ -73,6 +73,7 @@ hljs.highlightAll();
 <h3>Ancestors</h3>
 <ul class="hlist">
 <li><a title="loglan_core.base.BaseModel" href="base.html#loglan_core.base.BaseModel">BaseModel</a></li>
+<li>sqlalchemy.ext.asyncio.session.AsyncAttrs</li>
 <li>sqlalchemy.orm.decl_api.DeclarativeBase</li>
 <li>sqlalchemy.inspection.Inspectable</li>
 <li>typing.Generic</li>
@@ -100,9 +101,9 @@ hljs.highlightAll();
 </dd>
 <dt id="loglan_core.definition.BaseDefinition.grammar"><code class="name">prop <span class="ident">grammar</span> : str</code></dt>
 <dd>
-<div class="desc"><p>Combine definition's 'slots' and 'grammar_code' attributes</p>
+<div class="desc"><p>Combine definition's 'slots' and 'grammar_code' attributes.</p>
 <h2 id="returns">Returns</h2>
-<p>String with grammar data like (3v) or (2n)</p></div>
+<p>String with grammar data like (3v) or (2n), or an empty string if both are None.</p></div>
 </dd>
 <dt id="loglan_core.definition.BaseDefinition.grammar_code"><code class="name">var <span class="ident">grammar_code</span> : Union[InstrumentedAttribute[_T_co], _T_co]</code></dt>
 <dd>
@@ -152,6 +153,7 @@ hljs.highlightAll();
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="base.html#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="base.html#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="base.html#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.hybrid_properties" href="base.html#loglan_core.base.BaseModel.hybrid_properties">hybrid_properties</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.id" href="base.html#loglan_core.base.BaseModel.id">id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="base.html#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.registry" href="base.html#loglan_core.base.BaseModel.registry">registry</a></code></li>

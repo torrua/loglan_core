@@ -91,6 +91,7 @@ attributes of the instance's class are allowed. These could be,
 for example, any mapped columns or relationships.</p></div>
 <h3>Ancestors</h3>
 <ul class="hlist">
+<li>sqlalchemy.ext.asyncio.session.AsyncAttrs</li>
 <li>sqlalchemy.orm.decl_api.DeclarativeBase</li>
 <li>sqlalchemy.inspection.Inspectable</li>
 <li>typing.Generic</li>
@@ -104,7 +105,7 @@ for example, any mapped columns or relationships.</p></div>
 <li><a title="loglan_core.setting.BaseSetting" href="setting.html#loglan_core.setting.BaseSetting">BaseSetting</a></li>
 <li><a title="loglan_core.syllable.BaseSyllable" href="syllable.html#loglan_core.syllable.BaseSyllable">BaseSyllable</a></li>
 <li><a title="loglan_core.type.BaseType" href="type.html#loglan_core.type.BaseType">BaseType</a></li>
-<li><a title="loglan_core.word.BaseWord" href="word.html#loglan_core.word.BaseWord">BaseWord</a></li>
+<li>loglan_core.word.BaseWord</li>
 </ul>
 <h3>Class variables</h3>
 <dl>
@@ -226,6 +227,18 @@ cid (int): The id of the instance to retrieve.</p>
 </dl>
 <p>the given id, or None if no such instance exists.</p></div>
 </dd>
+<dt id="loglan_core.base.BaseModel.hybrid_properties"><code class="name flex">
+<span>def <span class="ident">hybrid_properties</span></span>(<span>) ‑> set[str]</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Class method that computes the hybrid properties of the class.</p>
+<p>It doesn’t require any parameters as it operates on the class itself.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>set[str]</code></dt>
+<dd>A set of strings with names of the hybrid properties.</dd>
+</dl></div>
+</dd>
 <dt id="loglan_core.base.BaseModel.non_foreign_keys"><code class="name flex">
 <span>def <span class="ident">non_foreign_keys</span></span>(<span>) ‑> set[str]</span>
 </code></dt>
@@ -308,6 +321,7 @@ It filters out keys that start with "_" and keys that are
 <li><code><a title="loglan_core.base.BaseModel.foreign_keys" href="#loglan_core.base.BaseModel.foreign_keys">foreign_keys</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_all" href="#loglan_core.base.BaseModel.get_all">get_all</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.get_by_id" href="#loglan_core.base.BaseModel.get_by_id">get_by_id</a></code></li>
+<li><code><a title="loglan_core.base.BaseModel.hybrid_properties" href="#loglan_core.base.BaseModel.hybrid_properties">hybrid_properties</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.id" href="#loglan_core.base.BaseModel.id">id</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.metadata" href="#loglan_core.base.BaseModel.metadata">metadata</a></code></li>
 <li><code><a title="loglan_core.base.BaseModel.non_foreign_keys" href="#loglan_core.base.BaseModel.non_foreign_keys">non_foreign_keys</a></code></li>

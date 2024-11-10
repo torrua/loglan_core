@@ -38,7 +38,7 @@ hljs.highlightAll();
 <dl>
 <dt id="loglan_core.addons.base_selector.BaseSelector"><code class="flex name class">
 <span>class <span class="ident">BaseSelector</span></span>
-<span>(</span><span>*entities: _ColumnsClauseArgument[Any])</span>
+<span>(</span><span>model: Type[<a title="loglan_core.base.BaseModel" href="../base.html#loglan_core.base.BaseModel">BaseModel</a>], is_sqlite: bool = False, case_sensitive: bool = False, disable_model_check: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>A custom base selector that inherits from SQLAlchemy's Select class.
@@ -53,159 +53,353 @@ Executes the session and returns all the results.</p>
 Executes the session and returns a scalar result.</p>
 <p>fetchmany(session: Session, size: int | None = None) -&gt; List[ResultRow]:
 Executes the session and fetches a specified number of results.</p>
-<p>condition_by_attribute(
-class_: Type[BaseModel],
-attr: InstrumentedAttribute | str,
-value: Any,
-is_sqlite: bool = False,
-case_sensitive: bool = False,
-) -&gt; BinaryExpression:
-Creates a filter to select items by a specific attribute value.
-Support wildcard and case-sensitive search.</p>
-<p>Construct a new :class:<code>_expression.Select</code>.</p>
-<p>The public constructor for :class:<code>_expression.Select</code> is the
-:func:<code>_sql.select</code> function.</p></div>
-<h3>Ancestors</h3>
-<ul class="hlist">
-<li>sqlalchemy.sql.selectable.Select</li>
-<li>sqlalchemy.sql.selectable.HasPrefixes</li>
-<li>sqlalchemy.sql.selectable.HasSuffixes</li>
-<li>sqlalchemy.sql.selectable.HasHints</li>
-<li>sqlalchemy.sql.base.HasCompileState</li>
-<li>sqlalchemy.sql.selectable._SelectFromElements</li>
-<li>sqlalchemy.sql.selectable.GenerativeSelect</li>
-<li>sqlalchemy.sql.selectable.SelectBase</li>
-<li>sqlalchemy.sql.roles.SelectStatementRole</li>
-<li>sqlalchemy.sql.selectable.TypedReturnsRows</li>
-<li>sqlalchemy.sql.selectable.ExecutableReturnsRows</li>
-<li>sqlalchemy.sql.base.Executable</li>
-<li>sqlalchemy.sql.roles.StatementRole</li>
-<li>sqlalchemy.sql.roles.DMLSelectRole</li>
-<li>sqlalchemy.sql.roles.CompoundElementRole</li>
-<li>sqlalchemy.sql.roles.AllowsLambdaRole</li>
-<li>sqlalchemy.sql.roles.InElementRole</li>
-<li>sqlalchemy.sql.selectable.HasCTE</li>
-<li>sqlalchemy.sql.roles.HasCTERole</li>
-<li>sqlalchemy.sql.selectable.SelectsRows</li>
-<li>sqlalchemy.sql.annotation.SupportsCloneAnnotations</li>
-<li>sqlalchemy.sql.selectable.Selectable</li>
-<li>sqlalchemy.sql.selectable.ReturnsRows</li>
-<li>sqlalchemy.sql.roles.ReturnsRowsRole</li>
-<li>sqlalchemy.sql.roles.SQLRole</li>
-<li>sqlalchemy.sql.elements.DQLDMLClauseElement</li>
-<li>sqlalchemy.sql.elements.ClauseElement</li>
-<li>sqlalchemy.sql.annotation.SupportsWrappingAnnotations</li>
-<li>sqlalchemy.sql.annotation.SupportsAnnotations</li>
-<li>sqlalchemy.sql.cache_key.MemoizedHasCacheKey</li>
-<li>sqlalchemy.sql.cache_key.HasCacheKey</li>
-<li>sqlalchemy.sql.base.Generative</li>
-<li>sqlalchemy.util.langhelpers.HasMemoized</li>
-<li>sqlalchemy.sql.traversals.HasCopyInternals</li>
-<li>sqlalchemy.sql.visitors.ExternallyTraversible</li>
-<li>sqlalchemy.sql.visitors.HasTraverseInternals</li>
-<li>sqlalchemy.sql.elements.CompilerElement</li>
-<li>sqlalchemy.sql.visitors.Visitable</li>
-<li>typing.Generic</li>
-</ul>
+<p>Initializes the Selector.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>model</code></strong> :&ensp;<code>Type</code></dt>
+<dd>The SQLAlchemy model class to select from.</dd>
+<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag indicating if the database is SQLite.</dd>
+<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag indicating if the queries should be case-sensitive.</dd>
+<dt><strong><code>disable_model_check</code></strong> :&ensp;<code>bool</code></dt>
+<dd>Flag indicating if the model check should be disabled.</dd>
+</dl></div>
 <h3>Subclasses</h3>
 <ul class="hlist">
 <li><a title="loglan_core.addons.definition_selector.DefinitionSelector" href="definition_selector.html#loglan_core.addons.definition_selector.DefinitionSelector">DefinitionSelector</a></li>
 <li><a title="loglan_core.addons.key_selector.KeySelector" href="key_selector.html#loglan_core.addons.key_selector.KeySelector">KeySelector</a></li>
 <li><a title="loglan_core.addons.word_selector.WordSelector" href="word_selector.html#loglan_core.addons.word_selector.WordSelector">WordSelector</a></li>
 </ul>
-<h3>Static methods</h3>
-<dl>
-<dt id="loglan_core.addons.base_selector.BaseSelector.condition_by_attribute"><code class="name flex">
-<span>def <span class="ident">condition_by_attribute</span></span>(<span>class_: Type[BaseModel], attr: InstrumentedAttribute | str, value: Any, is_sqlite: bool = False, case_sensitive: bool = False) ‑> sqlalchemy.sql.elements.BinaryExpression</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Applies a filter to select words by a specific attribute value.</p>
-<h2 id="args">Args</h2>
-<dl>
-<dt><strong><code>class_</code></strong> :&ensp;<code>BaseModel</code></dt>
-<dd>The class to select from.</dd>
-<dt><strong><code>attr</code></strong> :&ensp;<code>str</code></dt>
-<dd>The attribute to filter by.</dd>
-<dt><strong><code>value</code></strong> :&ensp;<code>Any</code></dt>
-<dd>The value of the attribute to filter by.</dd>
-<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
-<dd>If SQLite is being used. Defaults to False.</dd>
-<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Whether the search should be case-sensitive.
-Defaults to False.</dd>
-</dl>
-<h2 id="returns">Returns</h2>
-<dl>
-<dt><code><a title="loglan_core.addons.base_selector.BaseSelector" href="#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></code></dt>
-<dd>A query with the filter applied.</dd>
-</dl></div>
-</dd>
-</dl>
 <h3>Methods</h3>
 <dl>
 <dt id="loglan_core.addons.base_selector.BaseSelector.all"><code class="name flex">
-<span>def <span class="ident">all</span></span>(<span>self, session: Session)</span>
+<span>def <span class="ident">all</span></span>(<span>self, session: sqlalchemy.orm.session.Session, unique: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes the given session and returns all the results as a list.</p>
-<p>Args:
-session (Session): SQLAlchemy Session object.</p>
-<p>Returns:
-List[ResultRow]: All the results of the executed session.</p></div>
-</dd>
-<dt id="loglan_core.addons.base_selector.BaseSelector.by_attrs"><code class="name flex">
-<span>def <span class="ident">by_attrs</span></span>(<span>self, class_: Type[BaseModel], is_sqlite: bool = False, case_sensitive: bool = False, **kwargs) ‑> Self</span>
-</code></dt>
-<dd>
-<div class="desc"><p>Selects all words by a set of attributes.</p>
 <h2 id="args">Args</h2>
 <dl>
-<dt><strong><code>class_</code></strong> :&ensp;<code>Type[BaseModel]</code></dt>
-<dd>The class to select from.</dd>
-<dt><strong><code>is_sqlite</code></strong> :&ensp;<code>bool</code></dt>
-<dd>If SQLite is being used. Defaults to False.</dd>
-<dt><strong><code>case_sensitive</code></strong> :&ensp;<code>bool</code></dt>
-<dd>Whether the search should be case-sensitive.
-Defaults to False.</dd>
-<dt><strong><code>**kwargs</code></strong></dt>
-<dd>A set of attributes to filter by.</dd>
+<dt><strong><code>session</code></strong> :&ensp;<code>Session</code></dt>
+<dd>SQLAlchemy Session object.</dd>
+<dt><strong><code>unique</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag indicating if the result should contain unique items.</dd>
 </dl>
+<p>Defaults to False.</p>
 <h2 id="returns">Returns</h2>
 <dl>
-<dt><code><a title="loglan_core.addons.base_selector.BaseSelector" href="#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></code></dt>
-<dd>A query with the filter applied.</dd>
+<dt><code>List[ResultRow]</code></dt>
+<dd>All the results of the executed session.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.all_async"><code class="name flex">
+<span>async def <span class="ident">all_async</span></span>(<span>self, session: sqlalchemy.ext.asyncio.session.AsyncSession, unique: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Executes the given session and returns all the results as a list.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code>AsyncSession</code></dt>
+<dd>SQLAlchemy Session object.</dd>
+<dt><strong><code>unique</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag indicating if the result should contain unique items.</dd>
+</dl>
+<p>Defaults to False.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[ResultRow]</code></dt>
+<dd>All the results of the executed session.</dd>
 </dl></div>
 </dd>
 <dt id="loglan_core.addons.base_selector.BaseSelector.execute"><code class="name flex">
-<span>def <span class="ident">execute</span></span>(<span>self, session: Session)</span>
+<span>def <span class="ident">execute</span></span>(<span>self, session: sqlalchemy.orm.session.Session, unique: bool = False) ‑> Any</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes the given session and returns the result.</p>
-<p>Args:
-session (Session): SQLAlchemy Session object.</p>
-<p>Returns:
-ResultProxy: The result of the executed session.</p></div>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code>Session</code></dt>
+<dd>SQLAlchemy Session object.</dd>
+<dt><strong><code>unique</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag indicating if the result should be unique.</dd>
+</dl>
+<p>Defaults to False.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ResultProxy</code></dt>
+<dd>The result of the executed session.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.execute_async"><code class="name flex">
+<span>async def <span class="ident">execute_async</span></span>(<span>self, session: sqlalchemy.ext.asyncio.session.AsyncSession, unique: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Executes the given session and returns the result.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code>AsyncSession</code></dt>
+<dd>SQLAlchemy Session object.</dd>
+<dt><strong><code>unique</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag indicating if the result should be unique.</dd>
+</dl>
+<p>Defaults to False.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>ResultProxy</code></dt>
+<dd>The result of the executed session.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.base_selector.BaseSelector.fetchmany"><code class="name flex">
-<span>def <span class="ident">fetchmany</span></span>(<span>self, session: Session, size: int | None = None)</span>
+<span>def <span class="ident">fetchmany</span></span>(<span>self, session: sqlalchemy.orm.session.Session, size: int | None = None, unique: bool = False)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes the given session and fetches a specified number of results.</p>
-<p>Args:
-session (Session): SQLAlchemy Session object.
-size (int, optional): Number of results to fetch. If None, fetches all results.</p>
-<p>Returns:
-List[ResultRow]: The fetched results.</p></div>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code>Session</code></dt>
+<dd>SQLAlchemy Session object.</dd>
+<dt><strong><code>size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of results to fetch. If None, fetches all results.</dd>
+<dt><strong><code>unique</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag indicating if the result should contain unique items.</dd>
+</dl>
+<p>Defaults to False.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[ResultRow]</code></dt>
+<dd>The fetched results.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.fetchmany_async"><code class="name flex">
+<span>async def <span class="ident">fetchmany_async</span></span>(<span>self, session: sqlalchemy.ext.asyncio.session.AsyncSession, size: int | None = None, unique: bool = False)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Executes the given session and fetches a specified number of results.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code>AsyncSession</code></dt>
+<dd>SQLAlchemy Session object.</dd>
+<dt><strong><code>size</code></strong> :&ensp;<code>int</code>, optional</dt>
+<dd>Number of results to fetch. If None, fetches all results.</dd>
+<dt><strong><code>unique</code></strong> :&ensp;<code>bool</code>, optional</dt>
+<dd>Flag indicating if the result should contain unique items.</dd>
+</dl>
+<p>Defaults to False.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>List[ResultRow]</code></dt>
+<dd>The fetched results.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.filter"><code class="name flex">
+<span>def <span class="ident">filter</span></span>(<span>self, *args) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Filter results based on arbitrary keyword arguments.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*args</code></strong></dt>
+<dd>Column-value pairs to filter by.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>The current instance for method chaining.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.filter_by"><code class="name flex">
+<span>def <span class="ident">filter_by</span></span>(<span>self, **kwargs) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Filter results based on arbitrary keyword arguments.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*kwargs</code></strong></dt>
+<dd>Column-value pairs to filter by.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>The current instance for method chaining.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.get_like_condition"><code class="name flex">
+<span>def <span class="ident">get_like_condition</span></span>(<span>self, key: str | sqlalchemy.orm.attributes.InstrumentedAttribute, value: Any)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Generate the condition based on settings provided by Selector instance
+like (is_sqlite, case_sensitive).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>key</code></strong> :&ensp;<code>str | InstrumentedAttribute</code></dt>
+<dd>The key of the column to filter by.</dd>
+<dt><strong><code>value</code></strong> :&ensp;<code>Any</code></dt>
+<dd>The value to filter by.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Condition</code></dt>
+<dd>The SQLAlchemy condition to filter by.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.get_statement"><code class="name flex">
+<span>def <span class="ident">get_statement</span></span>(<span>self) ‑> sqlalchemy.sql.selectable.Select</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Get the current SQLAlchemy _statement.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Select</code></dt>
+<dd>The current SQLAlchemy _statement.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.limit"><code class="name flex">
+<span>def <span class="ident">limit</span></span>(<span>self, limit: int) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Limit the number of results returned.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>limit</code></strong> :&ensp;<code>int</code></dt>
+<dd>The maximum number of results to return.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>The current instance for method chaining.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.offset"><code class="name flex">
+<span>def <span class="ident">offset</span></span>(<span>self, offset: int) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Set the offset for the results returned.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>offset</code></strong> :&ensp;<code>int</code></dt>
+<dd>The number of results to skip before starting to return results.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>The current instance for method chaining.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.order_by"><code class="name flex">
+<span>def <span class="ident">order_by</span></span>(<span>self, *columns) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Specify the order in which results should be returned.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*columns</code></strong></dt>
+<dd>The columns to order by.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>The current instance for method chaining.</dd>
+</dl></div>
 </dd>
 <dt id="loglan_core.addons.base_selector.BaseSelector.scalar"><code class="name flex">
-<span>def <span class="ident">scalar</span></span>(<span>self, session: Session)</span>
+<span>def <span class="ident">scalar</span></span>(<span>self, session: sqlalchemy.orm.session.Session)</span>
 </code></dt>
 <dd>
 <div class="desc"><p>Executes the given session and returns a scalar result.</p>
-<p>Args:
-session (Session): SQLAlchemy Session object.</p>
-<p>Returns:
-Any: The scalar result of the executed session.</p></div>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code>Session</code></dt>
+<dd>SQLAlchemy Session object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>The scalar result of the executed session.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.scalar_async"><code class="name flex">
+<span>async def <span class="ident">scalar_async</span></span>(<span>self, session: sqlalchemy.ext.asyncio.session.AsyncSession)</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Executes the given session and returns a scalar result.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>session</code></strong> :&ensp;<code>AsyncSession</code></dt>
+<dd>SQLAlchemy Session object.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Any</code></dt>
+<dd>The scalar result of the executed session.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.select_columns"><code class="name flex">
+<span>def <span class="ident">select_columns</span></span>(<span>self, *columns: type[<a title="loglan_core.base.BaseModel" href="../base.html#loglan_core.base.BaseModel">BaseModel</a>]) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Specify which columns to select without resetting the filters.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*columns</code></strong></dt>
+<dd>The columns to select.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>The current instance for method chaining.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.where"><code class="name flex">
+<span>def <span class="ident">where</span></span>(<span>self, *args) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Filter results based on arbitrary keyword arguments.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>*args</code></strong></dt>
+<dd>Column-value pairs to filter by.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>The current instance for method chaining.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.where_like"><code class="name flex">
+<span>def <span class="ident">where_like</span></span>(<span>self, **kwargs) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Filter results based on arbitrary keyword arguments.
+Use internal method <code>_generate_column_condition</code> to generate
+the condition based on settings provided by Selector instance
+like (is_sqlite, case_sensitive).</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>**kwargs</code></strong></dt>
+<dd>Column-value pairs to filter by.</dd>
+</dl>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>The current instance for method chaining.</dd>
+</dl></div>
+</dd>
+<dt id="loglan_core.addons.base_selector.BaseSelector.with_relationships"><code class="name flex">
+<span>def <span class="ident">with_relationships</span></span>(<span>self, selected: Optional[Iterable[str]] = None) ‑> Self</span>
+</code></dt>
+<dd>
+<div class="desc"><p>Adds relationships to the query.</p>
+<h2 id="args">Args</h2>
+<dl>
+<dt><strong><code>selected</code></strong> :&ensp;<code>set[str]</code></dt>
+<dd>A set of relationship names to include.</dd>
+</dl>
+<p>Defaults to None if all relationships should be included.</p>
+<h2 id="returns">Returns</h2>
+<dl>
+<dt><code>Self</code></dt>
+<dd>A query with the relationships added.</dd>
+</dl></div>
 </dd>
 </dl>
 </dd>
@@ -226,13 +420,26 @@ Any: The scalar result of the executed session.</p></div>
 <ul>
 <li>
 <h4><code><a title="loglan_core.addons.base_selector.BaseSelector" href="#loglan_core.addons.base_selector.BaseSelector">BaseSelector</a></code></h4>
-<ul class="">
+<ul class="two-column">
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.all" href="#loglan_core.addons.base_selector.BaseSelector.all">all</a></code></li>
-<li><code><a title="loglan_core.addons.base_selector.BaseSelector.by_attrs" href="#loglan_core.addons.base_selector.BaseSelector.by_attrs">by_attrs</a></code></li>
-<li><code><a title="loglan_core.addons.base_selector.BaseSelector.condition_by_attribute" href="#loglan_core.addons.base_selector.BaseSelector.condition_by_attribute">condition_by_attribute</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.all_async" href="#loglan_core.addons.base_selector.BaseSelector.all_async">all_async</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute" href="#loglan_core.addons.base_selector.BaseSelector.execute">execute</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.execute_async" href="#loglan_core.addons.base_selector.BaseSelector.execute_async">execute_async</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany" href="#loglan_core.addons.base_selector.BaseSelector.fetchmany">fetchmany</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.fetchmany_async" href="#loglan_core.addons.base_selector.BaseSelector.fetchmany_async">fetchmany_async</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.filter" href="#loglan_core.addons.base_selector.BaseSelector.filter">filter</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.filter_by" href="#loglan_core.addons.base_selector.BaseSelector.filter_by">filter_by</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.get_like_condition" href="#loglan_core.addons.base_selector.BaseSelector.get_like_condition">get_like_condition</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.get_statement" href="#loglan_core.addons.base_selector.BaseSelector.get_statement">get_statement</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.limit" href="#loglan_core.addons.base_selector.BaseSelector.limit">limit</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.offset" href="#loglan_core.addons.base_selector.BaseSelector.offset">offset</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.order_by" href="#loglan_core.addons.base_selector.BaseSelector.order_by">order_by</a></code></li>
 <li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar" href="#loglan_core.addons.base_selector.BaseSelector.scalar">scalar</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.scalar_async" href="#loglan_core.addons.base_selector.BaseSelector.scalar_async">scalar_async</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.select_columns" href="#loglan_core.addons.base_selector.BaseSelector.select_columns">select_columns</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.where" href="#loglan_core.addons.base_selector.BaseSelector.where">where</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.where_like" href="#loglan_core.addons.base_selector.BaseSelector.where_like">where_like</a></code></li>
+<li><code><a title="loglan_core.addons.base_selector.BaseSelector.with_relationships" href="#loglan_core.addons.base_selector.BaseSelector.with_relationships">with_relationships</a></code></li>
 </ul>
 </li>
 </ul>
