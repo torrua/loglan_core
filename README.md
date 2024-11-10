@@ -7,11 +7,11 @@
 [![Pytest](https://github.com/torrua/loglan_core/actions/workflows/pytest.yml/badge.svg)](https://github.com/torrua/loglan_core/actions/workflows/pytest.yml)
 ![Bandit Status](https://img.shields.io/github/actions/workflow/status/torrua/loglan_core/bandit.yml?label=bandit)
 ![Black Status](https://img.shields.io/github/actions/workflow/status/torrua/loglan_core/black.yml?label=Black&labelColor=black)
+![Read the Docs](https://img.shields.io/readthedocs/loglan-core?label=readthedocs&link=https%3A%2F%2Floglan-core.readthedocs.io%2Fen%2Flatest%2F)
 
 ![PyPI - Downloads](https://img.shields.io/pypi/dm/loglan_core?color=yellow)
 ![PyPI - Version](https://img.shields.io/pypi/v/loglan-core?logo=PyPi&logoColor=%23FFFFFF)
 ![GitHub License](https://img.shields.io/github/license/torrua/loglan_core)
-
 
 
 # SQLAlchemy Database Model for Loglan Dictionary
@@ -46,7 +46,7 @@ After installing the package, you can use it as follows:
 from loglan_core import Word, Type, Event, Key
 # your code here...
 ```
-For more details please see [Intro](examples/intro.md), [Word](examples/word.md) and [WordSelector](examples/word_selector.md) documentation with examples.
+For more details please look into [Intro](examples/intro.md), [Word](examples/word.md) and [WordSelector](examples/word_selector.md) documentation with examples or read the [detailed package description](https://loglan-core.readthedocs.io/en/latest/).
 
 ## License
 Loglan-Core is licensed under the MIT license.
