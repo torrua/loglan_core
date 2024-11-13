@@ -4,13 +4,9 @@ This module contains a basic Syllable Model
 
 from sqlalchemy.orm import mapped_column, Mapped
 
-from .base import BaseModel, str_008, str_032
-from .table_names import T_NAME_SYLLABLES
-
-__pdoc__ = {
-    "BaseSyllable.created": False,
-    "BaseSyllable.updated": False,
-}
+from .base import BaseModel
+from .service.annotated_types import str_008, str_032
+from .service.table_names import T_NAME_SYLLABLES
 
 
 class BaseSyllable(BaseModel):

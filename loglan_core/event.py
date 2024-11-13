@@ -11,16 +11,12 @@ from sqlalchemy import Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
-from .base import BaseModel, str_016, str_064
-from .table_names import T_NAME_EVENTS
+from .base import BaseModel
+from .service.annotated_types import str_064, str_016
+from .service.table_names import T_NAME_EVENTS
 
 if TYPE_CHECKING:
     from .word import BaseWord
-
-__pdoc__ = {
-    "BaseEvent.created": False,
-    "BaseEvent.updated": False,
-}
 
 
 class BaseEvent(BaseModel):

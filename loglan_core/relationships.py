@@ -3,14 +3,14 @@ This module defines the relational mapping between various elements in the datab
 
 It contains the following tables:
 
-- `t_connect_authors`: This table maps authors to their words, creating a many-to-many relationship.
+`t_connect_authors`: This table maps authors to their words, creating a many-to-many relationship.
 Each row in the table represents a word that is associated with an author.
 
-- `t_connect_words`: This table maps parent words to their child words,
+`t_connect_words`: This table maps parent words to their child words,
 creating a many-to-many relationship. Each row in the table represents a child word
 that is associated with a parent word.
 
-- `t_connect_keys`: This table maps definitions to their keys in the database,
+`t_connect_keys`: This table maps definitions to their keys in the database,
 creating a many-to-many relationship. Each row in the table represents
 a definition that is associated with a key.
 
@@ -20,8 +20,7 @@ and includes indices on key columns to enhance query performance.
 
 from sqlalchemy import Column, ForeignKey, Table, Index
 
-from .base import BaseModel as Base
-from .table_names import (
+from loglan_core.service.table_names import (
     T_NAME_AUTHORS,
     T_NAME_KEYS,
     T_NAME_WORDS,
@@ -30,6 +29,7 @@ from .table_names import (
     T_NAME_CONNECT_WORDS,
     T_NAME_CONNECT_KEYS,
 )
+from .base import BaseModel as Base
 
 t_connect_authors = Table(
     T_NAME_CONNECT_AUTHORS,

@@ -11,18 +11,14 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from .base import BaseModel, str_008, str_016, str_064, str_255
-from .connect_tables import t_connect_keys
+from .base import BaseModel
 from .key import BaseKey
-from .table_names import T_NAME_WORDS, T_NAME_DEFINITIONS
+from .relationships import t_connect_keys
+from .service.annotated_types import str_008, str_016, str_064, str_255
+from .service.table_names import T_NAME_WORDS, T_NAME_DEFINITIONS
 
 if TYPE_CHECKING:
     from .word import BaseWord
-
-__pdoc__ = {
-    "BaseDefinition.created": False,
-    "BaseDefinition.updated": False,
-}
 
 
 class BaseDefinition(BaseModel):

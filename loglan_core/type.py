@@ -8,17 +8,12 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
-from .base import BaseModel, str_016, str_255
-from .table_names import T_NAME_TYPES
+from .base import BaseModel
+from .service.annotated_types import str_016, str_255
+from .service.table_names import T_NAME_TYPES
 
 if TYPE_CHECKING:
     from .word import BaseWord
-
-__pdoc__ = {
-    "BaseType.words": "words",
-    "BaseType.created": False,
-    "BaseType.updated": False,
-}
 
 
 class BaseType(BaseModel):

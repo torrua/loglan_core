@@ -27,13 +27,13 @@ from typing import Type
 
 from sqlalchemy import select
 
+from loglan_core.relationships import t_connect_keys
 from .base_selector import BaseSelector
-from .utils import (
+from .filters import (
     filter_word_by_event_id,
     filter_key_by_word_cs,
     filter_key_by_language,
 )
-from ..connect_tables import t_connect_keys
 from ..definition import BaseDefinition
 from ..key import BaseKey
 from ..word import BaseWord

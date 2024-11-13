@@ -1,85 +1,31 @@
-loglan\_core.addons package
-===========================
+Addons Modules
+==========================
 
-Submodules
-----------
+Selectors
+---------
 
-loglan\_core.addons.base\_selector module
------------------------------------------
+.. toctree::
+   :maxdepth: 1
 
-.. automodule:: loglan_core.addons.base_selector
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   addons/base_selector
+   addons/definition_selector
+   addons/key_selector
+   addons/word_selector
 
-loglan\_core.addons.definition\_selector module
------------------------------------------------
+Exporters And Converters
+------------------------
+.. toctree::
+   :maxdepth: 1
 
-.. automodule:: loglan_core.addons.definition_selector
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   addons/exporter
+   addons/export_word_converter
 
-loglan\_core.addons.export\_word\_converter module
---------------------------------------------------
+   addons/word_linker
+   addons/word_sourcer
 
-.. automodule:: loglan_core.addons.export_word_converter
-   :members:
-   :undoc-members:
-   :show-inheritance:
+Filters
+-------
+.. toctree::
+   :maxdepth: 2
 
-loglan\_core.addons.exporter module
------------------------------------
-
-.. automodule:: loglan_core.addons.exporter
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-loglan\_core.addons.key\_selector module
-----------------------------------------
-
-.. automodule:: loglan_core.addons.key_selector
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-loglan\_core.addons.utils module
---------------------------------
-
-.. automodule:: loglan_core.addons.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-loglan\_core.addons.word\_linker module
----------------------------------------
-
-.. automodule:: loglan_core.addons.word_linker
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-loglan\_core.addons.word\_selector module
------------------------------------------
-
-.. automodule:: loglan_core.addons.word_selector
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-loglan\_core.addons.word\_sourcer module
-----------------------------------------
-
-.. automodule:: loglan_core.addons.word_sourcer
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-Module contents
----------------
-
-.. automodule:: loglan_core.addons
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   addons/filters

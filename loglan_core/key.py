@@ -10,21 +10,13 @@ from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
 
-from .base import BaseModel, str_016, str_064
-from .connect_tables import t_connect_keys
-from .table_names import T_NAME_KEYS
+from .base import BaseModel
+from .relationships import t_connect_keys
+from .service.annotated_types import str_016, str_064
+from .service.table_names import T_NAME_KEYS
 
 if TYPE_CHECKING:
     from .definition import BaseDefinition
-
-__pdoc__ = {
-    "BaseKey.definitions": """
-    *Relationship query for getting a list of definitions related to this key*
-
-    **query** : Optional[List[BaseDefinition]]""",
-    "BaseKey.created": False,
-    "BaseKey.updated": False,
-}
 
 
 class BaseKey(BaseModel):

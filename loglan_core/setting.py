@@ -6,13 +6,9 @@ from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .base import BaseModel, str_016
-from .table_names import T_NAME_SETTINGS
-
-__pdoc__ = {
-    "BaseSetting.created": False,
-    "BaseSetting.updated": False,
-}
+from .base import BaseModel
+from .service.annotated_types import str_016
+from .service.table_names import T_NAME_SETTINGS
 
 
 class BaseSetting(BaseModel):
