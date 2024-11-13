@@ -3,14 +3,14 @@ This module defines the relational mapping between various elements in the datab
 
 It contains the following tables:
 
-- `t_connect_authors`: This table maps authors to their words, creating a many-to-many relationship.
+`t_connect_authors`: This table maps authors to their words, creating a many-to-many relationship.
 Each row in the table represents a word that is associated with an author.
 
-- `t_connect_words`: This table maps parent words to their child words,
+`t_connect_words`: This table maps parent words to their child words,
 creating a many-to-many relationship. Each row in the table represents a child word
 that is associated with a parent word.
 
-- `t_connect_keys`: This table maps definitions to their keys in the database,
+`t_connect_keys`: This table maps definitions to their keys in the database,
 creating a many-to-many relationship. Each row in the table represents
 a definition that is associated with a key.
 
