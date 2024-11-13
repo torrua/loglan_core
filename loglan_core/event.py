@@ -11,8 +11,8 @@ from sqlalchemy import Text
 from sqlalchemy.orm import Mapped, mapped_column
 from sqlalchemy.orm import relationship
 
-from .service.annotated_types import str_064, str_016
 from .base import BaseModel
+from .service.annotated_types import str_064, str_016
 from .service.table_names import T_NAME_EVENTS
 
 if TYPE_CHECKING:

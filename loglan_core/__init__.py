@@ -21,10 +21,10 @@ from .addons.key_selector import KeySelector
 from .addons.word_linker import WordLinker
 from .addons.word_selector import WordSelector
 from .author import BaseAuthor as Author
+from .base import BaseModel as Base
 from .definition import BaseDefinition as Definition
 from .event import BaseEvent as Event
 from .key import BaseKey as Key
-from .base import BaseModel as Base
 from .setting import BaseSetting as Setting
 from .syllable import BaseSyllable as Syllable
 from .type import BaseType as Type

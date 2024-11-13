@@ -11,10 +11,10 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from .key import BaseKey
-from .service.annotated_types import str_008, str_016, str_064, str_255
 from .base import BaseModel
+from .key import BaseKey
 from .relationships import t_connect_keys
+from .service.annotated_types import str_008, str_016, str_064, str_255
 from .service.table_names import T_NAME_WORDS, T_NAME_DEFINITIONS
 
 if TYPE_CHECKING:

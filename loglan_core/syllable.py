@@ -4,8 +4,8 @@ This module contains a basic Syllable Model
 
 from sqlalchemy.orm import mapped_column, Mapped
 
-from .service.annotated_types import str_008, str_032
 from .base import BaseModel
+from .service.annotated_types import str_008, str_032
 from .service.table_names import T_NAME_SYLLABLES
 
 

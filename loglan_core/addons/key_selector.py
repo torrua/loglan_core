@@ -27,6 +27,7 @@ from typing import Type
 
 from sqlalchemy import select
 
+from loglan_core.relationships import t_connect_keys
 from .base_selector import BaseSelector
 from .filters import (
     filter_word_by_event_id,
@@ -35,7 +36,6 @@ from .filters import (
 )
 from ..definition import BaseDefinition
 from ..key import BaseKey
-from loglan_core.relationships import t_connect_keys
 from ..word import BaseWord
 
 

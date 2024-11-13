@@ -8,8 +8,8 @@ from typing import TYPE_CHECKING
 
 from sqlalchemy.orm import relationship, mapped_column, Mapped
 
-from .service.annotated_types import str_016, str_255
 from .base import BaseModel
+from .service.annotated_types import str_016, str_255
 from .service.table_names import T_NAME_TYPES
 
 if TYPE_CHECKING:

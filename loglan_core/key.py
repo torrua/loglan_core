@@ -10,9 +10,9 @@ from sqlalchemy import UniqueConstraint
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
 
-from .service.annotated_types import str_016, str_064
 from .base import BaseModel
 from .relationships import t_connect_keys
+from .service.annotated_types import str_016, str_064
 from .service.table_names import T_NAME_KEYS
 
 if TYPE_CHECKING:

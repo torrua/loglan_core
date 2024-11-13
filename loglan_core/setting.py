@@ -6,8 +6,8 @@ from datetime import datetime
 
 from sqlalchemy.orm import Mapped, mapped_column
 
-from .service.annotated_types import str_016
 from .base import BaseModel
+from .service.annotated_types import str_016
 from .service.table_names import T_NAME_SETTINGS
 
 
