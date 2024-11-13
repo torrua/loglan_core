@@ -2,7 +2,7 @@ import pytest
 from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker, Session
 
-from loglan_core.base import BaseModel as Base
+from loglan_core import Base
 from ..objects import create_db
 
 
