@@ -11,8 +11,8 @@ from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
 from .service.annotated_types import str_064, str_128
-from .service.base import BaseModel
-from .service.connect_tables import t_connect_authors
+from .base import BaseModel
+from .relationships import t_connect_authors
 from .service.table_names import T_NAME_AUTHORS
 
 if TYPE_CHECKING:

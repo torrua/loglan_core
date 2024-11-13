@@ -13,8 +13,8 @@ from sqlalchemy.orm import relationship
 
 from .key import BaseKey
 from .service.annotated_types import str_008, str_016, str_064, str_255
-from .service.base import BaseModel
-from .service.connect_tables import t_connect_keys
+from .base import BaseModel
+from .relationships import t_connect_keys
 from .service.table_names import T_NAME_WORDS, T_NAME_DEFINITIONS
 
 if TYPE_CHECKING:

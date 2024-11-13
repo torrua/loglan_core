@@ -7,6 +7,7 @@ T_NAME_AUTHORS = "authors"
 
 T_NAME_EVENTS = "events"
 """`str` : `__tablename__` value for `BaseEvent` table"""
+
 T_NAME_KEYS = "keys"
 """`str` : `__tablename__` value for `BaseKey` table"""
 

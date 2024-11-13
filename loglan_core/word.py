@@ -15,8 +15,8 @@ from .author import BaseAuthor
 from .definition import BaseDefinition
 from .event import BaseEvent
 from .service.annotated_types import str_008, str_064, str_128
-from .service.base import BaseModel
-from .service.connect_tables import (
+from .base import BaseModel
+from .relationships import (
     t_connect_authors,
     t_connect_words,
 )

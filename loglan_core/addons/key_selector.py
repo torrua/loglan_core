@@ -35,7 +35,7 @@ from .filters import (
 )
 from ..definition import BaseDefinition
 from ..key import BaseKey
-from ..service.connect_tables import t_connect_keys
+from loglan_core.relationships import t_connect_keys
 from ..word import BaseWord
 
 

@@ -8,7 +8,7 @@ __author__ = "torrua"
 __copyright__ = "Copyright 2024, loglan_core project"
 __email__ = "torrua@gmail.com"
 
-from loglan_core.service.connect_tables import (
+from loglan_core.relationships import (
     t_connect_authors,
     t_connect_words,
     t_connect_keys,
@@ -24,7 +24,7 @@ from .author import BaseAuthor as Author
 from .definition import BaseDefinition as Definition
 from .event import BaseEvent as Event
 from .key import BaseKey as Key
-from .service.base import BaseModel as Base
+from .base import BaseModel as Base
 from .setting import BaseSetting as Setting
 from .syllable import BaseSyllable as Syllable
 from .type import BaseType as Type
