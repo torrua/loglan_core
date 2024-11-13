@@ -6,14 +6,15 @@ from sqlalchemy import select, delete
 from loglan_core.addons.word_linker import WordLinker
 from loglan_core.word import BaseWord as Word
 from loglan_core.author import BaseAuthor as Author
-from loglan_core.connect_tables import t_connect_words
+from loglan_core.relationships import t_connect_words
+
 
 @pytest.mark.usefixtures("db_session")
 class TestWordLinker:
 
     @staticmethod
     def get_word_by_name(name: str, session):
-        return session.execute(select(Word).where(Word.name==name)).scalars().first()
+        return session.execute(select(Word).where(Word.name == name)).scalars().first()
 
     @staticmethod
     def delete_links(db_session):
@@ -41,7 +42,6 @@ class TestWordLinker:
         WordLinker.add_child(pruci, prukao)
         assert len(prukao.parents) == 2
 
-
     def test_add_child_exception(self, db_session):
         kakto = self.get_word_by_name(name="kakto", session=db_session)
         pruci = self.get_word_by_name(name="pruci", session=db_session)
@@ -67,13 +67,17 @@ class TestWordLinker:
         assert len(kak.parents) == 1
         assert len(kao.parents) == 1
 
-
     def test_add_children_exception(self, db_session):
         pruci = self.get_word_by_name(name="pruci", session=db_session)
         pru = self.get_word_by_name(name="pru", session=db_session)
 
         with pytest.raises(TypeError):
-            WordLinker.add_children(pru, [pruci, ])
+            WordLinker.add_children(
+                pru,
+                [
+                    pruci,
+                ],
+            )
 
     def test_add_author(self, db_session):
         word = Word.get_by_id(db_session, 2)
@@ -87,7 +91,6 @@ class TestWordLinker:
         WordLinker.add_author(word, author)
         assert len(word.authors) == 2
         assert author in word.authors
-
 
     def test_add_authors(self, db_session):
 
