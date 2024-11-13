@@ -10,7 +10,7 @@ from sqlalchemy.orm import Session, InstrumentedAttribute, joinedload
 from sqlalchemy.types import String, Integer
 from typing_extensions import Self
 
-from ..base import BaseModel
+from ..service.base import BaseModel
 
 
 class BaseSelector:  # pylint: disable=too-many-ancestors

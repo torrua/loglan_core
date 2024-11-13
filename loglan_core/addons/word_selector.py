@@ -14,8 +14,8 @@ from typing_extensions import Self
 from .base_selector import BaseSelector
 from .definition_selector import DefinitionSelector
 from .filters import filter_word_by_event_id
-from ..connect_tables import t_connect_words
 from ..key import BaseKey
+from ..service.connect_tables import t_connect_words
 from ..type import BaseType
 from ..word import BaseWord
 

@@ -1,7 +1,7 @@
-# pylint: disable=invalid-name
 """
 Initial common functions for LOD Model Classes
 """
+
 from __future__ import annotations
 
 from datetime import datetime
@@ -11,49 +11,15 @@ from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session, registry as rg
-from typing_extensions import Annotated
 
-str_008 = Annotated[str, 8]
-"""
-A custom type annotation that annotates a string with a metadata value 
-of 8. It can be used to associate a string with the number 8 in certain 
-contexts, such as specifying the length for a string field in a database.
-"""
-
-str_016 = Annotated[str, 16]
-"""
-A custom type annotation that annotates a string with a metadata value 
-of 16. It can be used to associate a string with the number 16 in certain 
-contexts, such as specifying the length for a string field in a database.
-"""
-
-str_032 = Annotated[str, 32]
-"""
-A custom type annotation that annotates a string with a metadata value 
-of 32. It can be used to associate a string with the number 32 in certain 
-contexts, such as specifying the length for a string field in a database.
-"""
-
-str_064 = Annotated[str, 64]
-"""
-A custom type annotation that annotates a string with a metadata value 
-of 64. It can be used to associate a string with the number 64 in certain 
-contexts, such as specifying the length for a string field in a database.
-"""
-
-str_128 = Annotated[str, 128]
-"""
-A custom type annotation that annotates a string with a metadata value 
-of 128. It can be used to associate a string with the number 128 in certain 
-contexts, such as specifying the length for a string field in a database.
-"""
-
-str_255 = Annotated[str, 255]
-"""
-A custom type annotation that annotates a string with a metadata value 
-of 255. It can be used to associate a string with the number 255 in certain 
-contexts, such as specifying the length for a string field in a database.
-"""
+from loglan_core.service.annotated_types import (
+    str_008,
+    str_016,
+    str_032,
+    str_064,
+    str_128,
+    str_255,
+)
 
 
 class BaseModel(AsyncAttrs, DeclarativeBase):

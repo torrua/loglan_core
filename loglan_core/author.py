@@ -10,17 +10,13 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.orm import mapped_column
 from sqlalchemy.orm import relationship
 
-from .base import BaseModel, str_064, str_128
-from .connect_tables import t_connect_authors
-from .table_names import T_NAME_AUTHORS
+from .service.annotated_types import str_064, str_128
+from .service.base import BaseModel
+from .service.connect_tables import t_connect_authors
+from .service.table_names import T_NAME_AUTHORS
 
 if TYPE_CHECKING:
     from .word import BaseWord
-
-__pdoc__ = {
-    "BaseAuthor.created": False,
-    "BaseAuthor.updated": False,
-}
 
 
 class BaseAuthor(BaseModel):

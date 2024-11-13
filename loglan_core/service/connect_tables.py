@@ -20,7 +20,6 @@ and includes indices on key columns to enhance query performance.
 
 from sqlalchemy import Column, ForeignKey, Table, Index
 
-from .base import BaseModel as Base
 from .table_names import (
     T_NAME_AUTHORS,
     T_NAME_KEYS,
@@ -30,6 +29,7 @@ from .table_names import (
     T_NAME_CONNECT_WORDS,
     T_NAME_CONNECT_KEYS,
 )
+from ..service.base import BaseModel as Base
 
 t_connect_authors = Table(
     T_NAME_CONNECT_AUTHORS,

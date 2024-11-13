@@ -22,9 +22,9 @@ from .filters import (
     filter_key_by_word_cs,
     filter_key_by_language,
 )
-from ..connect_tables import t_connect_keys
 from ..definition import BaseDefinition
 from ..key import BaseKey
+from ..service.connect_tables import t_connect_keys
 from ..word import BaseWord
 
 

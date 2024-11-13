@@ -12,14 +12,15 @@ from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
 
 from .author import BaseAuthor
-from .base import BaseModel, str_008, str_064, str_128
-from .connect_tables import (
+from .definition import BaseDefinition
+from .event import BaseEvent
+from .service.annotated_types import str_008, str_064, str_128
+from .service.base import BaseModel
+from .service.connect_tables import (
     t_connect_authors,
     t_connect_words,
 )
-from .definition import BaseDefinition
-from .event import BaseEvent
-from .table_names import T_NAME_EVENTS, T_NAME_TYPES, T_NAME_WORDS
+from .service.table_names import T_NAME_EVENTS, T_NAME_TYPES, T_NAME_WORDS
 from .type import BaseType
 
 
