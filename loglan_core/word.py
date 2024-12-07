@@ -448,18 +448,23 @@ class BaseWord(BaseModel):
     """
 
     @property
-    def affixes(self) -> list[BaseWord]:
-        """List of affixes derived from the word.
+    def djifoa(self) -> list[BaseWord]:
+        """List of djifoa (deprecated name 'affixes') derived from the word.
 
-        This property filters the derivatives to return only those that are classified
-        as affixes.
+        This property filters the derivatives to return only those
+        that are classified as djifoa.
 
         Returns:
-            list[BaseWord]: A list of affixes that are derived from the word.
+            list[BaseWord]: A list of djifoa that are derived from the word.
         """
         return list(
             filter(lambda child: child.type.type_x == "Affix", self.derivatives)
         )
+
+    affixes = djifoa
+    """
+    List of djifoa derived from the word. Alias for `djifoa`, for backwards compatibility.
+    """
 
     @property
     def complexes(self) -> list[BaseWord]:
