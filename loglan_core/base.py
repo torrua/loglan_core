@@ -2,8 +2,6 @@
 Initial common functions for LOD Model Classes
 """
 
-from __future__ import annotations
-
 from datetime import datetime
 
 from sqlalchemy import String, inspect, func, select
@@ -177,7 +175,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of all attribute keys.
         """
-        return set(cls.__mapper__.attrs.keys()) | cls.hybrid_properties()
+        return set(cls.__mapper__.attrs.keys()) | cls.properties()
 
     @classmethod
     def attributes_basic(cls) -> set[str]:
@@ -190,7 +188,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of basic attributes.
         """
-        return set(cls.attributes_all() - cls.relationships() - cls.hybrid_properties())
+        return set(cls.attributes_all() - cls.relationships() - cls.properties())
 
     @classmethod
     def attributes_extended(cls) -> set[str]:
@@ -234,7 +232,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
             cls.attributes_all()
             - cls.relationships()
             - cls.non_foreign_keys()
-            - cls.hybrid_properties()
+            - cls.properties()
         )
 
     @classmethod
@@ -268,3 +266,17 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         """
         inspector = inspect(cls).all_orm_descriptors
         return {i.__name__ for i in inspector if isinstance(i, hybrid_property)}
+
+    @classmethod
+    def properties(cls):
+        """
+        Class method that computes the properties of the class.
+
+        It doesn’t require any parameters as it operates on the class itself.
+
+        Returns:
+            set[str]: A set of strings with names of the properties.
+        """
+        return {
+            key for key, value in cls.__dict__.items() if isinstance(value, property)
+        }
