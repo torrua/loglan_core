@@ -160,8 +160,10 @@ class BaseAuthor(BaseModel):
     - **Unique**: False (multiple authors can have the same notes)
 
     Examples:
-        - ``Notable linguist with contributions to Loglan.``: A brief note about the author's significance.
-        - ``Authors of the 1975 version of the dictionary.``: Additional context regarding the author's work.
+        - ``Notable linguist with contributions to Loglan.``: 
+        A brief note about the author's significance.
+        - ``Authors of the 1975 version of the dictionary.``: 
+        Additional context regarding the author's work.
     """
 
     contribution: Mapped[list[BaseWord]] = relationship(
@@ -176,8 +178,10 @@ class BaseAuthor(BaseModel):
     This relationship allows for efficient querying of all words associated with a given author.
 
     - **Type**: Mapped[list[:class:`~loglan_core.word.BaseWord`]]
-    - **Relationship**: Many-to-many (an author can contribute to multiple words, and a word can have multiple authors)
-    - **Back Population**: This relationship is bidirectional, allowing access to the authors from the words.
+    - **Relationship**: Many-to-many (an author can contribute to multiple words, 
+    and a word can have multiple authors)
+    - **Back Population**: This relationship is bidirectional, 
+    allowing access to the authors from the words.
 
     Returns:
         Mapped[list[BaseWord]]: A list of :class:`~loglan_core.word.BaseWord` 

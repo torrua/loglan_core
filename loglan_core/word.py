@@ -39,8 +39,10 @@ class BaseWord(BaseModel):
     Key Features:
         - Supports unique identification of words with an internal ID.
         - Allows for detailed information about the word's origin and matching criteria.
-        - Facilitates relationships with authors, definitions, and other words (derivatives and parents).
-        - Provides hybrid properties for easy access to specific types of derivatives (affixes and complexes).
+        - Facilitates relationships with authors, definitions,
+        and other words (derivatives and parents).
+        - Provides hybrid properties for easy access to specific
+        types of derivatives (affixes and complexes).
 
     Examples:
         To create a new word instance:
