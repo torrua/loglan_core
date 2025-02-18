@@ -175,13 +175,14 @@ class BaseAuthor(BaseModel):
     This attribute connects the :class:`~loglan_core.author.BaseAuthor` to multiple 
     :class:`~loglan_core.word.BaseWord` instances through the 
     :class:`~loglan_core.relationships.t_connect_authors` secondary table. 
-    This relationship allows for efficient querying of all words associated with a given author.
+    This relationship allows for efficient querying of all words associated with 
+    a given author.
 
     - **Type**: Mapped[list[:class:`~loglan_core.word.BaseWord`]]
     - **Relationship**: Many-to-many (an author can contribute to multiple words, 
     and a word can have multiple authors)
-    - **Back Population**: This relationship is bidirectional, 
-    allowing access to the authors from the words.
+    - **Back Population**: This relationship is bidirectional, allowing access to 
+    the authors from the words.
 
     Returns:
         Mapped[list[BaseWord]]: A list of :class:`~loglan_core.word.BaseWord` 
