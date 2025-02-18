@@ -3,8 +3,7 @@ This module provides utility functions for the loglan_core package.
 """
 
 from sqlalchemy import select, true, func
-from sqlalchemy.sql.elements import BinaryExpression
-from sqlalchemy.sql.elements import BooleanClauseList
+from sqlalchemy.sql.elements import BinaryExpression, BooleanClauseList
 from sqlalchemy.sql.expression import ColumnElement
 
 from ..event import BaseEvent
@@ -36,7 +35,17 @@ def filter_key_by_word_cs(
     case_sensitive: bool = False,
     is_sqlite: bool = False,
 ) -> BinaryExpression:
-    """case sensitive name filter"""
+    """
+    Returns a filter condition to select keys containing a specific word.
+
+    Args:
+        key: The word to filter by.
+        case_sensitive: Whether to perform a case-sensitive search.
+        is_sqlite: Whether the database is SQLite.
+
+    Returns:
+        BinaryExpression: A filter condition to select keys containing a specific word.
+    """
     key = str(key).replace("*", "%")
     return (
         (BaseKey.word.op("GLOB")(key) if is_sqlite else BaseKey.word.like(key))
