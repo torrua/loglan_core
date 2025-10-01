@@ -8,7 +8,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.11"]
     env:
       CC_TEST_REPORTER_ID: 0ab46c7acdcb9951ded95c2cb362eeec513807aa51c459b035509daf84e8f81e
 
