@@ -3,7 +3,7 @@
 import pytest
 
 from loglan_core import Word
-from loglan_core.addons.word_sourcer import WordSourcer, WordSource
+from loglan_core.addons.word_sourcer import WordSourcer, WordSource, OriginParser
 from loglan_core.addons.word_selector import WordSelector
 from tests.data import other_words
 
@@ -196,3 +196,11 @@ class TestGetParentComplex:
         """Test case where only linker remains after removing first element"""
         result = WordSourcer.get_parent_complex("first+y")
         assert result == ""  # After removing "first" and "y", nothing remains
+
+
+@pytest.mark.usefixtures("db_session")
+class TestOriginParser:
+    def test_init__(self, db_session):
+        prim = WordSelector().by_name("cii").scalar(db_session)
+        o_parser = OriginParser(prim)
+        assert o_parser.word == prim
