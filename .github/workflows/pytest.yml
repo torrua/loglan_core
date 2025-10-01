@@ -14,29 +14,45 @@ jobs:
 
     steps:
       - uses: actions/checkout@v5
+
       - name: Set up Python
         uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-tests.txt
-      - name: Test with pytest
-        run: |
-          pytest --cov loglan_core
-          bash <(curl -s https://codecov.io/bash)
-          ocular --data-file ".coverage" --config-file ".coveragerc"
+
       - name: Install CodeClimate Test-Reporter
         run: |
-          # download test reporter as a static binary
           curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
           chmod +x ./cc-test-reporter
-      - name: Run coverage report
-        run: |
           ./cc-test-reporter before-build
-          ./cc-test-reporter format-coverage -t coverage.py
-          ./cc-test-reporter upload-coverage
-      - name: Finish build
+
+      - name: Test with pytest
         run: |
-          ./cc-test-reporter after-build --exit-code $?
+          pytest --cov=loglan_core --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+
+      - name: Upload coverage to Ocular
+        run: |
+          ocular --data-file ".coverage" --config-file ".coveragerc"
+        continue-on-error: true
+
+      - name: Upload coverage to CodeClimate
+        run: |
+          ./cc-test-reporter format-coverage -t coverage.py -o coverage/codeclimate.json
+          ./cc-test-reporter upload-coverage
+        if: success()
+
+      - name: Finish CodeClimate build
+        run: |
+          ./cc-test-reporter after-build --exit-code 0
+        if: always()
