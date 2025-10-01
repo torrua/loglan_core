@@ -19,9 +19,9 @@ jobs:
         VERSION=$(echo "${{ steps.get_version.outputs.version }}")
         echo $VERSION
 
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: "3.13"
     - name: Update version and download URL in pyproject.toml
