@@ -4,6 +4,7 @@ on:
   push:
     branches: [ main ]
   pull_request:
+    # The branches below must be a subset of the branches above
     branches: [ main ]
   schedule:
     - cron: '32 7 * * 1'
@@ -26,48 +27,16 @@ jobs:
     - name: Checkout repository
       uses: actions/checkout@v5
 
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.x'
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        # Install testing dependencies if needed
-        pip install pytest coverage
-
-    # Download Code Climate test reporter
-    - name: Download Code Climate test reporter
-      run: |
-        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-        chmod +x ./cc-test-reporter
-
-    # Initialize CodeQL
+    # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
-      uses: github/codeql-action/init@v3
+      uses: github/codeql-action/init@v4
       with:
         languages: ${{ matrix.language }}
 
-    # Autobuild
+    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
+    # If this step fails, then you should remove it and run the build manually (see below)
     - name: Autobuild
-      uses: github/codeql-action/autobuild@v3
-
-    # Run tests with coverage (example with pytest)
-    - name: Run tests with coverage
-      run: |
-        # Example: run tests and generate coverage
-        python -m pytest --cov=.\loglan_core --cov-report=xml
-
-    # Code Climate test reporter
-    - name: Code Climate test reporter
-      run: |
-        ./cc-test-reporter before-build
-        ./cc-test-reporter format-coverage -t coverage.py coverage.xml
-        ./cc-test-reporter upload-coverage
-      env:
-        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+      uses: github/codeql-action/autobuild@v4
 
     - name: Perform CodeQL Analysis
-      uses: github/codeql-action/analyze@v3
+      uses: github/codeql-action/analyze@v4
