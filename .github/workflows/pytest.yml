@@ -8,35 +8,34 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        python-version: ["3.10"]
+        python-version: ["3.13"]
     env:
       CC_TEST_REPORTER_ID: 0ab46c7acdcb9951ded95c2cb362eeec513807aa51c459b035509daf84e8f81e
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
+
       - name: Set up Python
-        uses: actions/setup-python@v5
+        uses: actions/setup-python@v6
         with:
           python-version: ${{ matrix.python-version }}
+
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements-tests.txt
+
       - name: Test with pytest
         run: |
-          pytest --cov loglan_core
-          bash <(curl -s https://codecov.io/bash)
+          pytest --cov=loglan_core --cov-report=xml --cov-report=term
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        with:
+          file: ./coverage.xml
+          fail_ci_if_error: false
+
+      - name: Upload coverage to Ocular
+        run: |
           ocular --data-file ".coverage" --config-file ".coveragerc"
-      - name: Install CodeClimate Test-Reporter
-        run: |
-          # download test reporter as a static binary
-          curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
-          chmod +x ./cc-test-reporter
-      - name: Run coverage report
-        run: |
-          ./cc-test-reporter before-build
-          ./cc-test-reporter format-coverage -t coverage.py
-          ./cc-test-reporter upload-coverage
-      - name: Finish build
-        run: |
-          ./cc-test-reporter after-build --exit-code $?
+        continue-on-error: true

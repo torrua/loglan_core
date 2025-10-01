@@ -262,3 +262,56 @@ class WordSourcer:
             .filter(BaseWord.name.in_(sources))
             .filter(BaseWord.type_id.in_(type_ids))
         )
+
+    @staticmethod
+    def prepare_origin(origin: str) -> str:
+        """
+        Remove text in parentheses, reverse characters between slash, remove slash.
+
+        Examples:
+            zav(lo)+da(n)z(a)+fo/l(ma) => zav+daz+flo
+            be(rt)i+n+(t)rac(i)+ve(sl)o => bei+n+rac+veo
+
+        Args:
+            origin: str
+
+        Returns: str
+        """
+        origin_list = list(re.sub(r"\([^)]*\)", "", origin))
+        for index, char in enumerate(origin_list):
+            if char == "/" and 0 < index < len(origin_list) - 1:
+                start_index = index - 1
+                end_index = index + 2
+
+                origin_list[start_index:end_index] = reversed(
+                    origin_list[start_index:end_index]
+                )
+        return "".join(origin_list).replace("/", "")
+
+    @staticmethod
+    def get_parent_complex(origin: str) -> str:
+        """
+
+        Args:
+        Example:
+            zavdazflo -> zav(lo)+da(n)z(a)+fo/l(ma) => dazflo
+            zanynurkokmio -> za(v)n(o)+y+nur+kok(fa)+mi(tr)o => nurkokmio
+            cabsrusia -> cab(ro)+su/r(na)+si(tf)a => srusia
+            beinracveo -> be(rt)i+n+(t)rac(i)+ve(sl)o => racveo
+        Returns:
+        """
+        origin_list = WordSourcer.prepare_origin(origin).split("+")
+        origin_list = origin_list[1:]
+        origin_list = (
+            origin_list if origin_list[0] not in ["y", "r", "n"] else origin_list[1:]
+        )
+        return "".join(origin_list)
+
+
+class OriginParser:  # pylint: disable=too-few-public-methods
+    """
+    Test Class
+    """
+
+    def __init__(self, word: BaseWord):
+        self.word = word
