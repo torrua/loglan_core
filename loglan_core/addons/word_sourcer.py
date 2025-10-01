@@ -303,7 +303,9 @@ class WordSourcer:
         origin_list = WordSourcer.prepare_origin(origin).split("+")
         origin_list = origin_list[1:]
         origin_list = (
-            origin_list if origin_list[0] not in ["y", "r", "n"] else origin_list[1:]
+            origin_list
+            if origin_list and origin_list[0] not in ["y", "r", "n"]
+            else origin_list[1:]
         )
         return "".join(origin_list)
 

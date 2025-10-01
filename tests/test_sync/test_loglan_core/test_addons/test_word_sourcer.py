@@ -139,3 +139,60 @@ class TestWordSourcerPrepareOrigin:
         """Test parentheses adjacent to slashes"""
         result = WordSourcer.prepare_origin("a(b)/c(d)+e(f)/g(h)")
         assert result == "ca+ge"
+
+
+class TestGetParentComplex:
+    """Test suite for WordSourcer.get_parent_complex method"""
+
+    def test_example_cases(self):
+        """Test the examples provided in the docstring"""
+        # zav(lo)+da(n)z(a)+fo/l(ma) => zav+daz+flo => dazflo
+        result = WordSourcer.get_parent_complex("zav(lo)+da(n)z(a)+fo/l(ma)")
+        assert result == "dazflo"
+
+        # zanynurkokmio -> za(v)n(o)+y+nur+kok(fa)+mi(tr)o => za+no+y+nur+kok+mio => no+y+nur+kok+mio => nurkokmio
+        result = WordSourcer.get_parent_complex("za(v)n(o)+y+nur+kok(fa)+mi(tr)o")
+        assert result == "nurkokmio"
+
+        # cabsrusia -> cab(ro)+su/r(na)+si(tf)a => cab+sur+sitfa => sursitfa
+        result = WordSourcer.get_parent_complex("cab(ro)+su/r(na)+si(tf)a")
+        assert result == "srusia"
+
+        # be(rt)i+n+(t)rac(i)+ve(sl)o => bei+n+rac+i+velo => n+rac+i+velo => raciveloo
+        result = WordSourcer.get_parent_complex("be(rt)i+n+(t)rac(i)+ve(sl)o")
+        assert result == "racveo"
+
+    def test_single_element(self):
+        """Test case where there's only one element after prepare_origin"""
+        result = WordSourcer.get_parent_complex("abc(def)")
+        assert result == ""  # After removing first (and only) element, nothing remains
+
+    def test_with_linker_y(self):
+        """Test case with 'y' linker that should be removed"""
+        result = WordSourcer.get_parent_complex("first+y+third+fourth")
+        assert result == "thirdfourth"
+
+    def test_with_linker_r(self):
+        """Test case with 'r' linker that should be removed"""
+        result = WordSourcer.get_parent_complex("first+r+third+fourth")
+        assert result == "thirdfourth"
+
+    def test_with_linker_n(self):
+        """Test case with 'n' linker that should be removed"""
+        result = WordSourcer.get_parent_complex("first+n+third+fourth")
+        assert result == "thirdfourth"
+
+    def test_without_linkers(self):
+        """Test case without linker elements"""
+        result = WordSourcer.get_parent_complex("first+second+third")
+        assert result == "secondthird"
+
+    def test_empty_input(self):
+        """Test case with empty input"""
+        result = WordSourcer.get_parent_complex("")
+        assert result == ""
+
+    def test_only_linker_after_first(self):
+        """Test case where only linker remains after removing first element"""
+        result = WordSourcer.get_parent_complex("first+y")
+        assert result == ""  # After removing "first" and "y", nothing remains
