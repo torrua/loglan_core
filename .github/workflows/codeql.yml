@@ -1,40 +1,65 @@
-name: "CodeQL"
-
+name: "Tests and Analysis"
 on:
   push:
     branches: [ main ]
   pull_request:
-    # The branches below must be a subset of the branches above
     branches: [ main ]
-  schedule:
-    - cron: '32 7 * * 1'
 
 jobs:
+  test-coverage:
+    name: Test Coverage
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v5
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+
+    - name: Install dependencies
+      run: |
+        pip install -r requirements.txt
+        pip install pytest pytest-cov
+
+    - name: Run tests with coverage
+      run: |
+        pytest --cov=. --cov-report=xml
+
+    - name: Download CodeClimate Test Reporter
+      run: |
+        curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+        chmod +x ./cc-test-reporter
+
+    - name: Report to CodeClimate
+      run: |
+        ./cc-test-reporter before-build
+        ./cc-test-reporter format-coverage -t coverage.py -o coverage/codeclimate.json
+        ./cc-test-reporter upload-coverage
+      env:
+        CC_TEST_REPORTER_ID: ${{ secrets.CC_TEST_REPORTER_ID }}
+
   analyze:
-    name: Analyze
+    name: CodeQL Analysis
     runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
       security-events: write
-
     strategy:
       fail-fast: false
       matrix:
         language: [ 'python' ]
-
     steps:
     - name: Checkout repository
       uses: actions/checkout@v5
 
-    # Initializes the CodeQL tools for scanning.
     - name: Initialize CodeQL
       uses: github/codeql-action/init@v3
       with:
         languages: ${{ matrix.language }}
-   
-    # Autobuild attempts to build any compiled languages  (C/C++, C#, or Java).
-    # If this step fails, then you should remove it and run the build manually (see below)
+
     - name: Autobuild
       uses: github/codeql-action/autobuild@v3
 
