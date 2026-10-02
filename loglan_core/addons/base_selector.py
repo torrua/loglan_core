@@ -61,8 +61,8 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self.is_sqlite = is_sqlite
         self.case_sensitive = case_sensitive
 
-    def select_columns(self, *columns: type[BaseModel]) -> Self:
-        """Specify which columns to select without resetting the filters.
+    def select_columns(self, *columns: Any) -> Self:
+        """Specify which columns to select without resetting filters, ordering or limits.
 
         Args:
             *columns: The columns to select.
@@ -71,12 +71,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             Self: The current instance for method chaining.
         """
         self._selected_columns = list(columns)
-        existing_conditions = self._statement.whereclause
-
-        if existing_conditions is None:
-            self._statement = select(*self._selected_columns)
-        else:
-            self._statement = select(*self._selected_columns).where(existing_conditions)
+        self._statement = self._statement.with_only_columns(*self._selected_columns)
         return self
 
     def limit(self, limit: int) -> Self:
@@ -200,6 +195,15 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
 
         return column.like(value)
 
+    @property
+    def statement(self) -> Select:
+        """Get the current SQLAlchemy Select statement.
+
+        Returns:
+            Select: The current SQLAlchemy Select statement.
+        """
+        return self._statement
+
     def get_statement(self) -> Select:
         """Get the current SQLAlchemy _statement.
 
@@ -279,7 +283,10 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
             List[ResultRow]: All the results of the executed session.
         """
-        return self.execute(session, unique).scalars().all()
+        result = self.execute(session, unique)
+        if len(self._selected_columns) > 1:
+            return result.all()
+        return result.scalars().all()
 
     def scalar(self, session: Session):
         """Executes the given session and returns a scalar result.
@@ -305,7 +312,10 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         Returns:
             List[ResultRow]: The fetched results.
         """
-        return self.execute(session, unique).scalars().fetchmany(size)
+        result = self.execute(session, unique)
+        if len(self._selected_columns) > 1:
+            return result.fetchmany(size)
+        return result.scalars().fetchmany(size)
 
     async def execute_async(self, session: AsyncSession, unique: bool = False):
         """Executes the given session and returns the result.
@@ -331,6 +341,8 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             List[ResultRow]: All the results of the executed session.
         """
         result = await self.execute_async(session, unique)
+        if len(self._selected_columns) > 1:
+            return result.all()
         return result.scalars().all()
 
     async def scalar_async(self, session: AsyncSession):
@@ -359,4 +371,6 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             List[ResultRow]: The fetched results.
         """
         result = await self.execute_async(session, unique)
+        if len(self._selected_columns) > 1:
+            return result.fetchmany(size)
         return result.scalars().fetchmany(size)

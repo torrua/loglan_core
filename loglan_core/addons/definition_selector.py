@@ -126,9 +126,12 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
                 f"{self.model.__name__} does not have a 'keys' attribute"
             )
 
-        self._statement = self._statement.join(self.model.keys).where(
-            filter_key, filter_language
+        subquery = (
+            select(self.model.id)
+            .join(self.model.keys)
+            .where(filter_key, filter_language)
         )
+        self._statement = self._statement.where(self.model.id.in_(subquery))
 
         if distinct:
             self._statement = self._statement.distinct()

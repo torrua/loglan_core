@@ -1,7 +1,7 @@
 from datetime import date
 
 import pytest
-from sqlalchemy import Result
+from sqlalchemy import Result, Row
 
 from loglan_core import WordSelector
 from loglan_core.word import BaseWord
@@ -64,6 +64,46 @@ class TestBaseSelector:
         )
         assert len(result) == 3
         assert all(isinstance(item, str) for item in result)
+
+    def test_select_multiple_columns(self, db_session):
+        result = (
+            WordSelector().select_columns(BaseWord.id, BaseWord.name).all(db_session)
+        )
+        assert len(result) == 13
+        assert isinstance(result[0], Row)
+        assert len(result[0]) == 2
+        assert result[0] == (1, "kak")
+        assert result[0].id == 1
+        assert result[0].name == "kak"
+
+    def test_select_multiple_columns_fetchmany(self, db_session):
+        result = (
+            WordSelector()
+            .select_columns(BaseWord.id, BaseWord.name)
+            .fetchmany(db_session, 3)
+        )
+        assert len(result) == 3
+        assert isinstance(result[0], Row)
+        assert len(result[0]) == 2
+        assert result[0] == (1, "kak")
+
+    def test_select_columns_preserves_limit_and_ordering(self, db_session):
+        result = (
+            WordSelector()
+            .order_by(BaseWord.name)
+            .limit(2)
+            .select_columns(BaseWord.name)
+            .all(db_session)
+        )
+        assert len(result) == 2
+        assert result == ["cii", "flekukfoa"]
+
+    def test_statement_property(self, db_session):
+        selector = WordSelector().by_name("kakto")
+        assert selector.statement is selector.get_statement()
+        res = db_session.scalars(selector.statement).all()
+        assert len(res) == 1
+        assert res[0].name == "kakto"
 
     def test_order_by(self, db_session):
         result_asc = WordSelector().order_by(BaseWord.name).all(db_session)

@@ -209,3 +209,15 @@ class TestWordSelector:
             WordSelector(model=BaseDefinition, disable_model_check=True).by_name(
                 "kakto"
             ).scalar(db_session)
+
+    def test_by_type_chained(self, db_session):
+        result = (
+            WordSelector().by_type(group="Cpx").by_type(type_="2-Cpx").all(db_session)
+        )
+        assert [w.name for w in result] == ["prukao"]
+
+    def test_by_type_raise_error(self, db_session):
+        with pytest.raises(AttributeError) as _:
+            WordSelector(model=BaseDefinition, disable_model_check=True).by_type(
+                "Afx"
+            ).all(db_session)

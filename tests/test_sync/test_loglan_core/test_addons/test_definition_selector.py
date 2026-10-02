@@ -37,7 +37,9 @@ class TestDefinitionSelector:
     @staticmethod
     def test_by_event_without_keys(db_session):
         word = WordSelector().by_name("kakto").scalar(db_session)
-        def_no_keys = BaseDefinition(position=1, body="Test body without keys", language="en", word_id=word.id)
+        def_no_keys = BaseDefinition(
+            position=1, body="Test body without keys", language="en", word_id=word.id
+        )
         db_session.add(def_no_keys)
         db_session.commit()
 
@@ -73,6 +75,11 @@ class TestDefinitionSelector:
 
     def test_by_key_distinct(self, db_session):
         definitions = DefinitionSelector().by_key("act", distinct=True).all(db_session)
+        result = sorted(d.id for d in definitions)
+        assert result == [6, 9, 15, 16]
+
+    def test_by_key_chained(self, db_session):
+        definitions = DefinitionSelector().by_key("act").by_key("act").all(db_session)
         result = sorted(d.id for d in definitions)
         assert result == [6, 9, 15, 16]
 
