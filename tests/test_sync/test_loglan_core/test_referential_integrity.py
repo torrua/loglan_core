@@ -53,6 +53,20 @@ class TestReferentialIntegrity:
         ev_end_fk = next(iter(Word.__table__.c.event_end.foreign_keys))
         assert ev_end_fk.ondelete == "SET NULL"
 
+    def test_junction_table_indexes(self):
+        """Verify duplicate PK prefix indexes are removed and secondary indexes kept."""
+        author_idx_names = {idx.name for idx in t_connect_authors.indexes}
+        assert "index_AID" not in author_idx_names
+        assert "index_WID" in author_idx_names
+
+        words_idx_names = {idx.name for idx in t_connect_words.indexes}
+        assert "index_parent_id" not in words_idx_names
+        assert "index_child_id" in words_idx_names
+
+        keys_idx_names = {idx.name for idx in t_connect_keys.indexes}
+        assert "index_KID" not in keys_idx_names
+        assert "index_DID" in keys_idx_names
+
     def test_delete_author_cascades_only_connection(self, db_session):
         """Deleting an author deletes only the junction row; the word remains."""
         author = db_session.get(Author, 1)
