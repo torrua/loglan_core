@@ -299,7 +299,7 @@ class BaseWord(BaseModel):
     # Relationships
     type_id: Mapped[int] = mapped_column(
         "type",
-        ForeignKey(f"{T_NAME_TYPES}.id"),
+        ForeignKey(f"{T_NAME_TYPES}.id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
     )
@@ -334,7 +334,7 @@ class BaseWord(BaseModel):
     """
     event_start_id: Mapped[int] = mapped_column(
         "event_start",
-        ForeignKey(f"{T_NAME_EVENTS}.event_id"),
+        ForeignKey(f"{T_NAME_EVENTS}.event_id", ondelete="RESTRICT"),
         nullable=False,
         index=True,
     )
@@ -365,6 +365,7 @@ class BaseWord(BaseModel):
         "event_end",
         ForeignKey(
             f"{T_NAME_EVENTS}.event_id",
+            ondelete="SET NULL",
         ),
         index=True,
     )

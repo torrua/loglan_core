@@ -34,8 +34,16 @@ from .base import BaseModel as Base
 t_connect_authors = Table(
     T_NAME_CONNECT_AUTHORS,
     Base.metadata,
-    Column("AID", ForeignKey(f"{T_NAME_AUTHORS}.id"), primary_key=True),
-    Column("WID", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
+    Column(
+        "AID",
+        ForeignKey(f"{T_NAME_AUTHORS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "WID",
+        ForeignKey(f"{T_NAME_WORDS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
     Index("index_AID", "AID"),
     Index("index_WID", "WID"),
 )
@@ -58,8 +66,16 @@ Variables:
 t_connect_words = Table(
     T_NAME_CONNECT_WORDS,
     Base.metadata,
-    Column("parent_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
-    Column("child_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
+    Column(
+        "parent_id",
+        ForeignKey(f"{T_NAME_WORDS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "child_id",
+        ForeignKey(f"{T_NAME_WORDS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
     Index("index_parent_id", "parent_id"),
     Index("index_child_id", "child_id"),
 )
@@ -84,8 +100,16 @@ Variables:
 t_connect_keys = Table(
     T_NAME_CONNECT_KEYS,
     Base.metadata,
-    Column("KID", ForeignKey(f"{T_NAME_KEYS}.id"), primary_key=True),
-    Column("DID", ForeignKey(f"{T_NAME_DEFINITIONS}.id"), primary_key=True),
+    Column(
+        "KID",
+        ForeignKey(f"{T_NAME_KEYS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "DID",
+        ForeignKey(f"{T_NAME_DEFINITIONS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
     Index("index_KID", "KID"),
     Index("index_DID", "DID"),
 )
