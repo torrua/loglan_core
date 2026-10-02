@@ -46,16 +46,16 @@ class BaseDefinition(BaseModel):
 
     def __init__(  # pylint: disable=too-many-positional-arguments
         self,
-        word_id: Mapped[int],
-        position: Mapped[int],
-        body: Mapped[str],
-        usage: Mapped[str_064] | None = None,
-        grammar_code: Mapped[str_008] | None = None,
-        slots: Mapped[int] | None = None,
-        case_tags: Mapped[str_016] | None = None,
-        language: Mapped[str_016] | None = None,
-        notes: Mapped[str_255] | None = None,
-    ):
+        word_id: int,
+        position: int,
+        body: str,
+        usage: str | None = None,
+        grammar_code: str | None = None,
+        slots: int | None = None,
+        case_tags: str | None = None,
+        language: str | None = None,
+        notes: str | None = None,
+    ) -> None:
         super().__init__()
         self.word_id = word_id
         self.position = position
@@ -67,7 +67,7 @@ class BaseDefinition(BaseModel):
         self.language = language
         self.notes = notes
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         String representation of the BaseDefinition object.
 

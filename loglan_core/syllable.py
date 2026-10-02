@@ -27,16 +27,16 @@ class BaseSyllable(BaseModel):
 
     def __init__(
         self,
-        name: Mapped[str_008],
-        type_: Mapped[str_032],
-        allowed: Mapped[bool],
-    ):
+        name: str,
+        type_: str,
+        allowed: bool,
+    ) -> None:
         super().__init__()
         self.name = name
         self.type_ = type_
         self.allowed = allowed
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns:
         """

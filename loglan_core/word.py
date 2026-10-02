@@ -5,7 +5,7 @@ This module contains a basic Word Model.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Any
 
 from sqlalchemy import ForeignKey, JSON
 from sqlalchemy.orm import mapped_column, Mapped
@@ -90,19 +90,19 @@ class BaseWord(BaseModel):
 
     def __init__(  # pylint: disable=too-many-positional-arguments
         self,
-        id_old: Mapped[int],
-        name: Mapped[str_064],
-        type_id: Mapped[int],
-        event_start_id: Mapped[int],
-        event_end_id: Mapped[int] | None = None,
-        tid_old: Mapped[int] | None = None,
-        origin: Mapped[str_128] | None = None,
-        origin_x: Mapped[str_064] | None = None,
-        match: Mapped[str_008] | None = None,
-        rank: Mapped[str_008] | None = None,
-        year: Mapped[datetime.date] | None = None,
-        notes: Mapped[dict] | None = None,
-    ):
+        id_old: int,
+        name: str,
+        type_id: int,
+        event_start_id: int,
+        event_end_id: int | None = None,
+        tid_old: int | None = None,
+        origin: str | None = None,
+        origin_x: str | None = None,
+        match: str | None = None,
+        rank: str | None = None,
+        year: datetime.date | None = None,
+        notes: dict[str, Any] | None = None,
+    ) -> None:
         """
         Initializes a BaseWord instance.
 
@@ -115,9 +115,8 @@ class BaseWord(BaseModel):
                 Legacy ID for compatibility with older databases. This field is
                 required and cannot be null.
 
-            name (str_064):
-                The name of the word. This field is required and must be unique
-                within the database.
+            name (str):
+                The name of the word.
 
             type_id (int):
                 Foreign key referencing the type of the word. This field is
@@ -135,19 +134,19 @@ class BaseWord(BaseModel):
                 Legacy TID for compatibility with older databases. This field is
                 optional and can be set to None.
 
-            origin (str_128 | None, optional):
+            origin (str | None, optional):
                 The origin of the word. This field is optional and can be set to
                 None if the origin is not known.
 
-            origin_x (str_064 | None, optional):
+            origin_x (str | None, optional):
                 Additional origin information. This field is optional and can be
                 set to None if no additional information is available.
 
-            match (str_008 | None, optional):
+            match (str | None, optional):
                 Matching criteria for the word. This field is optional and can be
                 set to None if no specific matching criteria are defined.
 
-            rank (str_008 | None, optional):
+            rank (str | None, optional):
                 Rank of the word. This field is optional and can be set to None
                 if no rank is assigned.
 
@@ -155,7 +154,7 @@ class BaseWord(BaseModel):
                 Year associated with the word. This field is optional and can be
                 set to None if the year is not specified.
 
-            notes (dict | None, optional):
+            notes (dict[str, Any] | None, optional):
                 Additional notes about the word, stored as a JSON-encoded dictionary.
                 This field is optional and can be set to None if no notes are provided.
         """
@@ -177,7 +176,7 @@ class BaseWord(BaseModel):
 
         self.notes = notes
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Returns a string representation of the BaseWord instance.
 
         Returns:

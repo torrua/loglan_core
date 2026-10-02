@@ -29,18 +29,18 @@ class BaseSetting(BaseModel):
 
     def __init__(
         self,
-        date: Mapped[datetime],
-        db_version: Mapped[int],
-        last_word_id: Mapped[int],
-        db_release: Mapped[str_016],
-    ):
+        date: datetime,
+        db_version: int,
+        last_word_id: int,
+        db_release: str,
+    ) -> None:
         super().__init__()
         self.date = date
         self.db_version = db_version
         self.last_word_id = last_word_id
         self.db_release = db_release
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns:
         """

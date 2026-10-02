@@ -41,7 +41,7 @@ class WordLinker:
 
     # mark_as_parent_for
     @staticmethod
-    def add_children(parent: BaseWord, children: list[BaseWord]):
+    def add_children(parent: BaseWord, children: list[BaseWord]) -> None:
         """
         Associates multiple 'children' words with a 'parent' word,
         indicating that those children are derived from the parent.
@@ -79,7 +79,7 @@ class WordLinker:
         return author.abbreviation
 
     @staticmethod
-    def add_authors(word: BaseWord, authors: list[BaseAuthor]):
+    def add_authors(word: BaseWord, authors: list[BaseAuthor]) -> None:
         """
         Associates multiple 'authors' with a 'word',
         indicating that these authors have contributed to the word.

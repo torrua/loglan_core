@@ -23,12 +23,12 @@ class BaseType(BaseModel):
 
     def __init__(  # pylint: disable=too-many-positional-arguments
         self,
-        type_: Mapped[str_016],
-        type_x: Mapped[str_016],
-        group: Mapped[str_016],
-        parentable: Mapped[bool],
-        description: Mapped[str_255] | None = None,
-    ):
+        type_: str,
+        type_x: str,
+        group: str,
+        parentable: bool,
+        description: str | None = None,
+    ) -> None:
         """
         Returns:
         """
@@ -39,7 +39,7 @@ class BaseType(BaseModel):
         self.parentable = parentable
         self.description = description
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns:
         """

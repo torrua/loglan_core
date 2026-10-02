@@ -3,7 +3,7 @@ This module contains an "Export extensions" for LOD dictionary SQL model.
 Add export() function to db object for returning its text string presentation.
 """
 
-from typing import Iterable, Callable, Type
+from typing import Iterable, Callable, Type, Any
 
 from ..addons.export_word_converter import ExportWordConverter
 from ..author import BaseAuthor
@@ -46,7 +46,7 @@ class Exporter:
     FORMAT_DATE_SETTING = "%d.%m.%Y %H:%M:%S"
 
     @classmethod
-    def export(cls, obj, separator: str = DEFAULT_SEPARATOR) -> str:
+    def export(cls, obj: Any, separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Export the given object using the appropriate exporter function.
         Args:
@@ -58,7 +58,7 @@ class Exporter:
             ValueError: If the object type is not supported.
         """
 
-        exporters: dict[Type, Callable] = {
+        exporters: dict[Type[Any], Callable[[Any], tuple[Any, ...]]] = {
             BaseAuthor: cls.export_author,
             BaseEvent: cls.export_event,
             BaseType: cls.export_type,
@@ -82,7 +82,7 @@ class Exporter:
         return cls.merge_by(items, separator)
 
     @staticmethod
-    def merge_by(items: Iterable, separator: str = DEFAULT_SEPARATOR) -> str:
+    def merge_by(items: Iterable[Any], separator: str = DEFAULT_SEPARATOR) -> str:
         """
         Merges a list of items into a single string, separated by the
         specified separator.
@@ -96,7 +96,7 @@ class Exporter:
         return separator.join([str(i) if i is not None else "" for i in items])
 
     @staticmethod
-    def export_author(obj: BaseAuthor) -> tuple:
+    def export_author(obj: BaseAuthor) -> tuple[Any, ...]:
         """
         Prepare Author data for exporting to text file
 
@@ -106,7 +106,7 @@ class Exporter:
         return obj.abbreviation, obj.full_name, obj.notes
 
     @classmethod
-    def export_event(cls, obj: BaseEvent) -> tuple:
+    def export_event(cls, obj: BaseEvent) -> tuple[Any, ...]:
         """
         Prepare Event data for exporting to text file
 
@@ -123,7 +123,7 @@ class Exporter:
         )
 
     @staticmethod
-    def export_syllable(obj: BaseSyllable) -> tuple:
+    def export_syllable(obj: BaseSyllable) -> tuple[Any, ...]:
         """
         Prepare Syllable data for exporting to text file
 
@@ -133,7 +133,7 @@ class Exporter:
         return obj.name, obj.type_, str(obj.allowed)
 
     @classmethod
-    def export_setting(cls, obj: BaseSetting) -> tuple:
+    def export_setting(cls, obj: BaseSetting) -> tuple[Any, ...]:
         """
         Prepare Setting data for exporting to text file
 
@@ -148,7 +148,7 @@ class Exporter:
         )
 
     @staticmethod
-    def export_type(obj: BaseType) -> tuple:
+    def export_type(obj: BaseType) -> tuple[Any, ...]:
         """
         Prepare Type data for exporting to text file
 
@@ -164,7 +164,7 @@ class Exporter:
         )
 
     @staticmethod
-    def export_word(obj: BaseWord) -> tuple:
+    def export_word(obj: BaseWord) -> tuple[Any, ...]:
         """
         Prepare Word data for exporting to text file
 
@@ -192,7 +192,7 @@ class Exporter:
         )
 
     @staticmethod
-    def export_definition(obj: BaseDefinition) -> tuple:
+    def export_definition(obj: BaseDefinition) -> tuple[Any, ...]:
         """
         Prepare Definition data for exporting to text file
 
@@ -211,7 +211,7 @@ class Exporter:
         )
 
     @staticmethod
-    def export_word_spell(obj: BaseWordSpell) -> tuple:
+    def export_word_spell(obj: BaseWordSpell) -> tuple[Any, ...]:
         """
         Prepare WordSpell data for exporting to text file
 

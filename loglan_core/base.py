@@ -2,13 +2,17 @@
 Initial common functions for LOD Model Classes
 """
 
+from __future__ import annotations
+
 from datetime import datetime
+from typing import Any, Sequence
 
 from sqlalchemy import String, inspect, func, select
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from sqlalchemy.orm import Session, registry as rg
+from typing_extensions import Self
 
 from loglan_core.service.annotated_types import (
     str_008,
@@ -81,7 +85,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     :type: datetime
     """
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         """
         Special method that returns a string representation of the object.
         It forms the string by joining key-value pairs of the object's attributes,
@@ -104,7 +108,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         return f"{self.__class__.__name__}({obj_str})"
 
     @classmethod
-    def _filter_add_to_repr(cls, k, v):
+    def _filter_add_to_repr(cls, k: str, v: Any) -> bool:
         """
         Static method that filters out keys that start with "_" and keys
         that are "created" or "updated" and keys without values from the
@@ -118,7 +122,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         )
 
     @classmethod
-    def get_by_id(cls, session: Session, cid: int):
+    def get_by_id(cls: type[Self], session: Session, cid: int) -> Self | None:
         """
         Class method that retrieves an instance of the class from the
         database using the provided session and id.
@@ -134,7 +138,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         return session.get(cls, cid)
 
     @classmethod
-    def get_all(cls, session: Session):
+    def get_all(cls: type[Self], session: Session) -> Sequence[Self]:
         """
         Class method that retrieves all instances of the class from the
         database using the provided session.
@@ -147,7 +151,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         """
         return session.scalars(select(cls)).all()
 
-    def export(self):
+    def export(self) -> dict[str, Any]:
         """
         Class method that exports the object's attributes into a dictionary.
         It filters out keys that start with "_" and keys that are
@@ -264,7 +268,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         return {i.__name__ for i in inspector if isinstance(i, hybrid_property)}
 
     @classmethod
-    def properties(cls):
+    def properties(cls) -> set[str]:
         """
         Class method that computes the properties of the class.
 

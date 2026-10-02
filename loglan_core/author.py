@@ -65,7 +65,7 @@ class BaseAuthor(BaseModel):
         abbreviation: str,
         full_name: str | None = None,
         notes: str | None = None,
-    ):
+    ) -> None:
         """Initializes a BaseAuthor instance.
 
         This constructor sets up a new author with the provided abbreviation,
@@ -75,16 +75,16 @@ class BaseAuthor(BaseModel):
         about the author.
 
         Args:
-            abbreviation (Mapped[str_064]):
+            abbreviation (str):
                 A unique abbreviation for the author, used for identification
                 in various contexts, including the LOD dictionary. This field
                 is required and cannot be null.
 
-            full_name (Mapped[str_064 | None], optional):
+            full_name (str | None, optional):
                 The full name of the author. This field is optional and can be
                 set to None if the full name is not available.
 
-            notes (Mapped[str_128 | None], optional):
+            notes (str | None, optional):
                 Any additional information or notes about the author. This field
                 is also optional and can be set to None if no notes are provided.
 
@@ -102,7 +102,7 @@ class BaseAuthor(BaseModel):
         self.full_name = full_name
         self.notes = notes
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Returns a string representation of the BaseAuthor instance.
 
         Returns:

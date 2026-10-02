@@ -148,10 +148,13 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         Returns:
             Self: A query with the filter applied.
         """
-        if isinstance(type_, BaseType):
-            self._statement = self._statement.join(BaseType).where(
-                BaseType.id == type_.id
+        if not hasattr(self.model, "type_id"):
+            raise AttributeError(
+                f"{self.model.__name__} does not have a 'type_id' attribute"
             )
+
+        if isinstance(type_, BaseType):
+            self._statement = self._statement.where(self.model.type_id == type_.id)
             return self
 
         type_values = (
@@ -165,10 +168,10 @@ class WordSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         ]
 
         if not type_filters:
-            self._statement = self._statement
             return self
 
-        self._statement = self._statement.join(BaseType).where(and_(*type_filters))
+        subquery = select(BaseType.id).where(and_(*type_filters))
+        self._statement = self._statement.where(self.model.type_id.in_(subquery))
         return self
 
     def get_derivatives_of(self, word_id: int) -> Self:
