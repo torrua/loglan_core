@@ -69,15 +69,21 @@ ws_derivatives = WordSelector().get_affixes_of(word_id=1)
 You can combine them with filters as well.
 
 ## Get Results from WordSelector
-The WordSelector object returns a classic SQLAlchemy `Select` Object, so we can use it as normal within a session, like this:
+The `WordSelector` object exposes the SQLAlchemy `Select` statement via its `.statement` property (or `.get_statement()`), so you can execute it natively:
 ```python
-all_words = session.scalars(ws_combined.get_statement()).all()
-first_word = session.scalar(ws_combined.get_statement())
+all_words = session.scalars(ws_combined.statement).all()
+first_word = session.scalar(ws_combined.statement)
 ```
-Also, we can use the internal `all`, `scalar` or `fetchmany` methods:
+Alternatively, use the convenience methods directly:
 ```python
+# Synchronous session:
 all_words = ws_combined.all(session)
 first_word = ws_combined.scalar(session)
 first_five_words = ws_combined.fetchmany(session, size=5)
+
+# Asynchronous session (AsyncSession):
+all_words = await ws_combined.all_async(async_session)
+first_word = await ws_combined.scalar_async(async_session)
+first_five_words = await ws_combined.fetchmany_async(async_session, size=5)
 ```
-These methods return a list of Word Objects or a single Word Object that match the applied filters.
+These methods return a list of Word objects or a single Word object matching the applied filters.

@@ -52,7 +52,7 @@ class BaseSetting(BaseModel):
 
     date: Mapped[datetime] = mapped_column(nullable=False, unique=True)
     """*Last modified date*  
-        **dateime.datetime** : nullable=False, unique=True"""
+        **datetime.datetime** : nullable=False, unique=True"""
     db_version: Mapped[int] = mapped_column(nullable=False)
     """*Database version (for old application)*  
         **int** : nullable=False, unique=False"""

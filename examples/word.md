@@ -16,9 +16,8 @@ This method returns a statement for the database, which we execute using the `se
 from loglan_core.addons.word_selector import WordSelector
 
 word = WordSelector().by_name("proga").scalar(session)
-# or
-request = WordSelector().by_name("proga").get_statement()
-word = session.scalar(request)
+# or via SQLAlchemy statement:
+word = session.scalar(WordSelector().by_name("proga").statement)
 
 print(word)
 >>> <BaseWord ID **** proga>
@@ -103,9 +102,9 @@ print(word.event_end)
 ```
 
 ### Keys
-_Keys are keywords that define a word in a foreign language. They are taken from the definitions._
+_Keys are keywords that define a word in a foreign language. They are linked to definitions._
 
-_This word has only one key, but there may be more in the list._
+_The `word.keys` property returns all keyword objects associated with all definitions of this word:_
 
 ```python
 print(word.keys)
@@ -118,10 +117,12 @@ print(word.keys)
     ]
 ```
 
-### Word's Derivatives
+### Word's Derivatives, Complexes, Affixes, and Djifoa
 _This includes the so-called __“djifoa”__, that is, short forms of the word and complexes - 
 derived words consisting of several djifoa. For example, the short form of the word __“proga”__ is __“pog”__. 
 And __“pogleu”__ is a complex consisting of two parts - p(r)og(a)+le(ng)u - and means “programming language”._
+
+`word.derivatives` returns all derivative words (both affixes and complexes):
 ```python
 print(word.derivatives)
 >>> [
@@ -136,6 +137,12 @@ print(word.derivatives)
         BaseWord(name='pogsea', origin='p(r)og(a)+se(tf)a', origin_x='program set', type_id=5, ...), 
         BaseWord(name='selkopyproga', origin='sel(ji)+kop(ca)+y+proga', origin_x='self copy program', type_id=6, ...),
     ]
+```
+
+_You can also access filtered derivatives directly via hybrid properties (which can also be used in SQL expressions):_
+```python
+print(word.affixes)    # or word.djifoa: returns only affix forms
+print(word.complexes)  # returns only complex words derived with this word's affixes
 ```
 
 ## Finally
