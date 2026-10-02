@@ -34,7 +34,7 @@ def filter_key_by_word_cs(
     key: str,
     case_sensitive: bool = False,
     is_sqlite: bool = False,
-) -> BinaryExpression:
+) -> BinaryExpression[bool]:
     """
     Returns a filter condition to select keys containing a specific word.
 

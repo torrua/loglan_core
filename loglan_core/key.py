@@ -43,12 +43,12 @@ class BaseKey(BaseModel):
     __tablename__ = T_NAME_KEYS
     __table_args__ = (UniqueConstraint("word", "language", name="_word_language_uc"),)
 
-    def __init__(self, word, language):
+    def __init__(self, word: str, language: str) -> None:
         super().__init__()
         self.word = word
         self.language = language
 
-    def __str__(self):
+    def __str__(self) -> str:
         return f"<{self.__class__.__name__} {self.id} '{self.word}' ({self.language})>"
 
     word: Mapped[str_064] = mapped_column(nullable=False)

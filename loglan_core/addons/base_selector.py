@@ -2,9 +2,9 @@
 This module provides a base selector for SQLAlchemy
 """
 
-from typing import Type, Iterable, Any
+from typing import Type, Iterable, Any, Sequence, cast
 
-from sqlalchemy import select, Select
+from sqlalchemy import select, Select, Result, ColumnElement
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Session, InstrumentedAttribute, joinedload
 from sqlalchemy.types import String, Integer
@@ -98,7 +98,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self._statement = self._statement.offset(offset)
         return self
 
-    def order_by(self, *columns) -> Self:
+    def order_by(self, *columns: Any) -> Self:
         """Specify the order in which results should be returned.
 
         Args:
@@ -110,7 +110,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self._statement = self._statement.order_by(*columns)
         return self
 
-    def filter(self, *args) -> Self:
+    def filter(self, *args: Any) -> Self:
         """Filter results based on arbitrary keyword arguments.
 
         Args:
@@ -124,7 +124,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
 
         return self
 
-    def filter_by(self, **kwargs) -> Self:
+    def filter_by(self, **kwargs: Any) -> Self:
         """Filter results based on arbitrary keyword arguments.
 
         Args:
@@ -138,7 +138,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
 
         return self
 
-    def where(self, *args) -> Self:
+    def where(self, *args: Any) -> Self:
         """Filter results based on arbitrary keyword arguments.
 
         Args:
@@ -150,7 +150,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         self._statement = self._statement.where(*args)
         return self
 
-    def where_like(self, **kwargs) -> Self:
+    def where_like(self, **kwargs: Any) -> Self:
         """Filter results based on arbitrary keyword arguments.
             Use internal method `_generate_column_condition` to generate
             the condition based on settings provided by Selector instance
@@ -166,7 +166,9 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             self._statement = self._statement.where(self.get_like_condition(key, value))
         return self
 
-    def get_like_condition(self, key: str | InstrumentedAttribute, value: Any):
+    def get_like_condition(
+        self, key: str | InstrumentedAttribute[Any], value: Any
+    ) -> ColumnElement[bool]:
         """Generate the condition based on settings provided by Selector instance
         like (is_sqlite, case_sensitive).
 
@@ -180,7 +182,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         column = self._get_column(key)
 
         if not isinstance(column.type, (String, Integer)):
-            return column == value
+            return cast(ColumnElement[bool], column == value)
 
         if isinstance(column.type, Integer):
             return column == int(value)
@@ -196,7 +198,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         return column.like(value)
 
     @property
-    def statement(self) -> Select:
+    def statement(self) -> Select[Any]:
         """Get the current SQLAlchemy Select statement.
 
         Returns:
@@ -204,7 +206,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         """
         return self._statement
 
-    def get_statement(self) -> Select:
+    def get_statement(self) -> Select[Any]:
         """Get the current SQLAlchemy _statement.
 
         Returns:
@@ -234,7 +236,9 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         return self
 
     @staticmethod
-    def _is_model_accepted(model, parent: type[BaseModel] = BaseModel):
+    def _is_model_accepted(
+        model: type[Any], parent: type[BaseModel] = BaseModel
+    ) -> None:
         """Checks if the model is an instance of BaseModel or its child.
 
         Raises:
@@ -243,7 +247,9 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         if not issubclass(model, parent):
             raise ValueError(f"Provided model={model} is not a inherited from {parent}")
 
-    def _get_column(self, key: str | InstrumentedAttribute) -> InstrumentedAttribute:
+    def _get_column(
+        self, key: str | InstrumentedAttribute[Any]
+    ) -> InstrumentedAttribute[Any]:
         """Get the column from the model.
 
         Args:
@@ -260,7 +266,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             raise AttributeError(f"Model {self.model} has no attribute {key}")
         return column
 
-    def execute(self, session: Session, unique: bool = False) -> Any:
+    def execute(self, session: Session, unique: bool = False) -> Result[Any]:
         """Executes the given session and returns the result.
 
         Args:
@@ -273,7 +279,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         result = session.execute(self._statement)
         return result.unique() if unique else result
 
-    def all(self, session: Session, unique: bool = False):
+    def all(self, session: Session, unique: bool = False) -> Sequence[Any]:
         """Executes the given session and returns all the results as a list.
 
         Args:
@@ -288,7 +294,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             return result.all()
         return result.scalars().all()
 
-    def scalar(self, session: Session):
+    def scalar(self, session: Session) -> Any:
         """Executes the given session and returns a scalar result.
 
         Args:
@@ -301,7 +307,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
 
     def fetchmany(
         self, session: Session, size: int | None = None, unique: bool = False
-    ):
+    ) -> Sequence[Any]:
         """Executes the given session and fetches a specified number of results.
 
         Args:
@@ -317,7 +323,9 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             return result.fetchmany(size)
         return result.scalars().fetchmany(size)
 
-    async def execute_async(self, session: AsyncSession, unique: bool = False):
+    async def execute_async(
+        self, session: AsyncSession, unique: bool = False
+    ) -> Result[Any]:
         """Executes the given session and returns the result.
 
         Args:
@@ -330,7 +338,9 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         result = await session.execute(self._statement)
         return result.unique() if unique else result
 
-    async def all_async(self, session: AsyncSession, unique: bool = False):
+    async def all_async(
+        self, session: AsyncSession, unique: bool = False
+    ) -> Sequence[Any]:
         """Executes the given session and returns all the results as a list.
 
         Args:
@@ -345,7 +355,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
             return result.all()
         return result.scalars().all()
 
-    async def scalar_async(self, session: AsyncSession):
+    async def scalar_async(self, session: AsyncSession) -> Any:
         """Executes the given session and returns a scalar result.
 
         Args:
@@ -359,7 +369,7 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
 
     async def fetchmany_async(
         self, session: AsyncSession, size: int | None = None, unique: bool = False
-    ):
+    ) -> Sequence[Any]:
         """Executes the given session and fetches a specified number of results.
 
         Args:

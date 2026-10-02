@@ -9,7 +9,7 @@ import re
 from typing import Iterable
 
 from sqlalchemy import select, or_
-from sqlalchemy.sql.selectable import Select
+from sqlalchemy.sql.selectable import Select, ScalarSelect
 
 from ..type import BaseType
 from ..word import BaseWord
@@ -31,7 +31,7 @@ class WordSource:
         "G": "German",
     }
 
-    def __init__(self, source):
+    def __init__(self, source: str) -> None:
         compatibility_search = re.search(self.PATTERN_SOURCE, source)
         self.coincidence, self.length, self.language = self.parse_source(
             compatibility_search
@@ -42,7 +42,7 @@ class WordSource:
             str(transcription_search[0]).strip() if transcription_search else None
         )
 
-    def __str__(self):
+    def __str__(self) -> str:
         """
         Returns:
         """
@@ -50,7 +50,7 @@ class WordSource:
 
     @staticmethod
     def parse_source(
-        compatibility_search,
+        compatibility_search: re.Match[str] | None,
     ) -> tuple[int, int, str]:
         """
 
@@ -98,7 +98,7 @@ class WordSourcer:
     ]
 
     @classmethod
-    def get_sources_prim(cls, word: BaseWord):
+    def get_sources_prim(cls, word: BaseWord) -> list[WordSource] | str | None:
         """
 
         Returns:
@@ -167,7 +167,7 @@ class WordSourcer:
         )
 
     @classmethod
-    def get_type_ids(cls, types: Iterable[str]):
+    def get_type_ids(cls, types: Iterable[str]) -> ScalarSelect[int]:
         """
         Get ids of specific types from provided list
 

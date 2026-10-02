@@ -2,6 +2,8 @@
 This module contains ExportWordConverter for Word model of LOD.
 """
 
+from typing import Any
+
 from ..word import BaseWord
 
 
@@ -101,7 +103,7 @@ class ExportWordConverter:
         return f"{rank} {notes.get('rank', str())}".strip()
 
     @staticmethod
-    def stringer(value) -> str:
+    def stringer(value: Any) -> str:
         """
         Convert variable to string
         Args:

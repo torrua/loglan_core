@@ -41,13 +41,13 @@ class BaseEvent(BaseModel):
 
     def __init__(  # pylint: disable=too-many-positional-arguments
         self,
-        event_id: Mapped[int],
-        name: Mapped[str_064],
-        date: Mapped[datetime.date],
-        definition: Mapped[str],
-        annotation: Mapped[str_016],
-        suffix: Mapped[str_016],
-    ):
+        event_id: int,
+        name: str,
+        date: datetime.date,
+        definition: str,
+        annotation: str,
+        suffix: str,
+    ) -> None:
         super().__init__()
         self.event_id = event_id
         self.name = name
@@ -56,7 +56,7 @@ class BaseEvent(BaseModel):
         self.annotation = annotation
         self.suffix = suffix
 
-    def __str__(self):
+    def __str__(self) -> str:
         return (
             f"<{self.__class__.__name__}"
             f"{' ID ' + str(self.event_id) + ' ' if self.event_id else ' '}"
