@@ -7,7 +7,7 @@ Main point for export DB models
 __author__ = "torrua"
 __copyright__ = "Copyright 2024, loglan_core project"
 __email__ = "torrua@gmail.com"
-__version__ = "0.5.1"
+__version__ = "0.6.0"
 
 from loglan_core.relationships import (
     t_connect_authors,
