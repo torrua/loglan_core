@@ -27,3 +27,22 @@ async def test_scalar(session):
 async def test_fetchmany(session):
     fetch_words = await WordSelector().fetchmany_async(session, size=5)
     assert len(fetch_words) == 5
+
+
+@pytest.mark.usefixtures("session")
+async def test_select_columns_single(session):
+    result = await WordSelector().select_columns(BaseWord.name).all_async(session)
+    assert len(result) == 13
+    assert all(isinstance(n, str) for n in result)
+
+
+@pytest.mark.usefixtures("session")
+async def test_select_columns_multiple(session):
+    result = (
+        await WordSelector()
+        .select_columns(BaseWord.id, BaseWord.name)
+        .all_async(session)
+    )
+    assert len(result) == 13
+    assert len(result[0]) == 2
+    assert result[0] == (1, "kak")

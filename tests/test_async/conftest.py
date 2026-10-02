@@ -9,7 +9,7 @@ from sqlalchemy.ext.asyncio import (
 )
 
 from loglan_core import Base
-from ..objects import add_objects
+from ..objects import add_objects, link_objects
 
 DATABASE_URL = "sqlite+aiosqlite://"
 
@@ -35,9 +35,16 @@ async def setup_database(connection: AsyncConnection):
         await connection.run_sync(Base.metadata.create_all)
 
 
+def populate_db(sync_session):
+    add_objects(sync_session)
+    sync_session.flush()
+    link_objects(sync_session)
+    sync_session.flush()
+
+
 @pytest.fixture(autouse=True)
 async def async_create_db(session: AsyncSession):
-    await session.run_sync(add_objects)
+    await session.run_sync(populate_db)
 
 
 @pytest.fixture()
