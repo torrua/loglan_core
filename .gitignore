@@ -69,7 +69,7 @@ instance/
 .scrapy
 
 # Sphinx documentation
-docs_/_build/
+docs/_build/
 
 # PyBuilder
 target/
@@ -131,3 +131,6 @@ dmypy.json
 /main.py
 /.ruff_cache/
 /alembic.ini
+
+.idea/
+.planning/

@@ -46,12 +46,13 @@ def filter_key_by_word_cs(
     Returns:
         BinaryExpression: A filter condition to select keys containing a specific word.
     """
+    if case_sensitive:
+        if is_sqlite:
+            return BaseKey.word.op("GLOB")(str(key))
+        key = str(key).replace("*", "%")
+        return BaseKey.word.like(key)
     key = str(key).replace("*", "%")
-    return (
-        (BaseKey.word.op("GLOB")(key) if is_sqlite else BaseKey.word.like(key))
-        if case_sensitive
-        else BaseKey.word.ilike(key)
-    )
+    return BaseKey.word.ilike(key)
 
 
 def filter_key_by_language(language: str | None = None) -> ColumnElement[bool]:

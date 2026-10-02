@@ -15,10 +15,10 @@ This method returns a statement for the database, which we execute using the `se
 ```python
 from loglan_core.addons.word_selector import WordSelector
 
-request = WordSelector().by_name("proga")
-word = session.scalar(request)
-# or
 word = WordSelector().by_name("proga").scalar(session)
+# or
+request = WordSelector().by_name("proga").get_statement()
+word = session.scalar(request)
 
 print(word)
 >>> <BaseWord ID **** proga>
@@ -108,7 +108,8 @@ _Keys are keywords that define a word in a foreign language. They are taken from
 _This word has only one key, but there may be more in the list._
 
 ```python
-print(word.keys)
+# Keys belong to definitions of the word:
+print([key for d in word.definitions for key in d.keys])
 >>> [
         BaseKey(
             id=****,

@@ -190,13 +190,13 @@ class BaseSelector:  # pylint: disable=too-many-ancestors
         if isinstance(column.type, Integer):
             return column == int(value)
 
-        value = value.replace("*", "%")
+        if self.is_sqlite and self.case_sensitive:
+            return column.op("GLOB")(str(value))
+
+        value = str(value).replace("*", "%")
 
         if not self.case_sensitive:
             return column.ilike(value)
-
-        if self.is_sqlite:
-            return column.op("GLOB")(value)
 
         return column.like(value)
 

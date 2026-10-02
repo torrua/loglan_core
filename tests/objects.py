@@ -52,6 +52,7 @@ def get_objects():
 
 def create_db(session):
     add_objects(session)
+    session.flush()
     link_objects(session)
     session.commit()
 

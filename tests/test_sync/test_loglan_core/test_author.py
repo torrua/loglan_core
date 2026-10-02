@@ -14,3 +14,9 @@ class TestAuthor:
         assert len(author.contribution) == 4
         assert isinstance(author.contribution[0], Word)
         assert isinstance(author.contribution, list)
+
+    def test_init_defaults(self):
+        author = Author(abbreviation="JCB", full_name="James Cooke Brown")
+        assert author.abbreviation == "JCB"
+        assert author.full_name == "James Cooke Brown"
+        assert author.notes is None

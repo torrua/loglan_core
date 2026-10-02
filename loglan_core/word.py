@@ -198,8 +198,8 @@ class BaseWord(BaseModel):
     name: Mapped[str_064] = mapped_column(nullable=False)
     """The name of the word.
 
-    This attribute holds the actual word as a string. It is required and must 
-    be unique within the database.
+    This attribute holds the actual word as a string. It is required. Homonyms
+    are permitted (words with the same name and different definitions may coexist).
 
     - **Type**: str_064
     - **Max Length**: 64 characters

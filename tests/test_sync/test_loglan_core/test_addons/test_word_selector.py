@@ -57,6 +57,15 @@ class TestWordSelector:
         result_from_db = db_session.scalars(result.get_statement()).all()
         assert result_from_db == []
 
+    def test_by_name_case_sensitive_with_wildcard(self, db_session):
+        result = (
+            WordSelector(is_sqlite=True, case_sensitive=True)
+            .by_name("pru*")
+            .all(db_session)
+        )
+        assert len(result) == 3
+        assert [w.name for w in result] == ["pru", "pruci", "prukao"]
+
     def test_by_name_case_insensitive(self, db_session):
         result = (
             WordSelector(is_sqlite=True, case_sensitive=False)

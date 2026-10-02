@@ -97,7 +97,8 @@ class ExportWordConverter:
             str: The rank of the word and any additional notes about the rank.
         """
         notes: dict[str, str] = self.word.notes or {}
-        return f"{self.word.rank} {notes.get('rank', str())}".strip()
+        rank = self.word.rank if self.word.rank is not None else ""
+        return f"{rank} {notes.get('rank', str())}".strip()
 
     @staticmethod
     def stringer(value) -> str:
@@ -109,4 +110,4 @@ class ExportWordConverter:
         Returns:
             str:
         """
-        return str(value) if value else str()
+        return str(value) if value is not None else str()

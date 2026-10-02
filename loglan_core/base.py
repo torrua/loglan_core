@@ -60,7 +60,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     :type: int
     """
 
-    created: Mapped[datetime] = mapped_column(default=datetime.now(), nullable=False)
+    created: Mapped[datetime] = mapped_column(default=datetime.now, nullable=False)
     """
     A class attribute mapped to a column in the database table. It represents 
     the timestamp when a row is created. The default value is the current 
@@ -114,7 +114,7 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         return (
             not k.startswith("_")
             and k not in ["created", "updated", *cls.relationships()]
-            and v
+            and v not in (None, "")
         )
 
     @classmethod
@@ -220,39 +220,35 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     def foreign_keys(cls) -> set[str]:
         """
         Class method that computes the names of foreign keys of the class.
-        It does this by subtracting relationship keys and non-foreign keys
-        from all attributes.
 
         It doesn’t require any parameters as it operates on the class itself.
 
         Returns:
             set[str]: A set of strings with names of the foreign keys.
         """
-        return set(
-            cls.attributes_all()
-            - cls.relationships()
-            - cls.non_foreign_keys()
-            - cls.properties()
-        )
+        return {
+            attr.key
+            for attr in cls.__mapper__.column_attrs
+            if any(c.foreign_keys for c in attr.columns)
+        }
 
     @classmethod
     def non_foreign_keys(cls) -> set[str]:
         """
         Class method that computes the non-foreign keys of the class.
-        It does this by inspecting the class columns and selecting those
-        without foreign keys.
+        It does this by inspecting the class column attributes and selecting
+        those without foreign keys.
 
         It doesn’t require any parameters as it operates on the class itself.
 
         Returns:
             set[str]: A set of strings with names of the non-foreign keys.
         """
-        inspector = inspect(cls)
-        columns = inspector.columns
-        non_foreign_keys = {
-            column.name for column in columns if not column.foreign_keys
+        return {
+            attr.key
+            for attr in cls.__mapper__.column_attrs
+            if not any(c.foreign_keys for c in attr.columns)
         }
-        return non_foreign_keys
 
     @classmethod
     def hybrid_properties(cls) -> set[str]:

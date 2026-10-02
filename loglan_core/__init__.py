@@ -7,6 +7,7 @@ Main point for export DB models
 __author__ = "torrua"
 __copyright__ = "Copyright 2024, loglan_core project"
 __email__ = "torrua@gmail.com"
+__version__ = "0.5.1"
 
 from loglan_core.relationships import (
     t_connect_authors,
@@ -20,6 +21,7 @@ from .addons.exporter import Exporter
 from .addons.key_selector import KeySelector
 from .addons.word_linker import WordLinker
 from .addons.word_selector import WordSelector
+from .addons.word_sourcer import WordSourcer, WordSource
 from .author import BaseAuthor as Author
 from .base import BaseModel as Base
 from .definition import BaseDefinition as Definition
@@ -30,3 +32,28 @@ from .syllable import BaseSyllable as Syllable
 from .type import BaseType as Type
 from .word import BaseWord as Word
 from .word_spell import BaseWordSpell as WordSpell
+
+__all__ = (
+    "Author",
+    "Base",
+    "BaseSelector",
+    "Definition",
+    "DefinitionSelector",
+    "Event",
+    "ExportWordConverter",
+    "Exporter",
+    "Key",
+    "KeySelector",
+    "Setting",
+    "Syllable",
+    "Type",
+    "Word",
+    "WordLinker",
+    "WordSelector",
+    "WordSource",
+    "WordSourcer",
+    "WordSpell",
+    "t_connect_authors",
+    "t_connect_keys",
+    "t_connect_words",
+)
