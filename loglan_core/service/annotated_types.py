@@ -5,7 +5,6 @@ This module provides custom type annotations for string lengths.
 
 from typing import Annotated
 
-
 str_008 = Annotated[str, 8]
 """
 A custom type annotation that annotates a string with a metadata value 
