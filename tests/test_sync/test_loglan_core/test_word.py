@@ -90,3 +90,18 @@ class TestWord:
             "undertake",
         ]
 
+    def test_word_indexes(self):
+        indexed_cols = {
+            col.name for idx in Word.__table__.indexes for col in idx.columns
+        }
+        assert "name" in indexed_cols
+        assert "type" in indexed_cols
+        assert "event_start" in indexed_cols
+        assert "event_end" in indexed_cols
+
+        name_idx = next(
+            idx
+            for idx in Word.__table__.indexes
+            if Word.__table__.c.name in idx.columns.values()
+        )
+        assert not name_idx.unique

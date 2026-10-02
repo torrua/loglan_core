@@ -80,7 +80,7 @@ class BaseDefinition(BaseModel):
         )
 
     word_id: Mapped[int] = mapped_column(
-        ForeignKey(f"{T_NAME_WORDS}.id"), nullable=False
+        ForeignKey(f"{T_NAME_WORDS}.id"), nullable=False, index=True
     )
     position: Mapped[int] = mapped_column(nullable=False)
     body: Mapped[str] = mapped_column(Text, nullable=False)

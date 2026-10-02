@@ -198,7 +198,7 @@ class BaseWord(BaseModel):
     - **Nullable**: False
     """
 
-    name: Mapped[str_064] = mapped_column(nullable=False)
+    name: Mapped[str_064] = mapped_column(nullable=False, index=True)
     """The name of the word.
 
     This attribute holds the actual word as a string. It is required. Homonyms
@@ -301,6 +301,7 @@ class BaseWord(BaseModel):
         "type",
         ForeignKey(f"{T_NAME_TYPES}.id"),
         nullable=False,
+        index=True,
     )
     """Foreign key referencing the type of the word.
 
@@ -335,6 +336,7 @@ class BaseWord(BaseModel):
         "event_start",
         ForeignKey(f"{T_NAME_EVENTS}.event_id"),
         nullable=False,
+        index=True,
     )
     """Foreign key referencing the start event.
 
@@ -364,6 +366,7 @@ class BaseWord(BaseModel):
         ForeignKey(
             f"{T_NAME_EVENTS}.event_id",
         ),
+        index=True,
     )
     """Foreign key referencing the end event.
 

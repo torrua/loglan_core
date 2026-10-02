@@ -40,6 +40,7 @@ async def test_select_columns_single(session):
 async def test_select_columns_multiple(session):
     result = (
         await WordSelector()
+        .order_by(BaseWord.id)
         .select_columns(BaseWord.id, BaseWord.name)
         .all_async(session)
     )
