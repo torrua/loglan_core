@@ -121,7 +121,7 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             key.language if isinstance(key, BaseKey) else language
         )
 
-        if not hasattr(self.model, "keys"):
+        if not hasattr(self.model, "keys") or not hasattr(self.model.keys, "property"):
             raise AttributeError(
                 f"{self.model.__name__} does not have a 'keys' attribute"
             )

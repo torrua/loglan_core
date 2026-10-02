@@ -1,3 +1,4 @@
+# pylint: disable=too-many-ancestors
 """
 This module contains a basic WordSpell Model
 """

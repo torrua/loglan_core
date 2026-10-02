@@ -78,3 +78,15 @@ class TestWord:
         assert len(kakto.complexes) == 1
         assert isinstance(kakto.complexes, list)
         assert isinstance(kakto.complexes[0], Word)
+
+    def test_keys(self, db_session):
+        kakto: Word = WordSelector().by_name("kakto").scalar(db_session)
+        assert len(kakto.keys) == 5
+        assert [k.word for k in kakto.keys] == [
+            "act",
+            "activity",
+            "actor",
+            "end",
+            "undertake",
+        ]
+

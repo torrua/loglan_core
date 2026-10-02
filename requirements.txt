@@ -1,1 +1,1 @@
-SQLAlchemy>=2.0.21
+SQLAlchemy[asyncio]>=2.0.21

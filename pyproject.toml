@@ -37,7 +37,7 @@ dependencies = [
 include = ["loglan_core*"]
 
 [tool.pylint]
-disable = ["R0902", "R0913", "R0801"]
+disable = ["R0902", "R0913", "R0801", "R0901"]
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "session"

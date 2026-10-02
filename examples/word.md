@@ -108,8 +108,7 @@ _Keys are keywords that define a word in a foreign language. They are taken from
 _This word has only one key, but there may be more in the list._
 
 ```python
-# Keys belong to definitions of the word:
-print([key for d in word.definitions for key in d.keys])
+print(word.keys)
 >>> [
         BaseKey(
             id=****,
