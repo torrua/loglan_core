@@ -184,7 +184,11 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of all attribute keys.
         """
-        return set(cls.__mapper__.attrs.keys()) | cls.properties()
+        return (
+            set(cls.__mapper__.attrs.keys())
+            | cls.properties()
+            | cls.hybrid_properties()
+        )
 
     @classmethod
     def attributes_basic(cls) -> set[str]:
@@ -197,7 +201,12 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of basic attributes.
         """
-        return set(cls.attributes_all() - cls.relationships() - cls.properties())
+        return set(
+            cls.attributes_all()
+            - cls.relationships()
+            - cls.properties()
+            - cls.hybrid_properties()
+        )
 
     @classmethod
     def attributes_extended(cls) -> set[str]:

@@ -144,7 +144,7 @@ class TestBase:
         }
 
     def test_hybrid_properties(self):
-        assert not Word.hybrid_properties()
+        assert Word.hybrid_properties() == {"affixes", "complexes", "djifoa"}
 
     def test_created_and_updated_timestamps(self, db_session):
         word: Word = Word.get_by_id(db_session, 1)

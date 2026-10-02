@@ -5,9 +5,10 @@ This module contains a basic Word Model.
 from __future__ import annotations
 
 import datetime
-from typing import TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any, cast
 
-from sqlalchemy import ForeignKey, JSON
+from sqlalchemy import ForeignKey, JSON, and_
+from sqlalchemy.ext.hybrid import Comparator, hybrid_property
 from sqlalchemy.orm import mapped_column, Mapped
 from sqlalchemy.orm import relationship
 
@@ -25,6 +26,28 @@ from .type import BaseType
 
 if TYPE_CHECKING:
     from .key import BaseKey
+
+
+class _DerivativeFilterComparator(
+    Comparator[list["BaseWord"]]
+):  # pylint: disable=abstract-method
+    """Comparator for hybrid property filtering on word derivatives by type."""
+
+    def __init__(self, expression: Any, type_condition: Any) -> None:
+        super().__init__(expression)
+        self._type_condition = type_condition
+
+    def any(self, criterion: Any = None, **kwargs: Any) -> Any:
+        cond = BaseWord.type.has(self._type_condition)
+        if criterion is not None:
+            cond = and_(cond, criterion)
+        return cast(Any, self.expression).any(cond, **kwargs)
+
+    def has(self, criterion: Any = None, **kwargs: Any) -> Any:
+        cond = BaseWord.type.has(self._type_condition)
+        if criterion is not None:
+            cond = and_(cond, criterion)
+        return cast(Any, self.expression).has(cond, **kwargs)
 
 
 class BaseWord(BaseModel):
@@ -454,7 +477,7 @@ class BaseWord(BaseModel):
         - **Nullable**: True
     """
 
-    @property
+    @hybrid_property
     def djifoa(self) -> list[BaseWord]:
         """List of djifoa (deprecated name 'affixes') derived from the word.
 
@@ -468,12 +491,28 @@ class BaseWord(BaseModel):
             filter(lambda child: child.type.type_x == "Affix", self.derivatives)
         )
 
-    affixes = djifoa
-    """
-    List of djifoa derived from the word. Alias for `djifoa`, for backwards compatibility.
-    """
+    @djifoa.comparator  # type: ignore[no-redef]
+    @classmethod
+    def djifoa(cls) -> _DerivativeFilterComparator:
+        """SQL comparator for djifoa hybrid property."""
+        return _DerivativeFilterComparator(cls.derivatives, BaseType.type_x == "Affix")
 
-    @property
+    @hybrid_property
+    def affixes(self) -> list[BaseWord]:
+        """List of djifoa derived from the word. Alias for `djifoa`, for backwards compatibility.
+
+        Returns:
+            list[BaseWord]: A list of djifoa that are derived from the word.
+        """
+        return self.djifoa
+
+    @affixes.comparator  # type: ignore[no-redef]
+    @classmethod
+    def affixes(cls) -> _DerivativeFilterComparator:
+        """SQL comparator for affixes hybrid property."""
+        return _DerivativeFilterComparator(cls.derivatives, BaseType.type_x == "Affix")
+
+    @hybrid_property
     def complexes(self) -> list[BaseWord]:
         """List of complexes derived from the word.
 
@@ -484,6 +523,12 @@ class BaseWord(BaseModel):
             list[BaseWord]: A list of complexes that are derived from the word.
         """
         return list(filter(lambda child: child.type.group == "Cpx", self.derivatives))
+
+    @complexes.comparator  # type: ignore[no-redef]
+    @classmethod
+    def complexes(cls) -> _DerivativeFilterComparator:
+        """SQL comparator for complexes hybrid property."""
+        return _DerivativeFilterComparator(cls.derivatives, BaseType.group == "Cpx")
 
     @property
     def keys(self) -> list[BaseKey]:
