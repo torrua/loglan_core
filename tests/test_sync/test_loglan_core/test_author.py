@@ -7,7 +7,7 @@ from loglan_core import Author, Word
 class TestAuthor:
     def test_str(self, db_session):
         author = db_session.query(Author).filter(Author.id == 1).first()
-        assert str(author) == '<BaseAuthor ID 1 L4>'
+        assert str(author) == "<BaseAuthor ID 1 L4>"
 
     def test_contribution(self, db_session):
         author = db_session.query(Author).filter(Author.id == 1).first()

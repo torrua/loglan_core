@@ -7,7 +7,7 @@ class TestDefinition:
 
     def test_str(self, db_session):
         definition: Definition = db_session.query(Definition).filter_by(id=1).first()
-        assert str(definition) == '<BaseDefinition ID 1/6 K «test»/«examine» B…>'
+        assert str(definition) == "<BaseDefinition ID 1/6 K «test»/«examine» B…>"
 
     def test_keys(self, db_session):
         definition: Definition = db_session.query(Definition).filter_by(id=1).first()
@@ -18,9 +18,15 @@ class TestDefinition:
 
     def test_source_word(self, db_session):
         definition: Definition = db_session.query(Definition).filter_by(id=1).first()
-        prukao: Word = db_session.query(Word).filter(Word.name == 'prukao').first()
+        prukao: Word = db_session.query(Word).filter(Word.name == "prukao").first()
         assert definition.source_word == prukao
 
     def test_grammar(self, db_session):
         definition: Definition = db_session.query(Definition).filter_by(id=1).first()
         assert definition.grammar == "(4v)"
+
+    def test_definition_indexes(self):
+        indexed_cols = {
+            col.name for idx in Definition.__table__.indexes for col in idx.columns
+        }
+        assert "word_id" in indexed_cols

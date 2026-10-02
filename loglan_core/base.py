@@ -7,7 +7,7 @@ from __future__ import annotations
 from datetime import datetime
 from typing import Any, Sequence
 
-from sqlalchemy import String, inspect, func, select
+from sqlalchemy import DateTime, String, inspect, func, select
 from sqlalchemy.ext.asyncio import AsyncAttrs
 from sqlalchemy.ext.hybrid import hybrid_property
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
@@ -64,17 +64,22 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
     :type: int
     """
 
-    created: Mapped[datetime] = mapped_column(default=datetime.now, nullable=False)
+    created: Mapped[datetime] = mapped_column(
+        DateTime(timezone=True),
+        server_default=func.now(),  # pylint: disable=not-callable
+        nullable=False,
+    )
     """
     A class attribute mapped to a column in the database table. It represents 
-    the timestamp when a row is created. The default value is the current 
-    timestamp, and it can't be null.
+    the timestamp when a row is created. The default value is set by the database
+    server at insertion, and it cannot be null.
     
     :type: datetime
     """
 
     updated: Mapped[datetime | None] = mapped_column(
-        onupdate=func.now()  # pylint: disable=E1102
+        DateTime(timezone=True),
+        onupdate=func.now(),  # pylint: disable=not-callable
     )
     """
     A class attribute mapped to a column in the database table. It represents 
@@ -179,7 +184,11 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of all attribute keys.
         """
-        return set(cls.__mapper__.attrs.keys()) | cls.properties()
+        return (
+            set(cls.__mapper__.attrs.keys())
+            | cls.properties()
+            | cls.hybrid_properties()
+        )
 
     @classmethod
     def attributes_basic(cls) -> set[str]:
@@ -192,7 +201,12 @@ class BaseModel(AsyncAttrs, DeclarativeBase):
         Returns:
             set[str]: A set of strings with names of basic attributes.
         """
-        return set(cls.attributes_all() - cls.relationships() - cls.properties())
+        return set(
+            cls.attributes_all()
+            - cls.relationships()
+            - cls.properties()
+            - cls.hybrid_properties()
+        )
 
     @classmethod
     def attributes_extended(cls) -> set[str]:

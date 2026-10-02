@@ -15,7 +15,7 @@ class TestWordSource:
 
     def test_str(self):
         ws: WordSource = WordSource(word_sources[0])  # "2/3E act"
-        assert str(ws) == '<WordSource 2/3E act>'
+        assert str(ws) == "<WordSource 2/3E act>"
 
     def test_init_error(self):
         with pytest.raises(ValueError):

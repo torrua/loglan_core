@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy import select
 from loglan_core import Word, Type, Event, WordSelector, DefinitionSelector
 from loglan_core.addons.base_selector import BaseSelector
 
@@ -79,6 +80,36 @@ class TestWord:
         assert isinstance(kakto.complexes, list)
         assert isinstance(kakto.complexes[0], Word)
 
+    def test_affixes_hybrid_property_sql_filter(self, db_session):
+        stmt = select(Word).where(Word.affixes.any())
+        words_with_affixes = db_session.scalars(stmt).all()
+        words_names = {w.name for w in words_with_affixes}
+        assert "kakto" in words_names
+        assert "pruci" in words_names
+
+        stmt_specific = select(Word).where(Word.affixes.any(Word.name == "kak"))
+        words_with_kak = db_session.scalars(stmt_specific).all()
+        assert len(words_with_kak) == 1
+        assert words_with_kak[0].name == "kakto"
+
+    def test_complexes_hybrid_property_sql_filter(self, db_session):
+        stmt = select(Word).where(Word.complexes.any())
+        words_with_cpx = db_session.scalars(stmt).all()
+        words_names = {w.name for w in words_with_cpx}
+        assert "kakto" in words_names
+
+        stmt_specific = select(Word).where(Word.complexes.any(Word.name == "prukao"))
+        words_with_prukao = db_session.scalars(stmt_specific).all()
+        assert len(words_with_prukao) == 2
+
+    def test_djifoa_hybrid_property(self, db_session):
+        kakto = WordSelector().by_name("kakto").scalar(db_session)
+        assert kakto.djifoa == kakto.affixes
+        stmt = select(Word).where(Word.djifoa.any(Word.name == "kak"))
+        res = db_session.scalars(stmt).all()
+        assert len(res) == 1
+        assert res[0].name == "kakto"
+
     def test_keys(self, db_session):
         kakto: Word = WordSelector().by_name("kakto").scalar(db_session)
         assert len(kakto.keys) == 5
@@ -90,3 +121,18 @@ class TestWord:
             "undertake",
         ]
 
+    def test_word_indexes(self):
+        indexed_cols = {
+            col.name for idx in Word.__table__.indexes for col in idx.columns
+        }
+        assert "name" in indexed_cols
+        assert "type" in indexed_cols
+        assert "event_start" in indexed_cols
+        assert "event_end" in indexed_cols
+
+        name_idx = next(
+            idx
+            for idx in Word.__table__.indexes
+            if Word.__table__.c.name in idx.columns.values()
+        )
+        assert not name_idx.unique

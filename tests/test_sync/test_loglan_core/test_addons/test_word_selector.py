@@ -19,35 +19,39 @@ class TestWordSelector:
         assert isinstance(result, WordSelector)
 
         result_from_db = result.all(db_session)
-        sorted_names = [w.name for w in result_from_db]
-        assert sorted_names == [
-            "kak",
-            "kakto",
-            "kao",
-            "pru",
-            "pruci",
-            "prukao",
-            "cii",
-            "flekukfoa",
-            "lekveo",
-        ]
+        sorted_names = sorted(w.name for w in result_from_db)
+        assert sorted_names == sorted(
+            [
+                "kak",
+                "kakto",
+                "kao",
+                "pru",
+                "pruci",
+                "prukao",
+                "cii",
+                "flekukfoa",
+                "lekveo",
+            ]
+        )
 
     def test_by_event_custom_event_id(self, db_session):
         result = WordSelector().by_event(3).get_statement()
         result_from_db = db_session.execute(result).scalars().all()
-        sorted_names = [w.name for w in result_from_db]
-        assert sorted_names == [
-            "kak",
-            "kakto",
-            "kao",
-            "pru",
-            "pruci",
-            "prukao",
-            "osmio",
-            "riyhasgru",
-            "riyvei",
-            "testuda",
-        ]
+        sorted_names = sorted(w.name for w in result_from_db)
+        assert sorted_names == sorted(
+            [
+                "kak",
+                "kakto",
+                "kao",
+                "pru",
+                "pruci",
+                "prukao",
+                "osmio",
+                "riyhasgru",
+                "riyvei",
+                "testuda",
+            ]
+        )
 
     def test_by_name_case_sensitive(self, db_session):
         name = "Pru"

@@ -1,4 +1,5 @@
 import pytest
+from sqlalchemy import select
 from loglan_core import Word, Type, Event, WordSelector
 
 
@@ -77,3 +78,13 @@ class TestAsyncWord:
             "end",
             "undertake",
         ]
+
+    async def test_complexes_and_affixes_async_sql_filter(self, session):
+        cpx_stmt = select(Word).where(Word.complexes.any())
+        words_with_cpx = (await session.scalars(cpx_stmt)).all()
+        assert "kakto" in {w.name for w in words_with_cpx}
+
+        affix_stmt = select(Word).where(Word.affixes.any(Word.name == "kak"))
+        words_with_kak = (await session.scalars(affix_stmt)).all()
+        assert len(words_with_kak) == 1
+        assert words_with_kak[0].name == "kakto"

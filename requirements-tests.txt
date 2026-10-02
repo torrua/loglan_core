@@ -1,6 +1,7 @@
 -r requirements.txt
 
 aiosqlite
+alembic
 coverage
 pytest-cov
 pytest-asyncio

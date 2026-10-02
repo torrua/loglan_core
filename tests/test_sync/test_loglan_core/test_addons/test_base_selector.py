@@ -67,7 +67,10 @@ class TestBaseSelector:
 
     def test_select_multiple_columns(self, db_session):
         result = (
-            WordSelector().select_columns(BaseWord.id, BaseWord.name).all(db_session)
+            WordSelector()
+            .order_by(BaseWord.id)
+            .select_columns(BaseWord.id, BaseWord.name)
+            .all(db_session)
         )
         assert len(result) == 13
         assert isinstance(result[0], Row)
@@ -79,6 +82,7 @@ class TestBaseSelector:
     def test_select_multiple_columns_fetchmany(self, db_session):
         result = (
             WordSelector()
+            .order_by(BaseWord.id)
             .select_columns(BaseWord.id, BaseWord.name)
             .fetchmany(db_session, 3)
         )

@@ -34,9 +34,16 @@ from .base import BaseModel as Base
 t_connect_authors = Table(
     T_NAME_CONNECT_AUTHORS,
     Base.metadata,
-    Column("AID", ForeignKey(f"{T_NAME_AUTHORS}.id"), primary_key=True),
-    Column("WID", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
-    Index("index_AID", "AID"),
+    Column(
+        "AID",
+        ForeignKey(f"{T_NAME_AUTHORS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "WID",
+        ForeignKey(f"{T_NAME_WORDS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
     Index("index_WID", "WID"),
 )
 """
@@ -50,7 +57,6 @@ Variables:
     Column("AID", ForeignKey(f"{T_NAME_AUTHORS}.id"), primary_key=True): 
     The ID column for the author.
     Column("WID", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True): The ID column for the word.
-    Index("index_AID", "AID"): An index on the "AID" column to enhance query performance.
     Index("index_WID", "WID"): An index on the "WID" column to enhance query performance.
 
 """
@@ -58,9 +64,16 @@ Variables:
 t_connect_words = Table(
     T_NAME_CONNECT_WORDS,
     Base.metadata,
-    Column("parent_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
-    Column("child_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True),
-    Index("index_parent_id", "parent_id"),
+    Column(
+        "parent_id",
+        ForeignKey(f"{T_NAME_WORDS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "child_id",
+        ForeignKey(f"{T_NAME_WORDS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
     Index("index_child_id", "child_id"),
 )
 """
@@ -75,8 +88,6 @@ Variables:
     The ID column for the parent word.
     Column("child_id", ForeignKey(f"{T_NAME_WORDS}.id"), primary_key=True): 
     The ID column for the child word.
-    Index("index_parent_id", "parent_id"): An index on the "parent_id" 
-    column to enhance query performance.
     Index("index_child_id", "child_id"): An index on the "child_id" 
     column to enhance query performance.
 """
@@ -84,9 +95,16 @@ Variables:
 t_connect_keys = Table(
     T_NAME_CONNECT_KEYS,
     Base.metadata,
-    Column("KID", ForeignKey(f"{T_NAME_KEYS}.id"), primary_key=True),
-    Column("DID", ForeignKey(f"{T_NAME_DEFINITIONS}.id"), primary_key=True),
-    Index("index_KID", "KID"),
+    Column(
+        "KID",
+        ForeignKey(f"{T_NAME_KEYS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
+    Column(
+        "DID",
+        ForeignKey(f"{T_NAME_DEFINITIONS}.id", ondelete="CASCADE"),
+        primary_key=True,
+    ),
     Index("index_DID", "DID"),
 )
 """
@@ -101,6 +119,5 @@ Variables:
     The ID column for the key.
     Column("DID", ForeignKey(f"{T_NAME_DEFINITIONS}.id"), primary_key=True): 
     The ID column for the definition.
-    Index("index_KID", "KID"): An index on the "KID" column to enhance query performance.
     Index("index_DID", "DID"): An index on the "DID" column to enhance query performance.
 """

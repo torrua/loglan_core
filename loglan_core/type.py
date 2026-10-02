@@ -49,7 +49,9 @@ class BaseType(BaseModel):
             f"{self.type_} ({self.type_x})>"
         )
 
-    type_: Mapped[str_016] = mapped_column("type", nullable=False)  # E.g. 2-Cpx, C-Prim
+    type_: Mapped[str_016] = mapped_column(
+        "type", nullable=False, index=True
+    )  # E.g. 2-Cpx, C-Prim
     type_x: Mapped[str_016] = mapped_column(nullable=False)  # E.g. Predicate, Predicate
     group: Mapped[str_016] = mapped_column(nullable=False)  # E.g. Cpx, Prim
     parentable: Mapped[bool] = mapped_column(nullable=False)  # E.g. True, False
