@@ -3,8 +3,7 @@
 This module provides custom type annotations for string lengths.
 """
 
-from typing_extensions import Annotated
-
+from typing import Annotated
 
 str_008 = Annotated[str, 8]
 """

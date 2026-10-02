@@ -43,6 +43,7 @@ class TestBase:
             "djifoa",
             "event_end",
             "event_start",
+            "keys",
             "parents",
             "type",
             "created",
@@ -91,6 +92,7 @@ class TestBase:
             "djifoa",
             "event_end",
             "event_start",
+            "keys",
             "parents",
             "type",
             "created",
@@ -102,6 +104,7 @@ class TestBase:
             "origin",
             "origin_x",
             "rank",
+            "tid_old",
             "updated",
             "year",
         }
@@ -120,14 +123,13 @@ class TestBase:
     def test_foreign_keys(self):
         assert Word.foreign_keys() == {
             "event_start_id",
-            "tid_old",
             "event_end_id",
             "type_id",
         }
 
     def test_non_foreign_keys(self):
         assert Word.non_foreign_keys() == {
-            "TID_old",
+            "tid_old",
             "created",
             "id",
             "id_old",

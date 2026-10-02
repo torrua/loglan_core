@@ -36,7 +36,9 @@ type_3 = {'description': 'Affix.', 'group': 'Little', 'type_': 'Afx', 'parentabl
 type_4 = {'description': 'Derived Primitive, one of the primitives that follows the cultural (language, nationality, culture) or animal (male, female, infant, resembling, unspecified) declension.', 'group': 'Prim', 'parentable': False, 'type_': 'D-Prim', 'type_x': 'Predicate', }
 type_5 = {'description': 'Compound Little Word E.g. enoi from e+no, "and not".', 'group': 'Little', 'parentable': True, 'type_': 'Cpd', 'type_x': 'Struct', }
 type_6 = {'description': 'Little Word, a small word used to give Loglan its grammatical structure.', 'group': 'Little', 'parentable': True, 'type_': 'LW', 'type_x': 'Struct', }
-types = [type_1, type_2, type_3, type_4, type_5, type_6]
+type_7 = {'description': 'Borrowed Primitive.', 'group': 'Prim', 'type_': 'B-Prim', 'parentable': False, 'type_x': 'Predicate', }
+type_8 = {'description': 'Abbreviation.', 'group': 'Little', 'type_': 'Abb', 'parentable': False, 'type_x': 'Abbr', }
+types = [type_1, type_2, type_3, type_4, type_5, type_6, type_7, type_8]
 
 # ===== WORDS ==================================================================
 word_1 = {'notes': None, 'tid_old': None, 'id_old': 3869, 'name': 'kak', 'type_id': 3, 'origin': 'kak(to)', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '', 'rank': '7+', 'year': datetime.date(1988, 1, 1)}
@@ -75,16 +77,16 @@ connect_words = [(2, 1), (2, 3), (2, 6), (5, 4), (5, 6)]  # (parent_id, child_id
 
 
 # EVENT 5 === appeared_words ===================================================
-word_1_appeared_event_5 = {'notes': {'year': "(to '15)"}, 'tid_old': None, 'id_old': 10091, 'name': 'cii', 'type_id': 17, 'origin': '', 'event_start_id': 5, 'origin_x': '', 'event_end_id': None, 'match': '', 'rank': '', 'year': datetime.date(2013, 1, 1)}
+word_1_appeared_event_5 = {'notes': {'year': "(to '15)"}, 'tid_old': None, 'id_old': 10091, 'name': 'cii', 'type_id': 8, 'origin': '', 'event_start_id': 5, 'origin_x': '', 'event_end_id': None, 'match': '', 'rank': '', 'year': datetime.date(2013, 1, 1)}
 word_2_appeared_event_5 = {'notes': {'year': "(to '15)"}, 'tid_old': None, 'id_old': 10098, 'name': 'flekukfoa', 'type_id': 6, 'origin': 'fle(ti)+kuk(ra)+fo(rm)a', 'event_start_id': 5, 'origin_x': 'flying quick form', 'event_end_id': None, 'match': '', 'rank': '', 'year': datetime.date(2008, 1, 1)}
 word_3_appeared_event_5 = {'notes': {'year': "(to '15)"}, 'tid_old': None, 'id_old': 10099, 'name': 'lekveo', 'type_id': 5, 'origin': 'le(n)k(i)+ve(sl)o', 'event_start_id': 5, 'origin_x': 'electricity vessel', 'event_end_id': None, 'match': '', 'rank': '', 'year': datetime.date(2008, 1, 1)}
 words_appeared = [word_1_appeared_event_5, word_2_appeared_event_5, word_3_appeared_event_5]
 
 # EVENT 5 === deprecated_words =================================================
-word_1_deprecated_event_5 = {'notes': {'year': "(fixed bad joint '16)"}, 'tid_old': None, 'id_old': 6637, 'name': 'osmio', 'type_id': 8, 'origin': 'ISV', 'event_start_id': 1, 'origin_x': '', 'event_end_id': 5, 'match': '', 'rank': '7+', 'year': datetime.date(1988, 1, 1)}
+word_1_deprecated_event_5 = {'notes': {'year': "(fixed bad joint '16)"}, 'tid_old': None, 'id_old': 6637, 'name': 'osmio', 'type_id': 7, 'origin': 'ISV', 'event_start_id': 1, 'origin_x': '', 'event_end_id': 5, 'match': '', 'rank': '7+', 'year': datetime.date(1988, 1, 1)}
 word_2_deprecated_event_5 = {'notes': {'year': "(corrected CV to CVh '16)"}, 'tid_old': None, 'id_old': 7668, 'name': 'riyhasgru', 'type_id': 5, 'origin': 'rih+y+has(fa)+gru(pa)', 'event_start_id': 1, 'origin_x': 'few house group', 'event_end_id': 5, 'match': '', 'rank': '7+', 'year': datetime.date(1999, 1, 1)}
 word_3_deprecated_event_5 = {'notes': {'year': "(corrected CV to CVh '16)"}, 'tid_old': None, 'id_old': 7669, 'name': 'riyvei', 'type_id': 4, 'origin': 'rih+y+ve(tc)i', 'event_start_id': 1, 'origin_x': 'several events', 'event_end_id': 5, 'match': '', 'rank': '7+', 'year': datetime.date(1999, 1, 1)}
-word_4_deprecated_event_5 = {'notes': {'year': "(fixed '16)"}, 'tid_old': None, 'id_old': 9036, 'name': 'testuda', 'type_id': 8, 'origin': 'Lin. Testudines', 'event_start_id': 1, 'origin_x': '', 'event_end_id': 5, 'match': '', 'rank': '7+', 'year': datetime.date(1997, 1, 1)}
+word_4_deprecated_event_5 = {'notes': {'year': "(fixed '16)"}, 'tid_old': None, 'id_old': 9036, 'name': 'testuda', 'type_id': 7, 'origin': 'Lin. Testudines', 'event_start_id': 1, 'origin_x': '', 'event_end_id': 5, 'match': '', 'rank': '7+', 'year': datetime.date(1997, 1, 1)}
 words_deprecated = [word_1_deprecated_event_5, word_2_deprecated_event_5, word_3_deprecated_event_5, word_4_deprecated_event_5]
 
 changed_words = words_appeared + words_deprecated
@@ -120,7 +122,7 @@ word_sources = [word_source_1, word_source_2, word_source_3, word_source_4, ]
 
 # ===== OTHER ITEMS ===========================================================
 other_word_1 = {'tid_old': None, 'name': 'cirdui', 'origin': 'cir(na)+du(vr)i', 'type_id': 5, 'origin_x': 'learn discover', 'event_start_id': 1, 'match': '', 'event_end_id': None, 'rank': '7+', 'year': datetime.date(1991, 1, 1), 'notes': None, 'id_old': 992}
-other_word_2 = {'notes': None, 'tid_old': None, 'id_old': 3880, 'name': 'kakto', 'type_id': 9, 'origin': 'R akt | 4/4S | 3/3F acte | 2/3E act | 2/3H kam', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '56%', 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
+other_word_2 = {'notes': None, 'tid_old': None, 'id_old': 3880, 'name': 'kakto', 'type_id': 2, 'origin': 'R akt | 4/4S | 3/3F acte | 2/3E act | 2/3H kam', 'event_start_id': 1, 'origin_x': '', 'event_end_id': None, 'match': '56%', 'rank': '1.0', 'year': datetime.date(1975, 1, 1)}
 other_author_1 = {'full_name': 'Robert McIvor', 'notes': '', 'abbreviation': 'RAM'}
 
 other_word_3 = {'event_end_id': None, 'event_start_id': 1, 'id_old': 3589, 'match': '', 'name': 'humnu', 'notes': None, 'origin': 'humni', 'origin_x': '', 'rank': '1.4', 'tid_old': None, 'type_id': 4, 'year': datetime.date(1994, 1, 1)}

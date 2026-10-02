@@ -16,7 +16,6 @@ from typing import Type
 from sqlalchemy import select, true
 from typing_extensions import Self
 
-from loglan_core.relationships import t_connect_keys
 from .base_selector import BaseSelector
 from .filters import (
     filter_word_by_event_id,
@@ -89,10 +88,8 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
         """
         subquery = (
             select(self.model.id)
-            .join(t_connect_keys)
             .join(BaseWord)
             .where(filter_word_by_event_id(event_id))
-            .scalar_subquery()
         )
         self._statement = self._statement.where(self.model.id.in_(subquery))
         return self
@@ -124,7 +121,7 @@ class DefinitionSelector(BaseSelector):  # pylint: disable=too-many-ancestors
             key.language if isinstance(key, BaseKey) else language
         )
 
-        if not hasattr(self.model, "keys"):
+        if not hasattr(self.model, "keys") or not hasattr(self.model.keys, "property"):
             raise AttributeError(
                 f"{self.model.__name__} does not have a 'keys' attribute"
             )

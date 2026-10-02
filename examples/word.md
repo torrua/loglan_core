@@ -15,10 +15,10 @@ This method returns a statement for the database, which we execute using the `se
 ```python
 from loglan_core.addons.word_selector import WordSelector
 
-request = WordSelector().by_name("proga")
-word = session.scalar(request)
-# or
 word = WordSelector().by_name("proga").scalar(session)
+# or
+request = WordSelector().by_name("proga").get_statement()
+word = session.scalar(request)
 
 print(word)
 >>> <BaseWord ID **** proga>

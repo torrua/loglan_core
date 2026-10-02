@@ -34,10 +34,10 @@ dependencies = [
 "Repository" = "https://github.com/torrua/loglan_core"
 
 [tool.setuptools.packages.find]
-include = ["loglan_core", "loglan_core.addons"]
+include = ["loglan_core*"]
 
 [tool.pylint]
-disable = ["R0902", "R0913", "R0801"]
+disable = ["R0902", "R0913", "R0801", "R0901"]
 
 [tool.pytest.ini_options]
 asyncio_default_fixture_loop_scope = "session"
@@ -49,5 +49,5 @@ strict = false
 
 [tool.coverage.run]
 source = [
-  "pytest_asyncio",
+  "loglan_core",
 ]

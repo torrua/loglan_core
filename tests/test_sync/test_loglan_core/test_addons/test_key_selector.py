@@ -73,6 +73,16 @@ class TestKeySelector:
         assert keys == []
 
     @staticmethod
+    def test_by_key_cs_wildcard(db_session):
+        keys = (
+            KeySelector(is_sqlite=True, case_sensitive=True)
+            .by_key("ac*")
+            .all(db_session)
+        )
+        result = sorted(key.id for key in keys)
+        assert result == [7, 9, 11, 12]
+
+    @staticmethod
     def test_by_key_wildcard(db_session):
         keys = KeySelector(is_sqlite=True).by_key("Act*").all(db_session)
 

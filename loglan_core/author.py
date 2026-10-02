@@ -62,9 +62,9 @@ class BaseAuthor(BaseModel):
 
     def __init__(
         self,
-        abbreviation: Mapped[str_064],
-        full_name: Mapped[str_064 | None],
-        notes: Mapped[str_128 | None],
+        abbreviation: str,
+        full_name: str | None = None,
+        notes: str | None = None,
     ):
         """Initializes a BaseAuthor instance.
 

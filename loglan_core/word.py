@@ -5,6 +5,7 @@ This module contains a basic Word Model.
 from __future__ import annotations
 
 import datetime
+from typing import TYPE_CHECKING
 
 from sqlalchemy import ForeignKey, JSON
 from sqlalchemy.orm import mapped_column, Mapped
@@ -21,6 +22,9 @@ from .relationships import (
 from .service.annotated_types import str_008, str_064, str_128
 from .service.table_names import T_NAME_EVENTS, T_NAME_TYPES, T_NAME_WORDS
 from .type import BaseType
+
+if TYPE_CHECKING:
+    from .key import BaseKey
 
 
 class BaseWord(BaseModel):
@@ -198,8 +202,8 @@ class BaseWord(BaseModel):
     name: Mapped[str_064] = mapped_column(nullable=False)
     """The name of the word.
 
-    This attribute holds the actual word as a string. It is required and must 
-    be unique within the database.
+    This attribute holds the actual word as a string. It is required. Homonyms
+    are permitted (words with the same name and different definitions may coexist).
 
     - **Type**: str_064
     - **Max Length**: 64 characters
@@ -477,3 +481,18 @@ class BaseWord(BaseModel):
             list[BaseWord]: A list of complexes that are derived from the word.
         """
         return list(filter(lambda child: child.type.group == "Cpx", self.derivatives))
+
+    @property
+    def keys(self) -> list[BaseKey]:
+        """List of keywords associated with the word through its definitions.
+
+        This property gathers all unique keys across the word's definitions,
+        sorted alphabetically by key word and language.
+
+        Returns:
+            list[BaseKey]: A sorted list of unique keys for this word.
+        """
+        return sorted(
+            {key for definition in self.definitions for key in definition.keys},
+            key=lambda k: (k.word, k.language),
+        )

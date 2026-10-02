@@ -93,7 +93,7 @@ class Exporter:
         Returns:
         str: The resulting string after joining the items.
         """
-        return separator.join([str(i or "") for i in items])
+        return separator.join([str(i) if i is not None else "" for i in items])
 
     @staticmethod
     def export_author(obj: BaseAuthor) -> tuple:

@@ -4,6 +4,7 @@ import pytest
 
 from loglan_core.addons.definition_selector import DefinitionSelector
 from loglan_core.addons.key_selector import KeySelector
+from loglan_core.addons.word_selector import WordSelector
 from loglan_core.definition import BaseDefinition
 from loglan_core.word import BaseWord
 
@@ -32,6 +33,16 @@ class TestDefinitionSelector:
 
         result = sorted(d.id for d in definitions)
         assert len(result) == 17
+
+    @staticmethod
+    def test_by_event_without_keys(db_session):
+        word = WordSelector().by_name("kakto").scalar(db_session)
+        def_no_keys = BaseDefinition(position=1, body="Test body without keys", language="en", word_id=word.id)
+        db_session.add(def_no_keys)
+        db_session.commit()
+
+        definitions = DefinitionSelector().by_event(1).all(db_session)
+        assert def_no_keys.id in [d.id for d in definitions]
 
     def test_by_language(self, db_session):
         definitions = DefinitionSelector().by_language("es").all(db_session)
