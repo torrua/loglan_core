@@ -145,3 +145,14 @@ class TestBase:
 
     def test_hybrid_properties(self):
         assert not Word.hybrid_properties()
+
+    def test_created_and_updated_timestamps(self, db_session):
+        word: Word = Word.get_by_id(db_session, 1)
+        assert word is not None
+        assert isinstance(word.created, datetime.datetime)
+
+        word.match = "updated_match"
+        db_session.commit()
+        db_session.refresh(word)
+        assert word.updated is not None
+        assert isinstance(word.updated, datetime.datetime)
