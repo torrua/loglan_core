@@ -71,7 +71,7 @@ class BaseEvent(BaseModel):
         **str** : max_length=64, nullable=False, unique=False"""
     date: Mapped[datetime.date] = mapped_column(nullable=False)
     """*Event's starting day*  
-        **dateime.date** : nullable=False, unique=False"""
+        **datetime.date** : nullable=False, unique=False"""
     definition: Mapped[str] = mapped_column(Text, nullable=False)
     """*Event's definition*
         **str** : nullable=False, unique=False"""
